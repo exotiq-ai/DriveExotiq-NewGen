@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drive Exotiq — Field Notes</title>
+<style>
+  :root{
+    --bg:#0B0B0C; --s1:#161618; --s2:#1F1F23;
+    --hair:#28282C; --hair2:#3A3A40;
+    --t1:#F3F1EC; --t2:#ABA8A1; --t3:#6F6D67;
+    --blue:#6CBDE6; --metal:#C9C6BD; --gold:#C8A24E;
+    --disp:'Bricolage Grotesque','Schibsted Grotesk',system-ui,sans-serif;
+    --serif:'Spectral',Georgia,serif;
+    --ui:'Schibsted Grotesk',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{
+    background:var(--bg); color:var(--t1);
+    font-family:var(--ui);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--blue);color:#0B0B0C}
+
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.04;mix-blend-mode:screen;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+  .vig{position:fixed;inset:0;pointer-events:none;z-index:89;
+    background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.55) 100%);}
+
+  .prog{position:fixed;top:0;left:0;height:1px;background:var(--blue);width:0;z-index:100;opacity:.85}
+
+  .chrome{position:fixed;z-index:95;left:0;right:0;display:flex;justify-content:space-between;
+    padding:26px 34px;font-family:var(--ui);font-size:12px;letter-spacing:.04em;color:var(--t2);
+    mix-blend-mode:difference}
+  .chrome.top{top:0}
+  .chrome.bot{bottom:0;font-size:11px;color:var(--t3)}
+  .chrome .mark{color:var(--t1);font-family:var(--disp);font-weight:600;letter-spacing:-.01em;font-size:14px}
+  .chrome .live{display:flex;align-items:center;gap:8px;color:var(--blue)}
+  .chrome .live i{width:6px;height:6px;border-radius:50%;background:var(--blue);display:inline-block;
+    animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+
+  .stage{position:relative;width:100%}
+
+  .pin{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;
+    display:flex;align-items:center;justify-content:center}
+
+  #s1{height:280vh}
+  .h-wrap{position:relative;width:100%;height:100%;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center}
+  .kicker{font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.5vw,21px);
+    color:var(--t2);letter-spacing:.01em;margin-bottom:26px}
+  .kicker .ki{display:inline-block;overflow:hidden;vertical-align:bottom}
+  .kicker .ki b{display:inline-block;font-weight:400}
+  .mega{font-family:var(--disp);font-weight:700;line-height:.92;letter-spacing:-.035em;
+    font-size:clamp(48px,11.5vw,176px);color:var(--t1)}
+  .mega .ln{display:block;overflow:hidden;padding:0 .02em}
+  .mega .ln span{display:inline-block;will-change:transform}
+  .mega em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.02em;color:var(--metal)}
+  .sub{margin-top:30px;font-family:var(--ui);font-size:clamp(13px,1.15vw,16px);color:var(--t2);
+    max-width:520px;line-height:1.6}
+  .sub .blue{color:var(--blue)}
+  .scrollcue{position:absolute;bottom:42px;left:50%;transform:translateX(-50%);
+    font-size:11px;letter-spacing:.18em;color:var(--t3);font-family:var(--ui)}
+  .scrollcue .bar{display:block;width:1px;height:46px;margin:14px auto 0;background:linear-gradient(var(--hair2),transparent);
+    position:relative;overflow:hidden}
+  .scrollcue .bar:after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;
+    background:var(--blue);animation:run 2.2s ease-in-out infinite}
+  @keyframes run{0%{transform:translateY(-100%)}60%,100%{transform:translateY(300%)}}
+
+  #s2{height:300vh}
+  .quote-wrap{max-width:1100px;padding:0 6vw}
+  .quote{font-family:var(--serif);font-weight:400;line-height:1.14;
+    font-size:clamp(28px,5.4vw,80px);color:var(--t1);letter-spacing:-.01em}
+  .quote .w{display:inline-block;overflow:hidden;vertical-align:bottom;margin:0 .02em}
+  .quote .w b{display:inline-block;font-weight:400;will-change:transform,opacity}
+  .quote em{font-style:italic;color:var(--metal)}
+  .quote .hl b{color:var(--blue)}
+  .attr{margin-top:42px;font-family:var(--ui);font-size:13px;color:var(--t3);letter-spacing:.02em;
+    display:flex;align-items:center;gap:14px}
+  .attr .l{width:42px;height:1px;background:var(--hair2)}
+
+  #s3{height:300vh}
+  .frame{position:absolute;inset:0}
+  .frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    filter:saturate(.9) contrast(1.02) brightness(.82);will-change:transform}
+  .frame .scrim{position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(11,11,12,.55) 0%,rgba(11,11,12,.15) 40%,rgba(11,11,12,.85) 100%)}
+  .frame .scrim2{position:absolute;inset:0;
+    background:linear-gradient(90deg,rgba(11,11,12,.7) 0%,transparent 45%)}
+  .specs{position:absolute;left:7vw;bottom:13vh;z-index:3}
+  .specs .lab{font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.5vw,20px);
+    color:var(--t2);margin-bottom:18px}
+  .specs .row{display:flex;gap:clamp(34px,5vw,80px)}
+  .stat .n{font-family:var(--disp);font-weight:700;letter-spacing:-.03em;line-height:1;
+    font-size:clamp(40px,6.4vw,96px);color:var(--t1)}
+  .stat .n .u{font-size:.34em;color:var(--metal);font-weight:600;margin-left:.12em;letter-spacing:0}
+  .stat .c{margin-top:10px;font-family:var(--ui);font-size:11.5px;letter-spacing:.04em;color:var(--t3)}
+  .s3-head{position:absolute;top:13vh;left:7vw;z-index:3;font-family:var(--disp);font-weight:700;
+    letter-spacing:-.03em;line-height:.95;font-size:clamp(32px,5.2vw,78px);color:var(--t1)}
+  .s3-head em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--metal)}
+  .s3-head .ov{display:block;overflow:hidden}
+  .s3-head .ov span{display:inline-block}
+
+  #s4{height:420vh}
+  .h-pin{display:block}
+  .route-head{position:absolute;top:11vh;left:0;width:100%;text-align:center;z-index:5;
+    font-family:var(--serif);font-style:italic;color:var(--t2);font-size:clamp(15px,1.6vw,22px)}
+  .route-head b{display:block;font-family:var(--disp);font-style:normal;font-weight:700;color:var(--t1);
+    letter-spacing:-.03em;font-size:clamp(26px,3.6vw,52px);margin-top:8px}
+  .track{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;
+    white-space:nowrap;will-change:transform}
+  .city{display:inline-flex;flex-direction:column;justify-content:center;
+    padding:0 clamp(40px,6vw,120px);position:relative}
+  .city .idx{font-family:var(--ui);font-size:12px;color:var(--blue);letter-spacing:.1em;margin-bottom:14px}
+  .city .nm{font-family:var(--disp);font-weight:700;letter-spacing:-.035em;line-height:.9;
+    font-size:clamp(54px,9vw,150px);color:var(--t1);transition:color .3s}
+  .city .nm em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--metal)}
+  .city .mi{font-family:var(--ui);font-size:12.5px;color:var(--t3);margin-top:18px;letter-spacing:.02em}
+  .city .dot{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);
+    width:7px;height:7px;border-radius:50%;background:var(--hair2)}
+  .routeline{position:absolute;left:0;bottom:30vh;width:100%;height:120px;z-index:1;pointer-events:none}
+  .routeline path{fill:none;stroke-linecap:round}
+
+  #s5{height:200vh}
+  .close{max-width:1000px;padding:0 6vw;text-align:center}
+  .close .sm{font-family:var(--serif);font-style:italic;color:var(--t2);font-size:clamp(15px,1.6vw,22px);
+    margin-bottom:28px}
+  .close h2{font-family:var(--disp);font-weight:700;line-height:.95;letter-spacing:-.035em;
+    font-size:clamp(40px,8.5vw,128px);color:var(--t1)}
+  .close h2 .ov{display:block;overflow:hidden}
+  .close h2 .ov span{display:inline-block}
+  .close h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--metal)}
+  .cta{margin-top:46px;display:inline-flex;align-items:center;gap:14px;
+    border:1px solid var(--hair2);border-radius:2px;padding:16px 26px;
+    font-family:var(--ui);font-size:14px;color:var(--t1);letter-spacing:.01em;
+    background:rgba(108,189,230,.0);transition:border-color .4s,background .4s}
+  .cta .arr{color:var(--blue);transition:transform .4s}
+  .cta b{font-weight:600}
+  .cta .blue{color:var(--blue)}
+  .foot{margin-top:40px;font-family:var(--ui);font-size:11.5px;color:var(--t3);letter-spacing:.06em}
+
+  @media (prefers-reduced-motion:reduce){
+    .scrollcue .bar:after,.chrome .live i{animation:none}
+  }
+</style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="vig"></div>
+  <div class="prog" id="prog"></div>
+
+  <div class="chrome top">
+    <span class="mark">DRIVE EXOTIQ</span>
+    <span class="live"><i></i>Exotic Tour — Denver to Miami</span>
+  </div>
+  <div class="chrome bot">
+    <span>Field Notes / Vol. 01</span>
+    <span>Summer &rarr; Fall 2026</span>
+  </div>
+
+  <div class="stage">
+
+    <section id="s1" class="stage-sec">
+      <div class="pin">
+        <div class="h-wrap">
+          <div class="kicker" id="ki"></div>
+          <h1 class="mega" id="mega">
+            <span class="ln"><span>Built for the</span></span>
+            <span class="ln"><span>people who</span></span>
+            <span class="ln"><span><em>actually</em> drive</span></span>
+            <span class="ln"><span>the car.</span></span>
+          </h1>
+          <p class="sub" id="sub">An invite-only drive culture, taking one livery <span class="blue">Audi&nbsp;S8</span> across ten markets — Denver to Miami.</p>
+          <div class="scrollcue">SCROLL<span class="bar"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="s2" class="stage-sec">
+      <div class="pin">
+        <div class="quote-wrap">
+          <p class="quote" id="quote"></p>
+          <div class="attr"><span class="l"></span><span>The Drive Exotiq field manifesto</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="s3" class="stage-sec">
+      <div class="pin">
+        <div class="frame">
+          <img id="s3img" src="./s8.jpg" alt="The grey tour Audi S8">
+          <div class="scrim"></div>
+          <div class="scrim2"></div>
+        </div>
+        <h2 class="s3-head">
+          <span class="ov"><span>One car.</span></span>
+          <span class="ov"><span><em>Every</em> mile.</span></span>
+        </h2>
+        <div class="specs">
+          <div class="lab">2017 Audi S8 — heritage racing livery, sleeper</div>
+          <div class="row">
+            <div class="stat"><div class="n" data-to="5000" data-suf=" mi" id="st1">0</div><div class="c">Denver &rarr; Miami</div></div>
+            <div class="stat"><div class="n" data-to="10" id="st2">0</div><div class="c">Markets on tour</div></div>
+            <div class="stat"><div class="n" data-to="1" id="st3">0</div><div class="c">Wrap sponsor — open</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="s4" class="stage-sec">
+      <div class="pin h-pin">
+        <div class="route-head">the route<b>Ten markets, one summer</b></div>
+        <svg class="routeline" id="routeline" preserveAspectRatio="none" viewBox="0 0 1200 120">
+          <path id="routePath" stroke="#3A3A40" stroke-width="1.5" stroke-dasharray="3 7"
+            d="M0,90 C150,30 300,30 450,75 S780,120 900,60 S1120,30 1200,70"/>
+          <path id="routeDraw" stroke="#6CBDE6" stroke-width="1.5"
+            d="M0,90 C150,30 300,30 450,75 S780,120 900,60 S1120,30 1200,70"/>
+        </svg>
+        <div class="track" id="track"></div>
+      </div>
+    </section>
+
+    <section id="s5" class="stage-sec">
+      <div class="pin">
+        <div class="close">
+          <div class="sm" id="closesm">SUNRISE drives · Cars &amp; Coffee · the Exotic Tour</div>
+          <h2 id="closeh">
+            <span class="ov"><span>Put your</span></span>
+            <span class="ov"><span>name on</span></span>
+            <span class="ov"><span>the <em>car.</em></span></span>
+          </h2>
+          <a class="cta" id="cta" href="#"><b>Become the wrap sponsor</b><span class="arr">&rarr;</span></a>
+          <div class="foot">driveexotiq.com — the front door to <span style="color:var(--blue)">exotiq.rent</span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+(function(){
+  var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var clamp=function(v,a,b){return v<a?a:v>b?b:v;};
+  var lerp=function(a,b,t){return a+(b-a)*t;};
+  var ease=function(t){return t<0?0:t>1?1:1-Math.pow(1-t,3);};
+  var easeIO=function(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;};
+
+  function sceneProg(el){
+    var r=el.getBoundingClientRect();
+    var total=r.height-window.innerHeight;
+    if(total<=0) return clamp(-r.top/Math.max(1,r.height),0,1);
+    return clamp(-r.top/total,0,1);
+  }
+
+  var kiText="Field Notes — Vol. 01";
+  var ki=document.getElementById('ki');
+  (function(){
+    var w=document.createElement('span');w.className='ki';
+    var b=document.createElement('b');
+    kiText.split('').forEach(function(c){
+      var s=document.createElement('span');s.style.display='inline-block';
+      s.textContent=c===' '?' ':c;b.appendChild(s);
+    });
+    w.appendChild(b);ki.appendChild(w);
+  })();
+  var kiSpans=ki.querySelectorAll('b span');
+
+  var quoteParts=[
+    {t:'We',c:''},{t:'are',c:''},{t:'not',c:''},{t:'a',c:''},{t:'showroom.',c:''},
+    {t:'We',c:''},{t:'are',c:''},{t:'the',c:''},{t:'people',c:'em'},
+    {t:'who',c:'em'},{t:'turn',c:''},{t:'the',c:''},{t:'key',c:'hl'},
+    {t:'before',c:''},{t:'sunrise,',c:'em'},
+    {t:'and',c:''},{t:'drive',c:'hl'},{t:'it',c:''},{t:'like',c:''},
+    {t:'it',c:''},{t:'was',c:''},{t:'meant',c:''},{t:'to',c:''},{t:'be',c:''},{t:'driven.',c:'hl'}
+  ];
+  var quoteEl=document.getElementById('quote');
+  quoteParts.forEach(function(p){
+    var w=document.createElement('span');w.className='w'+(p.c?(' '+p.c):'');
+    var b=document.createElement('b');b.textContent=p.t;
+    w.appendChild(b);quoteEl.appendChild(w);
+    quoteEl.appendChild(document.createTextNode(' '));
+  });
+  var quoteWords=quoteEl.querySelectorAll('.w b');
+
+  var cities=[
+    ['01','Denver','—'],
+    ['02','Dallas','Ft Worth · 880 mi'],
+    ['03','Austin','195 mi'],
+    ['04','Houston','165 mi'],
+    ['05','New','Orleans · 350 mi'],
+    ['06','Tampa','St Pete · 680 mi'],
+    ['07','Orlando','85 mi'],
+    ['08','Palm','Beach · 175 mi'],
+    ['09','Ft','Lauderdale · 50 mi'],
+    ['10','Miami','30 mi']
+  ];
+  var track=document.getElementById('track');
+  cities.forEach(function(c,i){
+    var d=document.createElement('div');d.className='city';
+    var em=(i===4||i===7)?('<em>'+c[1]+'</em>'):c[1];
+    d.innerHTML='<div class="idx">'+c[0]+' / 10</div>'+
+                '<div class="nm">'+em+'</div>'+
+                '<div class="mi">'+c[2]+'</div>'+
+                '<div class="dot"></div>';
+    track.appendChild(d);
+  });
+  var cityEls=track.querySelectorAll('.city');
+
+  var routeDraw=document.getElementById('routeDraw');
+  var routeLen=routeDraw.getTotalLength();
+  routeDraw.style.strokeDasharray=routeLen;
+  routeDraw.style.strokeDashoffset=routeLen;
+
+  var s1=document.getElementById('s1'),s2=document.getElementById('s2'),
+      s3=document.getElementById('s3'),s4=document.getElementById('s4'),
+      s5=document.getElementById('s5');
+  var megaLines=document.querySelectorAll('#mega .ln span');
+  var sub=document.getElementById('sub');
+  var s3img=document.getElementById('s3img');
+  var s3head=document.querySelectorAll('.s3-head .ov span');
+  var st=[document.getElementById('st1'),document.getElementById('st2'),document.getElementById('st3')];
+  var stTo=st.map(function(e){return +e.getAttribute('data-to');});
+  var stSuf=st.map(function(e){return e.getAttribute('data-suf')||'';});
+  var closeH=document.querySelectorAll('#closeh .ov span');
+  var cta=document.getElementById('cta');
+  var prog=document.getElementById('prog');
+  var routeHead=document.querySelector('.route-head');
+
+  var targetY=window.scrollY, smoothY=window.scrollY;
+  var maxScroll=1;
+  function recalc(){maxScroll=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);}
+  window.addEventListener('resize',function(){recalc();
+    routeLen=routeDraw.getTotalLength();routeDraw.style.strokeDasharray=routeLen;});
+  recalc();
+
+  function fmt(n){return n>=1000?Math.round(n).toLocaleString('en-US'):Math.round(n).toString();}
+
+  function render(){
+    targetY=window.scrollY;
+    smoothY=RM?targetY:lerp(smoothY,targetY,0.12);
+    if(Math.abs(targetY-smoothY)<0.4) smoothY=targetY;
+
+    prog.style.width=(clamp(smoothY/maxScroll,0,1)*100)+'%';
+
+    var p1=sceneProg(s1);
+    var kp=clamp(p1/0.12,0,1);
+    for(var i=0;i<kiSpans.length;i++){
+      var d=i/kiSpans.length;
+      var t=ease(clamp((kp-d*0.5)/0.5,0,1));
+      kiSpans[i].style.transform='translateY('+lerp(110,0,t)+'%)';
+      kiSpans[i].style.opacity=t;
+    }
+    for(var i=0;i<megaLines.length;i++){
+      var inT=ease(clamp((p1-0.04-i*0.05)/0.30,0,1));
+      var outT=ease(clamp((p1-0.55-i*0.03)/0.42,0,1));
+      var y=lerp(120,0,inT)-outT*60;
+      megaLines[i].style.transform='translateY('+y+'%)';
+      megaLines[i].style.opacity=(1-outT);
+    }
+    var subT=ease(clamp((p1-0.30)/0.25,0,1));
+    var subO=ease(clamp((p1-0.62)/0.30,0,1));
+    sub.style.transform='translateY('+(lerp(24,0,subT)-subO*30)+'px)';
+    sub.style.opacity=subT*(1-subO);
+    var cue=document.querySelector('.scrollcue');
+    cue.style.opacity=clamp(1-p1*4,0,1);
+
+    var p2=sceneProg(s2);
+    var inSpan=0.62, n=quoteWords.length;
+    var outT2=ease(clamp((p2-0.80)/0.20,0,1));
+    for(var i=0;i<n;i++){
+      var start=0.05+(i/n)*inSpan;
+      var t=ease(clamp((p2-start)/0.16,0,1));
+      var y=lerp(115,0,t);
+      quoteWords[i].style.transform='translateY('+y+'%)';
+      quoteWords[i].style.opacity=t;
+    }
+    quoteEl.style.transform='translateY('+(-outT2*40)+'px)';
+    quoteEl.parentElement.style.opacity=clamp(1-outT2*1.05,0,1);
+    var attr=document.querySelector('.attr');
+    attr.style.opacity=ease(clamp((p2-0.55)/0.2,0,1))*(1-outT2);
+    attr.style.transform='translateX('+lerp(-14,0,ease(clamp((p2-0.55)/0.2,0,1)))+'px)';
+
+    var p3=sceneProg(s3);
+    var scl=lerp(1.18,1.04,easeIO(p3));
+    var ty=lerp(-4,4,p3);
+    s3img.style.transform='scale('+scl+') translateY('+ty+'%)';
+    for(var i=0;i<s3head.length;i++){
+      var t=ease(clamp((p3-0.06-i*0.07)/0.3,0,1));
+      var o=ease(clamp((p3-0.7)/0.28,0,1));
+      s3head[i].style.transform='translateY('+(lerp(110,0,t))+'%)';
+      s3head[i].parentElement.style.opacity=(1-o);
+    }
+    var cT=easeIO(clamp((p3-0.28)/0.42,0,1));
+    var specsBox=document.querySelector('.specs');
+    var specsIn=ease(clamp((p3-0.22)/0.22,0,1));
+    var specsOut=ease(clamp((p3-0.72)/0.26,0,1));
+    specsBox.style.opacity=specsIn*(1-specsOut);
+    specsBox.style.transform='translateY('+(lerp(28,0,specsIn))+'px)';
+    for(var i=0;i<st.length;i++){
+      var v=stTo[i]*cT;
+      st[i].innerHTML=fmt(v)+(stSuf[i]?'<span class="u">'+stSuf[i]+'</span>':'');
+    }
+
+    var p4=sceneProg(s4);
+    var trackW=track.scrollWidth;
+    var travel=Math.max(0,trackW-window.innerWidth);
+    var hp=easeIO(p4);
+    var x=-travel*hp;
+    track.style.transform='translateX('+x+'px)';
+    routeDraw.style.strokeDashoffset=routeLen*(1-clamp(p4*1.05,0,1));
+    routeHead.style.opacity=ease(clamp(p4/0.08,0,1))*clamp(1-(p4-0.92)/0.08,0,1);
+    var center=window.innerWidth/2;
+    for(var i=0;i<cityEls.length;i++){
+      var cr=cityEls[i].getBoundingClientRect();
+      var cc=cr.left+cr.width/2;
+      var dist=Math.abs(cc-center);
+      var near=clamp(1-dist/(window.innerWidth*0.34),0,1);
+      var dot=cityEls[i].querySelector('.dot');
+      dot.style.background=near>0.55?'var(--blue)':'var(--hair2)';
+      dot.style.transform='translateX(-50%) scale('+lerp(1,1.9,near)+')';
+      cityEls[i].querySelector('.nm').style.transform='translateY('+lerp(0,-10,near)+'px)';
+      cityEls[i].querySelector('.idx').style.opacity=lerp(.4,1,near);
+      cityEls[i].querySelector('.mi').style.opacity=lerp(.4,1,near);
+    }
+
+    var p5=sceneProg(s5);
+    var closesm=document.getElementById('closesm');
+    closesm.style.opacity=ease(clamp((p5-0.05)/0.2,0,1));
+    closesm.style.transform='translateY('+lerp(18,0,ease(clamp((p5-0.05)/0.2,0,1)))+'px)';
+    for(var i=0;i<closeH.length;i++){
+      var t=ease(clamp((p5-0.12-i*0.08)/0.34,0,1));
+      closeH[i].style.transform='translateY('+lerp(115,0,t)+'%)';
+    }
+    var ctaT=ease(clamp((p5-0.42)/0.26,0,1));
+    cta.style.opacity=ctaT;
+    cta.style.transform='translateY('+lerp(22,0,ctaT)+'px)';
+    var glow=ease(clamp((p5-0.55)/0.4,0,1));
+    cta.style.borderColor='rgba(108,189,230,'+lerp(0.18,0.9,glow)+')';
+    cta.style.background='rgba(108,189,230,'+(glow*0.06)+')';
+    cta.querySelector('.arr').style.transform='translateX('+(glow*8)+'px)';
+    document.querySelector('.foot').style.opacity=ease(clamp((p5-0.6)/0.3,0,1));
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>

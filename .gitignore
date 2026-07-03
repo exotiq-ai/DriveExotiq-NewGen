@@ -1,0 +1,40 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# local-only raw media (exceeds GitHub's 100MB file limit — see docs/redesign/storyboard/refs/LOCAL-MEDIA.md)
+docs/redesign/storyboard/refs/video/
+docs/redesign/storyboard/refs/shoots/s8/S8.Video.Standard4k.REVISE-002.mov
+docs/redesign/storyboard/refs/shoots/s8/e0083bd86f9a4aff981cdb02b511e9c8.mov
+docs/redesign/storyboard/refs/shoots/r8-458/Gregory and Sam  S8 and 458 Shoot Telluride.mp4

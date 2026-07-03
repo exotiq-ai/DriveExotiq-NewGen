@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Drive Exotiq — The Tour</title>
+<style>
+  :root{
+    --bg:#0B0B0C; --s1:#161618; --s2:#1F1F23;
+    --hair:#28282C; --hair2:#3A3A40;
+    --t1:#F3F1EC; --t2:#ABA8A1; --t3:#6F6D67;
+    --gulf:#6CBDE6; --metal:#C9C6BD; --gold:#C8A24E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{
+    background:var(--bg); color:var(--t1);
+    font-family:'Schibsted Grotesk',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .stage{ position:fixed; inset:0; z-index:1; overflow:hidden; will-change:transform; }
+  .sky{
+    position:absolute; inset:0;
+    background:linear-gradient(180deg,#0B0B0C 0%,#141318 38%,#1a1620 60%,#0B0B0C 100%);
+  }
+  .sky .glow{
+    position:absolute; left:50%; top:62%; width:140vw; height:80vh;
+    transform:translate(-50%,0);
+    background:radial-gradient(ellipse at center, rgba(108,189,230,.10), rgba(108,189,230,0) 60%);
+    opacity:0; will-change:transform,opacity;
+  }
+  .horizon{ position:absolute; left:-6%; right:-6%; bottom:-4%; height:74%; will-change:transform; }
+  .horizon .img{
+    position:absolute; inset:0; background-size:cover; background-position:center 38%;
+    will-change:transform,opacity;
+  }
+  .horizon .imgA{ background-image:url('./r8.jpg'); }
+  .horizon .imgB{ background-image:url('./s8.jpg'); opacity:0; }
+  .horizon::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, var(--bg) 0%, rgba(11,11,12,0) 22%, rgba(11,11,12,0) 55%, rgba(11,11,12,.7) 86%, var(--bg) 100%);
+  }
+  .grain{
+    position:absolute; inset:0; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .rail{ position:fixed; left:48px; top:0; bottom:0; width:2px; z-index:6; pointer-events:none; }
+  .rail svg{ position:absolute; left:-60px; top:0; height:100%; width:140px; overflow:visible;}
+  .routeBase{ fill:none; stroke:var(--hair2); stroke-width:1.5; }
+  .routeDraw{ fill:none; stroke:var(--gulf); stroke-width:2; stroke-linecap:round; }
+  .node{ fill:var(--bg); stroke:var(--hair2); stroke-width:1.5; }
+  .node.on{ stroke:var(--gulf); fill:var(--gulf); }
+  .car{ fill:var(--metal); }
+  .hud{ position:fixed; left:48px; top:40px; z-index:8; pointer-events:none; display:flex; flex-direction:column; gap:6px; }
+  .hud .lab{ font-size:10.5px; letter-spacing:.16em; color:var(--t3); }
+  .odo{
+    font-family:'Bricolage Grotesque',sans-serif; font-weight:600;
+    font-size:46px; line-height:.9; color:var(--t1);
+    display:flex; align-items:baseline; gap:8px; font-variant-numeric:tabular-nums;
+  }
+  .odo .mi{ font-family:'Schibsted Grotesk',sans-serif; font-size:13px; color:var(--t2); font-weight:400; letter-spacing:.04em;}
+  .leg{ font-family:'Spectral',serif; font-style:italic; font-size:14px; color:var(--t2); }
+  .meter{ position:fixed; right:48px; top:46px; z-index:8; text-align:right; pointer-events:none;}
+  .meter .num{ font-family:'Bricolage Grotesque',sans-serif; font-weight:600; font-size:13px; color:var(--gulf); letter-spacing:.06em;}
+  .meter .city{ font-family:'Schibsted Grotesk',sans-serif; font-size:11px; color:var(--t3); letter-spacing:.14em; margin-top:4px;}
+  .chapters{ position:fixed; inset:0; z-index:7; pointer-events:none;}
+  .beat{
+    position:absolute; left:130px; top:50%; transform:translateY(-50%);
+    max-width:520px; opacity:0; will-change:transform,opacity;
+  }
+  .beat .kick{
+    font-family:'Schibsted Grotesk',sans-serif; font-size:11px; letter-spacing:.14em;
+    color:var(--gulf); margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .beat .kick i{ width:22px; height:1px; background:var(--gulf); display:inline-block;}
+  .beat h2{
+    font-family:'Bricolage Grotesque',sans-serif; font-weight:600;
+    font-size:clamp(46px,7vw,86px); line-height:.94; letter-spacing:-.02em; color:var(--t1);
+  }
+  .beat .state{ color:var(--t3); font-weight:400; font-size:.42em; letter-spacing:.06em; display:block; margin-top:10px;}
+  .beat p{
+    font-family:'Spectral',serif; font-style:italic; font-size:19px; line-height:1.5;
+    color:var(--t2); margin-top:18px; max-width:420px;
+  }
+  .beat .miMark{ font-family:'Schibsted Grotesk',sans-serif; font-style:normal; font-size:12px; color:var(--t3); letter-spacing:.1em; margin-top:22px;}
+  .intro{
+    position:fixed; inset:0; z-index:9; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; pointer-events:none;
+    will-change:opacity,transform;
+  }
+  .intro .pre{ font-family:'Spectral',serif; font-style:italic; font-size:16px; color:var(--gulf); letter-spacing:.02em; margin-bottom:18px;}
+  .intro h1{
+    font-family:'Bricolage Grotesque',sans-serif; font-weight:600; letter-spacing:-.02em;
+    font-size:clamp(54px,9vw,128px); line-height:.92; color:var(--t1);
+  }
+  .intro .sub{ font-family:'Schibsted Grotesk',sans-serif; font-size:13px; color:var(--t2); letter-spacing:.16em; margin-top:24px;}
+  .intro .route{ font-family:'Schibsted Grotesk',sans-serif; font-size:11px; color:var(--t3); letter-spacing:.2em; margin-top:10px;}
+  .scrollcue{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%); z-index:9; color:var(--t3); font-size:10px; letter-spacing:.2em; pointer-events:none;}
+  .scrollcue .ln{ display:block; width:1px; height:30px; margin:10px auto 0; background:linear-gradient(var(--t3),transparent); }
+  .finale{
+    position:fixed; inset:0; z-index:9; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; opacity:0;
+    pointer-events:none; will-change:opacity,transform;
+  }
+  .finale .ar{ font-family:'Spectral',serif; font-style:italic; color:var(--gulf); font-size:16px; margin-bottom:14px;}
+  .finale h2{ font-family:'Bricolage Grotesque',sans-serif; font-weight:600; font-size:clamp(60px,11vw,150px); line-height:.9; letter-spacing:-.02em;}
+  .finale .tot{ font-family:'Schibsted Grotesk',sans-serif; font-size:13px; color:var(--t2); letter-spacing:.06em; margin-top:22px;}
+  .finale .cta{ display:flex; gap:14px; margin-top:34px; pointer-events:auto;}
+  .btn{
+    font-family:'Schibsted Grotesk',sans-serif; font-size:13px; letter-spacing:.02em;
+    padding:14px 22px; border-radius:2px; border:1px solid var(--hair2);
+    color:var(--t1); background:transparent; text-decoration:none; transition:border-color .3s,color .3s;
+  }
+  .btn:hover{ border-color:var(--metal);}
+  .btn.primary{ background:var(--gulf); color:#08222e; border-color:var(--gulf); font-weight:600;}
+  .tag{ font-family:'Spectral',serif; font-style:italic; font-size:14px; color:var(--t3); margin-top:30px;}
+  .spacer{ position:relative; z-index:0; height:1100vh; }
+  @media (max-width:760px){
+    .hud{ left:20px; top:24px;} .meter{ right:20px; top:30px;} .rail{ display:none;}
+    .beat{ left:24px; right:24px; max-width:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="sky" id="sky"><div class="glow" id="glow"></div></div>
+  <div class="horizon" id="horizon">
+    <div class="img imgA" id="imgA"></div>
+    <div class="img imgB" id="imgB"></div>
+  </div>
+  <div class="grain"></div>
+</div>
+
+<div class="rail" id="rail">
+  <svg id="railSvg" viewBox="0 0 140 1000" preserveAspectRatio="none">
+    <path class="routeBase" id="routeBase" d=""/>
+    <path class="routeDraw" id="routeDraw" d=""/>
+    <g id="nodes"></g>
+    <g id="carMark"><circle class="car" id="carDot" r="4" cx="60" cy="0"/></g>
+  </svg>
+</div>
+
+<div class="hud">
+  <div class="lab">ODOMETER</div>
+  <div class="odo"><span id="odo">000000</span><span class="mi">mi traveled</span></div>
+  <div class="leg" id="leg">Denver</div>
+</div>
+<div class="meter">
+  <div class="num" id="meterNum">01 / 10</div>
+  <div class="city" id="meterCity">DENVER</div>
+</div>
+
+<div class="chapters" id="chapters"></div>
+
+<div class="intro" id="intro">
+  <div class="pre">One Audi S8. Heritage livery. 5,000 miles.</div>
+  <h1>The Tour</h1>
+  <div class="sub">DENVER &nbsp;&rarr;&nbsp; MIAMI</div>
+  <div class="route">SUMMER &mdash; FALL 2026 &nbsp;&middot;&nbsp; TEN MARKETS</div>
+</div>
+<div class="scrollcue" id="cue">SCROLL TO DRIVE<span class="ln"></span></div>
+
+<div class="finale" id="finale">
+  <div class="ar">The wash gives way to the water.</div>
+  <h2>Miami</h2>
+  <div class="tot"><span id="finalMi">4,980</span> miles &middot; 10 markets &middot; one car</div>
+  <div class="cta">
+    <a class="btn primary" href="#">Sponsor the wrap</a>
+    <a class="btn" href="#">Follow the tour</a>
+  </div>
+  <div class="tag">Built for the people who actually drive the car.</div>
+</div>
+
+<div class="spacer"></div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var cities = [
+    {name:'Denver',     state:'COLORADO',          mi:0,    line:'Dawn over the Front Range. The flag drops.'},
+    {name:'Dallas',     state:'FT. WORTH, TEXAS',  mi:780,  line:'High plains to big sky. The S8 settles into its stride.'},
+    {name:'Austin',     state:'TEXAS',             mi:980,  line:'Hill-country switchbacks. The sleeper shows its teeth.'},
+    {name:'Houston',    state:'TEXAS',             mi:1150, line:'Gulf air, first humidity. Coffee at first light.'},
+    {name:'New Orleans',state:'LOUISIANA',         mi:1500, line:'Bayou bridges, long causeways, slow brass.'},
+    {name:'Tampa',      state:'ST. PETE, FLORIDA', mi:2350, line:'Palms on the horizon. The temperature warms.'},
+    {name:'Orlando',    state:'FLORIDA',           mi:2480, line:'Inland heat shimmer. The livery glows amber.'},
+    {name:'Palm Beach', state:'FLORIDA',           mi:2750, line:'Coast road opens. Ocean to the left, all the way down.'},
+    {name:'Ft. Lauderdale',state:'FLORIDA',        mi:2820, line:'Intracoastal at dusk. The blue hour arrives.'},
+    {name:'Miami',      state:'FLORIDA',           mi:2980, line:'The wash gives way to the water. Last light.'}
+  ];
+  var FINAL_MI = 4980;
+
+  var chWrap = document.getElementById('chapters');
+  var beats = [];
+  cities.forEach(function(c,i){
+    var b = document.createElement('div');
+    b.className='beat';
+    b.innerHTML =
+      '<div class="kick"><i></i>LEG '+String(i+1).padStart(2,'0')+' / 10</div>'+
+      '<h2>'+c.name+'<span class="state">'+c.state+'</span></h2>'+
+      '<p>'+c.line+'</p>'+
+      '<div class="miMark">MILE '+c.mi.toLocaleString()+'</div>';
+    chWrap.appendChild(b);
+    beats.push(b);
+  });
+
+  var N = cities.length;
+  var H = 1000;
+  var pad = 40;
+  var pts = [];
+  for(var i=0;i<N;i++){
+    var t = i/(N-1);
+    var y = pad + t*(H-2*pad);
+    var x = 60 + Math.sin(t*Math.PI*3.2)*26;
+    pts.push([x,y]);
+  }
+  function smoothPath(p){
+    var d='M'+p[0][0]+','+p[0][1];
+    for(var i=1;i<p.length;i++){
+      var a=p[i-1],b=p[i];
+      var mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2;
+      d+=' Q'+a[0]+','+a[1]+' '+mx+','+my;
+    }
+    d+=' L'+p[p.length-1][0]+','+p[p.length-1][1];
+    return d;
+  }
+  var dPath = smoothPath(pts);
+  var base = document.getElementById('routeBase');
+  var draw = document.getElementById('routeDraw');
+  base.setAttribute('d',dPath);
+  draw.setAttribute('d',dPath);
+  var nodesG = document.getElementById('nodes');
+  pts.forEach(function(p,i){
+    var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('class','node'); c.setAttribute('cx',p[0]); c.setAttribute('cy',p[1]); c.setAttribute('r',3.2);
+    nodesG.appendChild(c);
+  });
+  var nodeEls = nodesG.querySelectorAll('.node');
+  var carDot = document.getElementById('carDot');
+  var totalLen = draw.getTotalLength();
+  draw.style.strokeDasharray = totalLen;
+  draw.style.strokeDashoffset = totalLen;
+
+  var intro=document.getElementById('intro'), cue=document.getElementById('cue'),
+      finale=document.getElementById('finale'), horizon=document.getElementById('horizon'),
+      imgA=document.getElementById('imgA'), imgB=document.getElementById('imgB'),
+      sky=document.getElementById('sky'), glow=document.getElementById('glow'),
+      odo=document.getElementById('odo'), leg=document.getElementById('leg'),
+      meterNum=document.getElementById('meterNum'), meterCity=document.getElementById('meterCity'),
+      finalMi=document.getElementById('finalMi');
+
+  var maxScroll=1, p=0, lp=0;
+  function recalc(){ maxScroll=(document.body.scrollHeight - window.innerHeight)||1; }
+  recalc(); window.addEventListener('resize',recalc);
+
+  function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+  function smooth(t){ return t*t*(3-2*t); }
+
+  function skyFor(prog){
+    var dawn = ['#0B0B0C','#15131a','#1b1622','#0B0B0C'];
+    var noon = ['#0e0c0f','#221b22','#2a2030','#0B0B0C'];
+    var dusk = ['#0a0d10','#181a24','#101522','#0B0B0C'];
+    function mix(c1,c2,t){
+      var a=parseInt(c1.slice(1),16), b=parseInt(c2.slice(1),16);
+      var ar=(a>>16)&255,ag=(a>>8)&255,ab=a&255, br=(b>>16)&255,bg=(b>>8)&255,bb=b&255;
+      var r=Math.round(ar+(br-ar)*t),g=Math.round(ag+(bg-ag)*t),bl=Math.round(ab+(bb-ab)*t);
+      return 'rgb('+r+','+g+','+bl+')';
+    }
+    var s;
+    if(prog<0.5){ var t=prog/0.5; s=[0,1,2,3].map(function(k){return mix(dawn[k],noon[k],smooth(t));}); }
+    else { var t2=(prog-0.5)/0.5; s=[0,1,2,3].map(function(k){return mix(noon[k],dusk[k],smooth(t2));}); }
+    return 'linear-gradient(180deg,'+s[0]+' 0%,'+s[1]+' 40%,'+s[2]+' 62%,'+s[3]+' 100%)';
+  }
+
+  var ease = reduce ? 1 : 0.12;
+  function frame(){
+    lp += (p-lp)*ease;
+    var prog = lp;
+
+    var iv = clamp(prog/0.08,0,1);
+    intro.style.opacity = (1-iv).toFixed(3);
+    intro.style.transform = 'translateY('+(-iv*40)+'px) scale('+(1-iv*0.04)+')';
+    cue.style.opacity = (1-clamp(prog/0.05,0,1)).toFixed(3);
+
+    var fv = clamp((prog-0.9)/0.1,0,1);
+    var fvs = smooth(fv);
+    finale.style.opacity = fvs.toFixed(3);
+    finale.style.transform = 'translateY('+((1-fvs)*40)+'px)';
+    finale.style.pointerEvents = fv>0.5?'auto':'none';
+
+    var jp = clamp((prog-0.06)/(0.86), 0, 1);
+
+    var push = 1.06 + jp*0.16;
+    var pan  = -jp*6;
+    horizon.style.transform='translateY('+pan+'%)';
+    imgA.style.transform='scale('+push+') translateY('+(jp*-2)+'%)';
+    imgB.style.transform='scale('+(push+0.02)+') translateY('+(jp*-2)+'%)';
+    var cross = smooth(clamp((jp-0.45)/0.4,0,1));
+    imgA.style.opacity=(1-cross).toFixed(3);
+    imgB.style.opacity=cross.toFixed(3);
+
+    sky.style.background = skyFor(jp);
+    glow.style.opacity = (0.25 + 0.55*Math.sin(jp*Math.PI)).toFixed(3);
+    glow.style.transform='translate(-50%,'+( -jp*8 )+'%)';
+
+    draw.style.strokeDashoffset = (totalLen*(1-jp)).toFixed(1);
+    var cp = draw.getPointAtLength(totalLen*jp);
+    carDot.setAttribute('cx',cp.x); carDot.setAttribute('cy',cp.y);
+
+    for(var i=0;i<N;i++){
+      var on = jp >= (i/(N-1)) - 0.001;
+      nodeEls[i].classList.toggle('on', on);
+    }
+
+    var miNow = Math.round(jp*FINAL_MI);
+    odo.textContent = String(miNow).padStart(6,'0');
+
+    var idx = clamp(Math.round(jp*(N-1)),0,N-1);
+    var cur = cities[idx];
+    leg.textContent = cur.name;
+    meterNum.textContent = String(idx+1).padStart(2,'0')+' / 10';
+    meterCity.textContent = cur.name.toUpperCase();
+
+    for(var b=0;b<N;b++){
+      var center = b/(N-1);
+      var half = (1/(N-1))*0.62;
+      var dist = Math.abs(jp-center);
+      var local = clamp(1 - dist/half, 0, 1);
+      var sm = smooth(local);
+      var el = beats[b];
+      el.style.opacity = sm.toFixed(3);
+      var dir = (jp-center)/half;
+      el.style.transform='translateY(calc(-50% + '+(dir*-46)+'px))';
+    }
+
+    finalMi.textContent = '4,980';
+    requestAnimationFrame(frame);
+  }
+
+  function onScroll(){ p = clamp(window.scrollY/maxScroll,0,1); }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+  if(reduce){ lp = p; }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

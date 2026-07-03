@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Drive Exotiq — Cinematic Scroll Storyboard · Contact Sheet</title>
+<style>
+  :root{
+    --bg:#0B0B0C; --bg2:#101012; --surface:#161618; --line:#28282C;
+    --ink:#F3F1EC; --ink2:#ABA8A1; --ink3:#6F6D67; --gulf:#6CBDE6; --gold:#C8A24E;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
+  header{padding:40px 32px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:linear-gradient(180deg,var(--bg) 70%,rgba(11,11,12,.85));backdrop-filter:blur(6px);z-index:5;}
+  h1{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px;}
+  header p{margin:0;color:var(--ink2);font-size:13px;max-width:70ch;line-height:1.5;}
+  header .meta{margin-top:8px;color:var(--ink3);font-size:12px;}
+  header .meta b{color:var(--gulf);font-weight:600;}
+  .act{padding:26px 32px 6px;color:var(--gold);font-size:12px;letter-spacing:.18em;text-transform:uppercase;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;padding:8px 32px 40px;}
+  figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:4px;overflow:hidden;transition:border-color .2s,transform .2s;}
+  figure:hover{border-color:var(--gulf);transform:translateY(-2px);}
+  .imgwrap{position:relative;aspect-ratio:3/2;background:#000;}
+  .imgwrap img{width:100%;height:100%;object-fit:cover;display:block;}
+  .tag{position:absolute;top:8px;left:8px;background:rgba(8,8,9,.8);border:1px solid var(--line);color:var(--ink);font-size:11px;font-weight:600;padding:3px 7px;border-radius:2px;letter-spacing:.02em;}
+  .scroll{position:absolute;bottom:8px;right:8px;background:rgba(8,8,9,.8);color:var(--gulf);font-size:11px;font-weight:600;padding:3px 7px;border-radius:2px;}
+  figcaption{padding:10px 12px 12px;}
+  figcaption .t{font-size:14px;font-weight:600;letter-spacing:-.01em;line-height:1.25;}
+  figcaption .a{margin-top:3px;color:var(--ink3);font-size:11px;letter-spacing:.04em;text-transform:uppercase;}
+  footer{padding:24px 32px 60px;color:var(--ink3);font-size:12px;border-top:1px solid var(--line);}
+  footer code{color:var(--ink2);}
+</style>
+</head>
+<body>
+<header>
+  <h1>Drive Exotiq — Cinematic Scroll Landing · Storyboard v1</h1>
+  <p>23 frames across six acts, one continuous scroll = the drive. Black-and-white director's sketches (charcoal), rendered from the per-frame prompts. Hover a frame to highlight.</p>
+  <div class="meta">Locked v1: <b>R8 → S8</b> hero · <b>full restraint</b> · <b>poster-first (no WebGL)</b> · crescendo = <b>Sponsor the wrap</b>. Full spec: <code>docs/redesign/03-STORYBOARD-cinematic-scroll.md</code></div>
+</header>
+<div id="root"></div>
+<footer>Sketches in <code>docs/redesign/storyboard/frames/</code> · prompts in <code>SKETCH-PROMPTS.md</code> · regenerate any with <code>node render-sketches.mjs --only SB-04 --force</code></footer>
+<script>
+const F=[
+ {n:1,id:"SB-01",t:"Cold open in the dark",a:"Act I — The Garage",s:"0–5%",f:"frame-01-sb-01.png"},
+ {n:2,id:"SB-02",t:"The garage exterior, the door lifts",a:"Act I — The Garage",s:"5–10%",f:"frame-02-sb-02.png"},
+ {n:3,id:"SB-03",t:"Flying-camera push through the threshold",a:"Act I — The Garage",s:"10–15%",f:"frame-03-sb-03.png"},
+ {n:4,id:"SB-04",t:"The lineup reveal",a:"Act II — The Choice",s:"15–20%",f:"frame-04-sb-04.png"},
+ {n:5,id:"SB-05",t:"Card: the McLaren 720S",a:"Act II — The Choice",s:"20–24%",f:"frame-05-sb-05.png"},
+ {n:6,id:"SB-06",t:"Card: the Porsche GT3 RS",a:"Act II — The Choice",s:"24–28%",f:"frame-06-sb-06.png"},
+ {n:7,id:"SB-07",t:"Card: the icons — two Lamborghinis, one Ferrari",a:"Act II — The Choice",s:"28–32%",f:"frame-07-sb-07.png"},
+ {n:8,id:"SB-07b",t:"The waitlist rest stop",a:"Act II — Capture beat",s:"34–38%",f:"frame-08-sb-07b.png"},
+ {n:9,id:"SB-08",t:"Choose your car",a:"Act II — The Choice",s:"32–37%",f:"frame-09-sb-08.png"},
+ {n:10,id:"SB-08b",t:"This one is yours — the quiet ask",a:"Act II — Ownership beat",s:"35–39%",f:"frame-10-sb-08b.png"},
+ {n:11,id:"SB-09",t:"Door open, POV approach",a:"Act III — Ignition",s:"37–42%",f:"frame-11-sb-09.png"},
+ {n:12,id:"SB-10",t:"Settling into the seat",a:"Act III — Ignition",s:"42–46%",f:"frame-12-sb-10.png"},
+ {n:13,id:"SB-11",t:"Push-to-start, the gauge sweep",a:"Act III — Ignition",s:"46–51%",f:"frame-13-sb-11.png"},
+ {n:14,id:"SB-11b",t:"Roll-out — the nose noses out of the garage",a:"Act I→II seam",s:"55–58%",f:"frame-14-sb-11b.png"},
+ {n:15,id:"SB-12",t:"Windscreen wipe to open road",a:"Act IV — The Road",s:"51–56%",f:"frame-15-sb-12.png"},
+ {n:16,id:"SB-13",t:"The drive — feel the power, restrained",a:"Act IV — The Road",s:"56–62%",f:"frame-16-sb-13.png"},
+ {n:17,id:"SB-14",t:"Golden-hour aerial reveal",a:"Act V — The Coast",s:"62–68%",f:"frame-17-sb-14.png"},
+ {n:18,id:"SB-15",t:"The coastline run",a:"Act V — The Coast",s:"68–74%",f:"frame-18-sb-15.png"},
+ {n:19,id:"SB-16",t:"Close detail",a:"Act V — The Coast",s:"74–79%",f:"frame-19-sb-16.png"},
+ {n:20,id:"SB-17",t:"Arrival at the overlook, the car parks",a:"Act VI — Arrival & Booking",s:"79–84%",f:"frame-20-sb-17.png"},
+ {n:21,id:"SB-18",t:"Camera pulls back",a:"Act VI — Arrival & Booking",s:"84–89%",f:"frame-21-sb-18.png"},
+ {n:22,id:"SB-19",t:"The wrap reveal",a:"Act VI — Arrival & Booking",s:"89–95%",f:"frame-22-sb-19.png"},
+ {n:23,id:"SB-20",t:"Closing CTA — sponsor the wrap",a:"Act VI — Arrival & Booking",s:"95–100%",f:"frame-23-sb-20.png"},
+];
+const root=document.getElementById('root');
+let curAct=null,grid=null;
+for(const x of F){
+  if(x.a!==curAct){curAct=x.a;const h=document.createElement('div');h.className='act';h.textContent=x.a;root.appendChild(h);grid=document.createElement('div');grid.className='grid';root.appendChild(grid);}
+  const fig=document.createElement('figure');
+  fig.innerHTML=`<div class="imgwrap"><span class="tag">${x.n}. ${x.id}</span><span class="scroll">${x.s}</span><img loading="lazy" src="frames/${x.f}" alt="${x.id} ${x.t}"></div><figcaption><div class="t">${x.t}</div><div class="a">${x.a}</div></figcaption>`;
+  grid.appendChild(fig);
+}
+</script>
+</body>
+</html>

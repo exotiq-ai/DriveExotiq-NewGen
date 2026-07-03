@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Machine — Drive Exotiq</title>
+<style>
+  :root{
+    --bg:#0B0B0C; --s1:#161618; --s2:#1F1F23;
+    --hair:#28282C; --hair2:#3A3A40;
+    --t1:#F3F1EC; --t2:#ABA8A1; --t3:#6F6D67;
+    --gulf:#6CBDE6; --metal:#C9C6BD; --gold:#C8A24E; --papaya:#FF5A1F;
+    --disp:'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+    --serif:'Spectral', Georgia, serif;
+    --ui:'Schibsted Grotesk', system-ui, sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{
+    background:var(--bg); color:var(--t1);
+    font-family:var(--ui);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .stage{position:relative; width:100%; height:340vh;}
+  .pin{
+    position:sticky; top:0; height:100vh; width:100%;
+    overflow:hidden;
+    background:radial-gradient(140% 90% at 50% 8%, #15151a 0%, var(--bg) 60%);
+  }
+  .grid{
+    position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background-image:linear-gradient(to right, var(--hair) 1px, transparent 1px);
+    background-size:calc(100% / 12) 100%;
+    -webkit-mask-image:linear-gradient(to bottom, transparent, #000 22%, #000 80%, transparent);
+            mask-image:linear-gradient(to bottom, transparent, #000 22%, #000 80%, transparent);
+  }
+  .grid::after{
+    content:""; position:absolute; left:0; right:0; height:1px; top:50%;
+    background:var(--hair2);
+  }
+  .topbar{
+    position:absolute; top:0; left:0; right:0; z-index:40;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:26px 40px;
+    font-family:var(--ui); font-size:12px; letter-spacing:.14em; color:var(--t2);
+  }
+  .topbar .brand{color:var(--t1); font-family:var(--disp); font-weight:700; letter-spacing:.02em; font-size:15px;}
+  .topbar .live{display:flex; gap:9px; align-items:center; color:var(--t2);}
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--gulf);}
+  .carwrap{
+    position:absolute; left:50%; top:53%;
+    width:min(96vw, 1180px); aspect-ratio:16/9;
+    transform:translate(-50%,-50%);
+    will-change:transform;
+  }
+  .carframe{
+    position:absolute; inset:0; overflow:hidden;
+    border:1px solid var(--hair); border-radius:2px; background:var(--s1);
+  }
+  .layer{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .car-base{filter:grayscale(.85) brightness(.62) contrast(1.05);}
+  .car-livery{
+    filter:saturate(1.08) contrast(1.06) brightness(.96);
+    clip-path:inset(0 100% 0 0); will-change:clip-path;
+  }
+  .wipe{
+    position:absolute; top:0; bottom:0; width:2px;
+    background:linear-gradient(to bottom, transparent, var(--gulf), transparent);
+    opacity:0; will-change:transform,opacity;
+  }
+  .carframe::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0,0,0,.55) 100%);
+  }
+  .stripes{
+    position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
+    clip-path:inset(0 100% 0 0); will-change:clip-path; opacity:0;
+  }
+  .stripe{position:absolute; left:0; right:0; height:9px;}
+  .stripe.a{top:42%; background:var(--gulf); opacity:.85;}
+  .stripe.b{top:46%; background:var(--metal); opacity:.5;}
+  .stripe.c{top:49%; background:var(--gold); opacity:.55;}
+  .spec{
+    position:absolute; z-index:20; font-family:var(--ui); color:var(--t1);
+    opacity:0; will-change:transform,opacity;
+  }
+  .spec .lead{
+    position:absolute; height:1px; background:var(--hair2);
+    transform-origin:left center; transform:scaleX(0); will-change:transform;
+  }
+  .spec .node{
+    position:absolute; width:7px; height:7px; border:1px solid var(--gulf);
+    border-radius:50%; background:var(--bg);
+    transform:translate(-50%,-50%) scale(0); will-change:transform;
+  }
+  .spec .label{position:absolute; white-space:nowrap;}
+  .spec .k{font-size:10px; letter-spacing:.18em; color:var(--gulf); font-family:var(--ui); margin-bottom:4px;}
+  .spec .v{
+    font-family:var(--disp); font-weight:700; font-size:26px; line-height:1;
+    color:var(--t1); display:flex; align-items:baseline; gap:5px;
+  }
+  .spec .v small{font-family:var(--ui); font-weight:400; font-size:12px; color:var(--t2); letter-spacing:.04em;}
+  .cluster{
+    position:absolute; left:50%; bottom:5.5vh; z-index:30;
+    transform:translateX(-50%);
+    display:flex; align-items:flex-end; gap:42px;
+    opacity:0; will-change:transform,opacity;
+  }
+  .gauge{position:relative; width:150px; height:150px;}
+  .gauge svg{display:block;}
+  .gauge .ring-bg{fill:none; stroke:var(--hair); stroke-width:2;}
+  .gauge .ring-fg{fill:none; stroke:var(--gulf); stroke-width:2; stroke-linecap:round; will-change:stroke-dashoffset;}
+  .gauge .tick{stroke:var(--hair2); stroke-width:1;}
+  .gauge .center{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+  }
+  .gauge .num{font-family:var(--disp); font-weight:700; font-size:30px; line-height:1; color:var(--t1);}
+  .gauge .unit{font-family:var(--ui); font-size:10px; letter-spacing:.16em; color:var(--t2); margin-top:5px;}
+  .gauge .name{font-family:var(--ui); font-size:9px; letter-spacing:.22em; color:var(--t3); margin-top:8px;}
+  .center-gauge{width:188px; height:188px;}
+  .center-gauge .num{font-size:40px;}
+  .needle{
+    position:absolute; left:50%; top:50%; width:2px; height:38%;
+    background:linear-gradient(to top, transparent, var(--metal));
+    transform-origin:bottom center;
+    transform:translate(-50%,-100%) rotate(-120deg);
+    will-change:transform;
+  }
+  .center-gauge .needle{height:40%;}
+  .needle.gulf{background:linear-gradient(to top, transparent, var(--gulf));}
+  .titleblock{
+    position:absolute; left:50%; top:34%; z-index:25;
+    transform:translate(-50%,-50%);
+    text-align:center; pointer-events:none; will-change:transform,opacity;
+  }
+  .kicker{font-family:var(--ui); font-size:12px; letter-spacing:.16em; color:var(--t2); margin-bottom:14px;}
+  .kicker b{color:var(--gulf); font-weight:500;}
+  .title{
+    font-family:var(--disp); font-weight:700; letter-spacing:-.02em;
+    font-size:clamp(40px, 7vw, 96px); line-height:.92; color:var(--t1);
+  }
+  .title .em{font-family:var(--serif); font-style:italic; font-weight:400; color:var(--metal);}
+  .edge{
+    position:absolute; z-index:15; font-family:var(--ui);
+    font-size:10px; letter-spacing:.16em; color:var(--t3);
+    display:flex; flex-direction:column; gap:10px;
+    opacity:0; will-change:opacity,transform;
+  }
+  .edge.l{left:40px; top:50%; transform:translateY(-50%);}
+  .edge.r{right:40px; top:50%; transform:translateY(-50%); text-align:right;}
+  .edge .row{display:flex; gap:8px; align-items:center;}
+  .edge.r .row{justify-content:flex-end;}
+  .edge .bar{width:34px; height:1px; background:var(--hair2);}
+  .edge b{color:var(--t1); font-family:var(--disp); font-weight:700; letter-spacing:.02em; font-size:13px;}
+  .closing{
+    position:absolute; left:50%; bottom:6vh; z-index:36;
+    transform:translateX(-50%); text-align:center; opacity:0; will-change:opacity,transform;
+  }
+  .closing .q{
+    font-family:var(--serif); font-style:italic; font-size:clamp(20px,2.6vw,30px);
+    color:var(--t1); line-height:1.3;
+  }
+  .closing .cta{
+    margin-top:22px; display:inline-flex; align-items:center; gap:10px;
+    border:1px solid var(--hair2); border-radius:2px; padding:12px 22px;
+    color:var(--gulf); font-family:var(--ui); font-size:12px; letter-spacing:.1em;
+    background:rgba(108,189,230,.04);
+  }
+  .closing .cta .arr{width:18px; height:1px; background:var(--gulf); position:relative;}
+  .closing .cta .arr::after{content:""; position:absolute; right:0; top:-2px; width:5px; height:5px; border-top:1px solid var(--gulf); border-right:1px solid var(--gulf); transform:rotate(45deg);}
+  .progress{position:fixed; left:0; top:0; height:2px; width:0%; background:var(--gulf); z-index:60; will-change:width;}
+  .hint{
+    position:absolute; left:50%; bottom:26px; z-index:42; transform:translateX(-50%);
+    font-family:var(--ui); font-size:10px; letter-spacing:.22em; color:var(--t3);
+    display:flex; flex-direction:column; align-items:center; gap:10px; will-change:opacity;
+  }
+  .hint .line{width:1px; height:30px; background:linear-gradient(to bottom, var(--hair2), transparent); position:relative; overflow:hidden;}
+  .hint .line::after{content:""; position:absolute; left:0; top:-30px; width:1px; height:30px; background:var(--gulf); animation:drop 2.2s infinite ease-in;}
+  @keyframes drop{0%{transform:translateY(0)}70%{transform:translateY(60px)}100%{transform:translateY(60px)}}
+  @media (prefers-reduced-motion: reduce){ .hint .line::after{animation:none} }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="topbar">
+  <div class="brand">DRIVE EXOTIQ</div>
+  <div class="live"><span class="dot"></span> THE MACHINE · NO. 001</div>
+</div>
+<div class="stage" id="stage">
+  <div class="pin">
+    <div class="grid"></div>
+    <div class="carwrap" id="carwrap">
+      <div class="carframe">
+        <img class="layer car-base" src="./s8.jpg" alt="Audi S8 base" />
+        <img class="layer car-livery" id="livery" src="./s8.jpg" alt="Audi S8 livery" />
+        <div class="stripes" id="stripes">
+          <div class="stripe a"></div>
+          <div class="stripe b"></div>
+          <div class="stripe c"></div>
+        </div>
+        <div class="wipe" id="wipe"></div>
+      </div>
+    </div>
+    <div class="titleblock" id="titleblock">
+      <div class="kicker">2017 AUDI S8 · <b>HERITAGE LIVERY</b> · THE SLEEPER</div>
+      <div class="title">The <span class="em">Machine</span></div>
+    </div>
+    <div class="edge l" id="edgeL">
+      <div class="row"><span class="bar"></span> ENGINE / 4.0 TFSI V8</div>
+      <div class="row"><span class="bar"></span> DRIVE / QUATTRO AWD</div>
+      <div class="row"><span class="bar"></span> ROUTE / DENVER → MIAMI</div>
+    </div>
+    <div class="edge r" id="edgeR">
+      <div class="row">10 MARKETS <span class="bar"></span></div>
+      <div class="row">SUMMER → FALL 2026 <span class="bar"></span></div>
+      <div class="row">BUILD NO. <b>001</b> <span class="bar"></span></div>
+    </div>
+    <div class="spec" id="spec1" data-x="30" data-y="34">
+      <span class="node"></span><span class="lead"></span>
+      <span class="label"><div class="k">STAGE 2 TUNE</div><div class="v" data-count="591"><span>0</span><small>HP</small></div></span>
+    </div>
+    <div class="spec" id="spec2" data-x="71" data-y="40">
+      <span class="node"></span><span class="lead"></span>
+      <span class="label"><div class="k">VALVED EXHAUST</div><div class="v" data-count="102"><span>0</span><small>dB</small></div></span>
+    </div>
+    <div class="spec" id="spec3" data-x="26" data-y="62">
+      <span class="node"></span><span class="lead"></span>
+      <span class="label"><div class="k">CARBON-CERAMIC</div><div class="v" data-count="420"><span>0</span><small>MM</small></div></span>
+    </div>
+    <div class="spec" id="spec4" data-x="74" data-y="64">
+      <span class="node"></span><span class="lead"></span>
+      <span class="label"><div class="k">MICHELIN PS4S</div><div class="v" data-count="295"><span>0</span><small>/30 R21</small></div></span>
+    </div>
+    <div class="cluster" id="cluster">
+      <div class="gauge">
+        <svg viewBox="0 0 150 150" id="g-left"></svg>
+        <div class="needle" id="n-left"></div>
+        <div class="center"><div class="num" id="rpm">0</div><div class="unit">×1000 RPM</div><div class="name">TACH</div></div>
+      </div>
+      <div class="gauge center-gauge">
+        <svg viewBox="0 0 188 188" id="g-mid"></svg>
+        <div class="needle gulf" id="n-mid"></div>
+        <div class="center"><div class="num" id="mph">0</div><div class="unit">MPH</div><div class="name">SPEED</div></div>
+      </div>
+      <div class="gauge">
+        <svg viewBox="0 0 150 150" id="g-right"></svg>
+        <div class="needle" id="n-right"></div>
+        <div class="center"><div class="num" id="miles">0</div><div class="unit">MILES</div><div class="name">ODOMETER</div></div>
+      </div>
+    </div>
+    <div class="closing" id="closing">
+      <div class="q">"Built for the people who actually drive the car."</div>
+      <div class="cta">FOLLOW THE BUILD <span class="arr"></span></div>
+    </div>
+    <div class="hint" id="hint">SCROLL TO BUILD<div class="line"></div></div>
+  </div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function buildGauge(svg, size, ticks){
+    var c = size/2, r = c - 8;
+    var ns = "http://www.w3.org/2000/svg";
+    var start = 150, sweep = 240;
+    for(var i=0;i<=ticks;i++){
+      var ang = (start + (sweep*i/ticks)) * Math.PI/180;
+      var r1 = r, r2 = r - (i%2===0? 9:5);
+      var x1 = c + r1*Math.cos(ang), y1 = c + r1*Math.sin(ang);
+      var x2 = c + r2*Math.cos(ang), y2 = c + r2*Math.sin(ang);
+      var ln = document.createElementNS(ns,'line');
+      ln.setAttribute('x1',x1.toFixed(1)); ln.setAttribute('y1',y1.toFixed(1));
+      ln.setAttribute('x2',x2.toFixed(1)); ln.setAttribute('y2',y2.toFixed(1));
+      ln.setAttribute('class','tick'); svg.appendChild(ln);
+    }
+    var circ = 2*Math.PI*r;
+    var arcLen = circ * (sweep/360);
+    var bg = document.createElementNS(ns,'circle');
+    bg.setAttribute('cx',c); bg.setAttribute('cy',c); bg.setAttribute('r',r);
+    bg.setAttribute('class','ring-bg');
+    bg.setAttribute('stroke-dasharray', arcLen+' '+circ);
+    bg.setAttribute('transform','rotate('+start+' '+c+' '+c+')');
+    svg.appendChild(bg);
+    var fg = document.createElementNS(ns,'circle');
+    fg.setAttribute('cx',c); fg.setAttribute('cy',c); fg.setAttribute('r',r);
+    fg.setAttribute('class','ring-fg');
+    fg.setAttribute('stroke-dasharray', arcLen+' '+circ);
+    fg.setAttribute('stroke-dashoffset', arcLen);
+    fg.setAttribute('transform','rotate('+start+' '+c+' '+c+')');
+    svg.appendChild(fg);
+    return {fg:fg, arcLen:arcLen};
+  }
+  var gL = buildGauge(document.getElementById('g-left'),150,16);
+  var gM = buildGauge(document.getElementById('g-mid'),188,20);
+  var gR = buildGauge(document.getElementById('g-right'),150,16);
+  var specs = [].slice.call(document.querySelectorAll('.spec'));
+  function layoutSpecs(){
+    var W = window.innerWidth, H = window.innerHeight;
+    specs.forEach(function(s){
+      var px = parseFloat(s.dataset.x)/100*W;
+      var py = parseFloat(s.dataset.y)/100*H;
+      s.style.left = px+'px'; s.style.top = py+'px';
+      var node = s.querySelector('.node');
+      var lead = s.querySelector('.lead');
+      var label = s.querySelector('.label');
+      node.style.left='0px'; node.style.top='0px';
+      var left = px < W/2; var len = 96;
+      lead.style.top='0px'; lead.style.width=len+'px'; lead.style.transform='scaleX(0)';
+      if(left){
+        lead.style.left='0px';
+        label.style.left=(len+12)+'px'; label.style.transform='translateY(-50%)'; label.style.textAlign='left';
+      } else {
+        lead.style.left=(-len)+'px';
+        label.style.left=(-len-12)+'px'; label.style.transform='translate(-100%,-50%)'; label.style.textAlign='right';
+      }
+    });
+  }
+  layoutSpecs();
+  window.addEventListener('resize', layoutSpecs);
+  var stage = document.getElementById('stage');
+  var progressBar = document.getElementById('progress');
+  var carwrap = document.getElementById('carwrap');
+  var livery = document.getElementById('livery');
+  var stripes = document.getElementById('stripes');
+  var wipe = document.getElementById('wipe');
+  var titleblock = document.getElementById('titleblock');
+  var cluster = document.getElementById('cluster');
+  var edgeL = document.getElementById('edgeL');
+  var edgeR = document.getElementById('edgeR');
+  var closing = document.getElementById('closing');
+  var hint = document.getElementById('hint');
+  var counters = [].slice.call(document.querySelectorAll('.v[data-count]'));
+  var target = 0, cur = 0;
+  function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function smooth(t){return t*t*(3-2*t);}
+  function seg(p,a,b){return clamp((p-a)/(b-a),0,1);}
+  function setGauge(g, v, needle, minDeg, maxDeg){
+    v = clamp(v,0,1);
+    g.fg.setAttribute('stroke-dashoffset', (g.arcLen*(1-v)).toFixed(2));
+    var deg = lerp(minDeg, maxDeg, v);
+    needle.style.transform = 'translate(-50%,-100%) rotate('+deg.toFixed(1)+'deg)';
+  }
+  function update(){
+    var rect = stage.getBoundingClientRect();
+    var total = stage.offsetHeight - window.innerHeight;
+    var raw = clamp(-rect.top / total, 0, 1);
+    target = raw;
+    cur = lerp(cur, target, reduce?1:0.12);
+    if(Math.abs(cur-target) < 0.0002) cur = target;
+    var p = cur;
+    progressBar.style.width = (p*100)+'%';
+    hint.style.opacity = (1 - seg(p,0.0,0.08));
+    var carScale = lerp(1.06, 1.0, smooth(seg(p,0,0.30)));
+    var carY = lerp(14, -10, smooth(seg(p,0,0.55)));
+    carwrap.style.transform = 'translate(-50%,-50%) translateY('+carY+'px) scale('+carScale.toFixed(4)+')';
+    var tP = seg(p,0.10,0.26);
+    titleblock.style.opacity = (1 - tP);
+    titleblock.style.transform = 'translate(-50%,-50%) translateY('+(-tP*40)+'px)';
+    var wipeP = smooth(seg(p,0.14,0.42));
+    var inset = (1 - wipeP)*100;
+    livery.style.clipPath = 'inset(0 '+inset.toFixed(2)+'% 0 0)';
+    stripes.style.clipPath = 'inset(0 '+inset.toFixed(2)+'% 0 0)';
+    stripes.style.opacity = wipeP>0?Math.min(1,wipeP*1.4):0;
+    if(wipeP>0 && wipeP<1){
+      wipe.style.opacity = 1;
+      wipe.style.left = (wipeP*100)+'%';
+      wipe.style.transform = 'translateX(-1px)';
+    } else { wipe.style.opacity = 0; }
+    var eP = smooth(seg(p,0.18,0.34));
+    edgeL.style.opacity = eP; edgeR.style.opacity = eP;
+    edgeL.style.transform = 'translateY(-50%) translateX('+(-(1-eP)*20)+'px)';
+    edgeR.style.transform = 'translateY(-50%) translateX('+((1-eP)*20)+'px)';
+    specs.forEach(function(s,i){
+      var a = 0.34 + i*0.05;
+      var sp = smooth(seg(p, a, a+0.12));
+      s.style.opacity = sp;
+      var node = s.querySelector('.node');
+      var lead = s.querySelector('.lead');
+      var label = s.querySelector('.label');
+      node.style.transform = 'translate(-50%,-50%) scale('+sp.toFixed(3)+')';
+      lead.style.transform = 'scaleX('+sp.toFixed(3)+')';
+      label.style.opacity = smooth(seg(p, a+0.05, a+0.14));
+    });
+    var cP = smooth(seg(p,0.34,0.60));
+    counters.forEach(function(c){
+      var end = parseInt(c.dataset.count,10);
+      var val = Math.round(end*cP);
+      c.querySelector('span').textContent = val.toLocaleString();
+    });
+    var clP = smooth(seg(p,0.52,0.66));
+    cluster.style.opacity = clP;
+    cluster.style.transform = 'translateX(-50%) translateY('+((1-clP)*30)+'px)';
+    var sweepP = smooth(seg(p,0.55,0.88));
+    var settle = seg(p,0.88,1.0);
+    var liveVal = sweepP*(1 - settle*0.18) + (settle>0?0.12*settle:0);
+    liveVal = clamp(liveVal,0,1);
+    setGauge(gL, liveVal*0.92, document.getElementById('n-left'), -120, 120);
+    setGauge(gM, liveVal, document.getElementById('n-mid'), -120, 120);
+    setGauge(gR, smooth(seg(p,0.55,1.0)), document.getElementById('n-right'), -120, 120);
+    document.getElementById('rpm').textContent = (liveVal*7.2).toFixed(1);
+    document.getElementById('mph').textContent = Math.round(liveVal*186);
+    var odo = Math.round(smooth(seg(p,0.55,1.0))*5000);
+    document.getElementById('miles').textContent = odo.toLocaleString();
+    var fP = smooth(seg(p,0.82,0.96));
+    closing.style.opacity = fP;
+    closing.style.transform = 'translateX(-50%) translateY('+((1-fP)*26)+'px)';
+    if(fP>0){
+      cluster.style.transform = 'translateX(-50%) translateY('+(-fP*46)+'px)';
+      cluster.style.opacity = (1 - fP*0.25);
+    }
+    raf = requestAnimationFrame(update);
+  }
+  var raf = requestAnimationFrame(update);
+})();
+</script>
+</body>
+</html>

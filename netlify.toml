@@ -1,0 +1,46 @@
+# Netlify Configuration for Drive Exotiq
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# NOTE: Routing is owned entirely by @netlify/plugin-nextjs (above).
+# The previous SPA catch-all redirect (/* -> /index.html, 200) has been removed —
+# it shadowed the Next.js runtime, would collapse every URL to a non-existent
+# static shell (killing per-route SEO) and mask the /api/* route handlers
+# (silently breaking forms + email). Do not re-add it.
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+
+
+
+

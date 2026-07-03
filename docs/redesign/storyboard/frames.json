@@ -1,0 +1,209 @@
+[
+  {
+    "n": 1,
+    "id": "SB-01",
+    "title": "Cold open in the dark",
+    "act": "Act I — The Garage",
+    "scrollRange": "0–5%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — a near-black frame seen from OUTSIDE in the pre-dawn dark, dead-on eye-level locked lens, almost the entire panel crushed to deep shadow by a heavy four-corner vignette, one small faint soft pool of light glowing low and centred like warm light leaking under a large closed garage door, the bottom edge of that closed door and a single barely-there vertical seam just right of centre suggested with ruled charcoal lines, deep negative space and stillness, one small motion arrow pushing inward toward the door to imply a slow approach on foot, faint drifting dust specks in the glow.",
+    "file": "frame-01-sb-01.png"
+  },
+  {
+    "n": 2,
+    "id": "SB-02",
+    "title": "The garage exterior, the door lifts",
+    "act": "Act I — The Garage",
+    "scrollRange": "5–10%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — low wide-angle three-quarter on a plain matte concrete industrial garage facade at pre-dawn, camera near the wet ground looking slightly up; a sectional roll-up door caught mid-lift, panels rolling away, a hard blade of light spilling out from inside and stretching across rain-sheened asphalt toward the lens; single hard key from within, deep exterior shadow and heavy vignette everywhere else; a faint low sports-car silhouette barely readable in the widening light gap, no logos, no badges; the wet forecourt catching a soft reflected streak of the light blade; short upward motion arrows on the rising door panels and one long directional arrow tracing the light spilling toward camera.",
+    "file": "frame-02-sb-02.png"
+  },
+  {
+    "n": 3,
+    "id": "SB-03",
+    "title": "Flying-camera push through the threshold",
+    "act": "Act I — The Garage",
+    "scrollRange": "10-15%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — fast first-person dolly rushing through a garage doorway, the door frame and jamb streaking past the left, right and top edges with heavy directional motion blur, a dark cavernous interior resolving to a single strong vanishing point dead center, one faint soft pool of light deep in the distance drawing the eye inward, hard warm key raking the jamb from behind camera, deep black interior, strong exaggerated wide-angle perspective, long horizontal motion arrows driving into the frame toward the vanishing point, no car visible yet, heavy edge vignette from the rushing aperture.",
+    "file": "frame-03-sb-03.png"
+  },
+  {
+    "n": 4,
+    "id": "SB-04",
+    "title": "The lineup reveal",
+    "act": "Act II — The Choice",
+    "scrollRange": "15-20%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — wide symmetrical one-point-perspective interior of a dark warehouse garage, two facing rows of low exotic-car silhouettes angled inward toward a central aisle receding to a single vanishing point, a lone mid-engine wedge nearest on the near-left bay, a hardcore winged car opposite, angular scissor-door shapes deeper in dissolving into fog, one hard key light raking across the near profiles from high left, deep black shadow swallowing the rear of the hall, hairline reflections mirrored on a polished concrete floor, a single soft pool of glow on the floor at aisle-center, heavy vignette, generous dark headroom above the cars for a masked-up title, one faint low forward motion arrow easing down the aisle and a second short arrow at the nearest car peeling off toward frame-right — no logos, cars read as stance and shoulder-line only.",
+    "file": "frame-04-sb-04.png"
+  },
+  {
+    "n": 5,
+    "id": "SB-05",
+    "title": "Card: the McLaren 720S",
+    "act": "Act II — The Choice",
+    "scrollRange": "20–24%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — low three-quarter front view of a single McLaren 720S-style mid-engine supercar silhouette sliding leftward into center of the frame, nose crossing the left third — recognizable by shape alone: an extremely low teardrop cabin, a short low nose, deeply hollowed eye-socket headlight recesses that channel air, smooth organic curved bodywork with almost no hard creases, sculpted side intakes flowing back into dihedral doors, wide low haunches; one hard key raking across the front fascia and near flank with deep black shadow on the far side and a bright hairline rim along the roofline against near-black void; a clean empty rectangular caption block floats in the negative space to the right with a short vertical tick mark beside it; a faint reflection line under the tires suggests a polished floor; long horizontal motion arrows pointing left with a speed-smear trailing off toward the right edge and a small settling arrow at its nose; heavy vignette, no logos, no badges.",
+    "file": "frame-05-sb-05.png"
+  },
+  {
+    "n": 6,
+    "id": "SB-06",
+    "title": "Card: the Porsche GT3 RS",
+    "act": "Act II — The Choice",
+    "scrollRange": "24-28%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — low three-quarter rear view of a hardcore mid-engine track car mid-wipe across the frame, an oversized active rear wing dominating the upper third as one bold horizontal slash, exposed rear diffuser and twin muscular haunches sunk in deep shadow, a single hard key light raking the top surface of the wing and rear deck, a thin hairline rim separating the wing's trailing edge from a pure black void, an empty rectangular caption block floating in the left-third negative space, strong horizontal wipe arrows trailing the car toward frame-left, heavy vignette, silhouette only, no logos, no badges, no plate.",
+    "file": "frame-06-sb-06.png"
+  },
+  {
+    "n": 7,
+    "id": "SB-07",
+    "title": "Card: the icons — two Lamborghinis, one Ferrari",
+    "act": "Act II — The Choice",
+    "scrollRange": "28-32%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — low three-quarter angle at rocker height looking down a shallow receding row of three exotic-car silhouettes overlapping on clearly separated depth planes: nearest are two sharply angular Lamborghini-style wedges with hard origami creases, knife-edge folded surfaces, hexagonal and Y-shaped lighting hints and very low pointed noses, the nearer wedge with a single scissor door raised vertically; behind them, farther down the row, a curvier Ferrari-style mid-engine silhouette with smoother flowing haunches and a softer rounded cabin, dissolving into black at the right, crisp hairline edges separating each plane, a single hard key light raking their leading edges from frame-left, deep black shadow pooling between them, a faint soft glow pool on the polished floor beneath the nearest car, faint hairline reflections on the floor, generous dark negative space across the top for a title, long horizontal motion arrows sweeping the whole row past camera from right to left.",
+    "file": "frame-07-sb-07.png"
+  },
+  {
+    "n": 8,
+    "id": "SB-07b",
+    "title": "The waitlist rest stop — get on the list for the fleet",
+    "act": "Act II — The Garage / The Fleet (capture beat, closing the fleet-card run before \"Choose your car\")",
+    "scrollRange": "≈0.34–0.38 of total page scroll — a short held beat immediately after SB-07 (Card: the icons) and before SB-08 (Choose your car). Ranges are relative; final timing gets retimed against the existing scrollYProgress map when the frame is spliced in (see director notes).",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — wide slightly-elevated three-quarter view of a garage interior: a row of low supercar silhouettes recedes along the left and back, dissolving into deep fog and darkness, each car separated by faint horizon lines on a polished dark floor with a single thin reflection streak. The camera has come to a full stop, indicated by a short dolly-back arrow that ends in a hard stop mark. On the right third, a clean rectangular card panel floats in the near plane, catching a cold key light, with a small quiet rounded-rectangle button shape at its lower edge and a tiny glowing dot beside a short line at its top; a soft mask-up arrow shows the card rising into place. Generous empty negative space around the card, a low soft radial glow behind the receding cars, heavy vignette at the corners, cars rendered as pure silhouette with no markings, no text anywhere.",
+    "file": "frame-08-sb-07b.png"
+  },
+  {
+    "n": 9,
+    "id": "SB-08",
+    "title": "Choose your car",
+    "act": "Act II — The Choice",
+    "scrollRange": "32-37%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — a fanned rack of five low exotic-car silhouettes in a shallow arc across staggered depth planes; the center car stepped forward and lifted higher than the rest, a crisp hard rim-light edge tracing its profile and lifting it clear of the others; the flankers fall into soft blur and deeper shadow on either side; a single hard key rakes every profile; faint reflections on a polished dark floor; small upward arrows lifting the hero forward, one short push arrow toward its near door; deep negative space in the upper third, heavy vignette, no logos, no badges, silhouette-only.",
+    "file": "frame-09-sb-08.png"
+  },
+  {
+    "n": 10,
+    "id": "SB-08b",
+    "title": "This one is yours — the quiet ask",
+    "act": "Act II — The Garage: the choice, held (the ownership beat converts before the cockpit)",
+    "scrollRange": "≈35–39% (immediately after SB-08 \"Choose your car\", before SB-09 door-up POV approach)",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — a single low-slung supercar silhouette held in three-quarter view, rim-lit from behind so a bright edge line traces its roof and haunch, occupying the upper-right two-thirds; two or three other car shapes dissolving into deep black at the left and far edges, barely readable; the camera locked and still, shown by a short curved \"settle\" arrow easing into the car and then stopping; in the lower-left negative space, a slim horizontal baseline rule with a small blank underlined input bar and a minimal button block suggested in a few strokes (no legible letters), sitting quiet and understated beneath the car; a small downward arrow at the frame edge implying the scroll may continue past; strong single key light, heavy vignette, generous empty space, cinematic and restrained.",
+    "file": "frame-10-sb-08b.png"
+  },
+  {
+    "n": 11,
+    "id": "SB-09",
+    "title": "Door open, POV approach",
+    "act": "Act III — Ignition",
+    "scrollRange": "37–42%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — first-person low-angle POV at a sports car's wide-open door swung toward the viewer against near-black, the door's top edge and window frame sweeping up on a strong upward-left diagonal and dominating the frame; the sill and a bucket seat bolster loom huge in the near lower-right foreground; a single hard rim light traces the door's leading edge; deep shadow cabin beyond falling into a black seat pocket; hard key from upper right, heavy vignette; a curved motion arrow riding the door's swing and a short forward arrow pointing toward the seat.",
+    "file": "frame-11-sb-09.png"
+  },
+  {
+    "n": 12,
+    "id": "SB-10",
+    "title": "Settling into the seat",
+    "act": "Act III — Ignition",
+    "scrollRange": "42-46%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — first-person driver's-eye view settling low into a bucket seat inside a dark performance-car cabin, twin A-pillars framing the left and right edges as strong diagonals, the top arc of a steering wheel crossing the lower third with two hands loosely suggested at the rim, deep black interior falling into shadow, a thin horizontal band of dawn light glowing across the top of the windscreen ahead, tightening vignette narrowing the whole frame down to the driver's triangle, a small dim unlit start button waiting on the wheel hub, a single downward settling arrow at the seat, no logos, no lettering.",
+    "file": "frame-12-sb-10.png"
+  },
+  {
+    "n": 13,
+    "id": "SB-11",
+    "title": "Push-to-start, the gauge sweep",
+    "act": "Act III — Ignition",
+    "scrollRange": "46–51%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — tight over-the-shoulder first-person angle looking down onto a dark car center console, a driver's thumb pressing a round engine start/stop button anchored in the lower-left third, an instrument-cluster arc filling the upper-right seen through the lower spoke of a steering-wheel rim, a single needle caught mid-sweep across the full arc with hard specular glints raking the dial faces, deep black shadow swallowing the rest of the cabin, shallow depth of field softening the background, a faint band of dawn just warming the top edge, generous empty space held upper-left, small radial motion arrows tracing the needle's sweep and one short forward arrow for the slow push-in.",
+    "file": "frame-13-sb-11.png"
+  },
+  {
+    "n": 14,
+    "id": "SB-11b",
+    "title": "Roll-out — the nose noses out of the garage",
+    "act": "Act I close → Act II open (the garage-egress seam, inserted between SB-11 push-to-start and SB-12 windscreen-wipe)",
+    "scrollRange": "~0.55–0.585 of page scrollYProgress — a short inserted beat that borrows the first ~3% off the head of SB-12's ramp; roughly one dark-to-blue viewport between the settled gauges (SB-11) and the open highway (SB-12)",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — first-person driver POV from low inside a supercar cabin: a heavy black dashboard cowl and the top arc of the steering-wheel rim fill the bottom third as dense foreground silhouette, dark A-pillars frame the left and right edges, and through the windscreen ahead the black garage mouth opens onto a soft pre-dawn sky with a single low glow of first light on the horizon. The garage-door header beam slides up and out of the top of the frame with clear upward motion arrows; the wet concrete apron reflects faint light in the lower side glass and sweeps beneath the car; the nose of the car eases across the threshold, crossing from the enclosed black interior into open pre-dawn air, forward motion arrows on the ground, deep shadow inside the cabin and bright soft light pooling ahead through the opening — the exact moment of leaving the garage.",
+    "file": "frame-14-sb-11b.png"
+  },
+  {
+    "n": 15,
+    "id": "SB-12",
+    "title": "Windscreen wipe to open road",
+    "act": "Act IV — The Road",
+    "scrollRange": "51-56%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — first-person driver point of view from inside a car: heavy dark A-pillar masses frame the left and right edges, a soft dark dashboard cowl curves across the lower third, a small rear-view mirror stub at top center, all in deep near-black shadow; a heavy dark garage-door lintel just clearing the very top edge of the frame with an up-and-behind arrow, implying the car has this instant nosed out through the door. Between the pillars the windscreen is a bright aperture: a burst of light blooms from the top-left of the glass and washes down across the dark dashboard, revealing an empty two-lane road opening toward a strong vanishing point in the distance beyond the glass, mountains suggested on the horizon at first light. A single sweeping arc arrow of light curves from top-left down to lower-right; a short forward arrow at the road's vanishing point implies the car beginning to accelerate. Deep contrast between the dark cabin silhouette and the glowing road ahead.",
+    "file": "frame-15-sb-12.png"
+  },
+  {
+    "n": 16,
+    "id": "SB-13",
+    "title": "The drive — feel the power, restrained",
+    "act": "Act IV — The Road",
+    "scrollRange": "56-62%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — low tracking three-quarter alongside a low mid-engine sports-car silhouette carving an open mountain highway, camera locked parallel to the car at rocker height with the nose leading frame-right, a hard side key raking the flank so the car reads crisp and near-static, a granite ridgeline along the upper third under a bright but not blown-out morning sky, the road sweeping as a diagonal toward a high vanishing point, background pines and rock smeared into sharp horizontal speed streaks, a thin telemetry/odometer readout implied along the lower frame edge, long horizontal speed arrows trailing the car and a subtle upward crane arrow beginning to lift at the right edge, generous open sky reserved upper-left for a single line, no logos or badges anywhere.",
+    "file": "frame-16-sb-13.png"
+  },
+  {
+    "n": 17,
+    "id": "SB-14",
+    "title": "Golden-hour aerial reveal",
+    "act": "Act V — The Coast",
+    "scrollRange": "62-68%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — high sweeping aerial looking down and ahead at roughly a fifty-degree tilt, a thin ribbon of coast road unspooling diagonally from the lower foreground up toward a headland where land meets sea on the upper third; a single tiny car on the road, about a third of the way up the ribbon, for scale, casting a long raking shadow; low golden-hour sun implied from the left edge by long cast shadows and glinting water; vast open sea and sky filling the top two-thirds as breathing negative space; a large curved crane-up arrow sweeping from lower-center upward and back to show the camera lifting and easing away; car rendered as pure silhouette with no logos or markings, cliffside falling away to surf below, type-safe empty trough in the lower-left corner.",
+    "file": "frame-17-sb-14.png"
+  },
+  {
+    "n": 18,
+    "id": "SB-15",
+    "title": "The coastline run",
+    "act": "Act V — The Coast",
+    "scrollRange": "68-74%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — low road-level lateral tracking shot running parallel to a low mid-engine sports-car silhouette carving a cliffside coast road, car anchored in the lower-left third with its nose pointed right, road cutting a diagonal toward a vanishing point mid-right; glittering water and a distant headland on the right, a hard low sun flaring from the upper-right frame edge and raking a single bright highlight line down the car's flank; long horizontal tracking arrows and background speed streaks matching the car's momentum, guardrail and road furniture blurring past; deep quiet sky negative space upper-left, calm confident composition, no logos, no brand marks.",
+    "file": "frame-18-sb-15.png"
+  },
+  {
+    "n": 19,
+    "id": "SB-16",
+    "title": "Close detail",
+    "act": "Act V — The Coast",
+    "scrollRange": "74–79%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — extreme macro at wheel-arch height along the flank of a low sleeper sedan; a spinning wheel fills the lower-left third with radial motion blur on the spokes and a small curved rotation arrow at the hub; the sculpted fender crease runs a hard diagonal specular line up to the right, a thin raised livery-stripe edge at top-right catching one sharp glint; very shallow depth of field smudging the background into soft bokeh; hard low raking key from frame-left grazing the bodywork, deep black shadow filling the rest of the frame; a short horizontal drift arrow along the crease for the slow camera slide.",
+    "file": "frame-19-sb-16.png"
+  },
+  {
+    "n": 20,
+    "id": "SB-17",
+    "title": "Arrival at the overlook, the car parks",
+    "act": "Act VI — Arrival & Booking",
+    "scrollRange": "79–84%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — wide, high rear three-quarter from behind and slightly above a low, long, sleek sedan silhouette come to rest at the very edge of a cliff overlook, its nose pointed out to a vast low horizon; a long raking dusk shadow stretches from the car toward the lower-left foreground; the cliff edge reads as a single soft horizontal line beneath the car; deep empty sky fills the upper two-thirds; calm, balanced composition, car on the lower-left third, open horizon to the right; one short curved deceleration arrow settling the car to a stop; a small suggested instrument readout low-right for balance; heavy vignette, hard low key light from behind camera-left; no logos, no badges, no text.",
+    "file": "frame-20-sb-17.png"
+  },
+  {
+    "n": 21,
+    "id": "SB-18",
+    "title": "Camera pulls back",
+    "act": "Act VI — Arrival & Booking",
+    "scrollRange": "84-89%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — a high crane looking down and forward over a cliff overlook at dusk: a small low sedan silhouette parked nose to a low horizon in the lower-third-left, one tiny standing figure beside it, both dwarfed by a vast empty sky filling the upper two-thirds, deep negative space, a single thin hairline horizon, long raking shadows leading down to the subject, darkening vignette in the corners, and one large curved pull-back arrow receding up and away from the car and figure.",
+    "file": "frame-21-sb-18.png"
+  },
+  {
+    "n": 22,
+    "id": "SB-19",
+    "title": "The wrap reveal",
+    "act": "Act VI — Arrival & Booking",
+    "scrollRange": "89–95%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — dead-on eye-level pure side profile of a large low sleeper sedan silhouette at dusk, telephoto-flat so the flank reads as a clean even plane, car seated in the lower-center band occupying about seventy percent of the frame width on a low horizon, a single thin horizon hairline behind it, a curved camera-arc arrow sweeping around the car from a high rear three-quarter down to this level profile to imply the camera orbiting into place rather than cutting, vast calm dusk sky opening above as deep negative space for a headline, even wraparound light with a soft raking highlight tracing the shoulder line, a suggested heritage racing-stripe livery graphic reading as thin line-art running the full length of the flank, a light-wipe arrow sweeping front-to-rear along the stripe to imply it drawing on, a small simple rectangular call-to-action button shape resting low in the frame to imply the ask, minimal empty ground, no background clutter, no logos, no text.",
+    "file": "frame-22-sb-19.png"
+  },
+  {
+    "n": 23,
+    "id": "SB-20",
+    "title": "Closing CTA — sponsor the wrap, get on the list",
+    "act": "Act VI — Arrival & Booking",
+    "scrollRange": "95-100%",
+    "prompt": "Black-and-white cinematic storyboard sketch, rough graphite and charcoal on lightly toned paper, loose confident director hand, bold gesture linework with soft smudged shading, high-contrast film-noir key light, no color, no text, 16:9 widescreen frame, subtle motion arrows where movement is implied — a near-black empty frame at absolute rest, vast negative space, a heavy vignette closing all four edges into charcoal shadow; low center-frame a small horizontal instrument readout bar — an odometer of stacked digit boxes and one thin telemetry rule — faintly glinting as if self-lit; centered just above it a single crisp hard-edged rectangle with clean square 2px corners, the one focal shape, rendered as if softly luminous with a sharp highlight along its top edge; a fainter second small bar sits directly beneath the rectangle, quieter; deepest pooled shadow at the bottom of the frame; no car, no figures, no arrows anywhere — utter stillness, the machine switched off, the drive parked in the dark.",
+    "file": "frame-23-sb-20.png"
+  }
+]

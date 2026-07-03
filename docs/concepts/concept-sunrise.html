@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drive Exotiq — Sunrise</title>
+<style>
+  :root{
+    --bg:#0B0B0C; --s1:#161618; --s2:#1F1F23;
+    --hair:#28282C; --hair2:#3A3A40;
+    --tx:#F3F1EC; --tx2:#ABA8A1; --tx3:#6F6D67;
+    --gulf:#6CBDE6; --metal:#C9C6BD; --gold:#C8A24E; --papaya:#FF5A1F;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{background:var(--bg)}
+  body{
+    background:var(--bg); color:var(--tx);
+    font-family:'Schibsted Grotesk',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  /* 320vh tall to drive the scroll timeline */
+  .scrollspace{height:320vh; position:relative;}
+
+  /* fixed cinematic stage */
+  .stage{
+    position:fixed; inset:0; overflow:hidden;
+    background:var(--bg);
+    will-change:transform;
+  }
+
+  /* ---- LAYER: sky / pre-dawn base ---- */
+  .sky{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(120% 80% at 50% 118%,
+        #1a160f 0%, #131214 32%, #0B0B0C 62%, #0B0B0C 100%);
+    opacity:1;
+  }
+
+  /* ---- LAYER: the car (R8) ---- */
+  .carwrap{
+    position:absolute; left:50%; top:50%;
+    width:118vw; height:78vh; max-height:78vh;
+    transform:translate(-50%,-46%) scale(1.06);
+    will-change:transform,opacity,filter;
+    opacity:0;
+  }
+  .carwrap img{
+    width:100%; height:100%; object-fit:cover; object-position:center 42%;
+    display:block;
+    filter:brightness(.18) contrast(1.05) saturate(.5) sepia(.05);
+    will-change:filter;
+  }
+  /* letterbox + ground shadow so the car sits, never floats */
+  .carwrap::after{
+    content:""; position:absolute; inset:0;
+    background:
+      linear-gradient(to bottom, rgba(11,11,12,.85) 0%, rgba(11,11,12,0) 22%, rgba(11,11,12,0) 60%, rgba(11,11,12,.92) 100%);
+    pointer-events:none;
+  }
+
+  /* ---- LAYER: dawn light bloom (rises from lower third) ---- */
+  .dawn{
+    position:absolute; left:50%; bottom:-10%;
+    width:160vw; height:120vh;
+    transform:translate(-50%,40%) scale(.6);
+    background:
+      radial-gradient(60% 60% at 50% 100%,
+        rgba(255,210,150,.95) 0%,
+        rgba(231,176,116,.55) 18%,
+        rgba(150,128,104,.30) 38%,
+        rgba(60,56,52,.12) 58%,
+        rgba(11,11,12,0) 74%);
+    opacity:0; mix-blend-mode:screen;
+    will-change:transform,opacity;
+    pointer-events:none;
+  }
+  /* the thin gold horizon hairline — the one jewelry accent */
+  .horizon{
+    position:absolute; left:0; right:0; bottom:26%;
+    height:1px; background:linear-gradient(to right, transparent, var(--gold) 22%, var(--gold) 78%, transparent);
+    opacity:0; transform:scaleX(.4);
+    transform-origin:50% 50%;
+    will-change:transform,opacity;
+  }
+
+  /* ---- LAYER: ignition flash (Gulf) — the single hard transient ---- */
+  .flash{
+    position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(105deg, transparent 30%, rgba(108,189,230,.0) 42%, rgba(108,189,230,.55) 50%, rgba(108,189,230,0) 58%, transparent 70%);
+    opacity:0; mix-blend-mode:screen;
+    will-change:opacity,transform;
+  }
+  .spark{
+    position:absolute; left:50%; top:50%;
+    width:6px;height:6px;border-radius:50%;
+    transform:translate(-50%,-50%) scale(0);
+    background:var(--gulf);
+    box-shadow:none; /* never glow */
+    opacity:0; will-change:transform,opacity;
+  }
+
+  /* film grain + vignette to keep the dark frame alive (no glow) */
+  .vignette{
+    position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(130% 100% at 50% 46%, rgba(11,11,12,0) 50%, rgba(11,11,12,.78) 100%);
+  }
+  .grain{
+    position:absolute; inset:-50%; pointer-events:none; opacity:.05;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    will-change:transform; mix-blend-mode:overlay;
+  }
+
+  /* ---- TYPE ---- */
+  .copy{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:0 6vw;
+    pointer-events:none;
+  }
+  .pretitle{
+    font-family:'Schibsted Grotesk',sans-serif;
+    font-size:13px; letter-spacing:.04em; color:var(--tx2);
+    margin-bottom:3vh; display:flex; align-items:center; gap:14px;
+    opacity:0; will-change:opacity,transform;
+  }
+  .pretitle .dot{width:6px;height:6px;border-radius:50%;background:var(--tx3);}
+  .head{
+    font-family:'Bricolage Grotesque','Schibsted Grotesk',sans-serif;
+    font-weight:700;
+    font-size:clamp(44px,13vw,212px);
+    line-height:.9; letter-spacing:-.02em; color:var(--tx);
+    max-width:14ch;
+  }
+  .head .line{display:block; overflow:hidden;}
+  .head .word{
+    display:inline-block;
+    transform:translateY(108%);
+    will-change:transform;
+  }
+  .voice{
+    font-family:'Spectral',Georgia,serif; font-style:italic;
+    font-weight:400; font-size:clamp(16px,2.1vw,26px);
+    color:var(--tx2); margin-top:4vh; max-width:34ch; line-height:1.45;
+    opacity:0; transform:translateY(14px); will-change:opacity,transform;
+  }
+  .cta{
+    margin-top:5vh; pointer-events:auto;
+    display:inline-flex; align-items:center; gap:12px;
+    align-self:flex-start;
+    padding:14px 22px; border:1px solid var(--gulf); border-radius:2px;
+    color:var(--gulf); background:transparent;
+    font-family:'Schibsted Grotesk',sans-serif; font-size:14px; letter-spacing:.01em;
+    opacity:0; transform:translateY(14px); will-change:opacity,transform;
+    cursor:pointer; transition:background .25s ease,color .25s ease;
+    text-decoration:none;
+  }
+  .cta:hover{background:var(--gulf); color:var(--bg);}
+  .cta .arr{display:inline-block; transition:transform .25s ease;}
+  .cta:hover .arr{transform:translateX(4px);}
+
+  /* ---- HUD: timecode + brand + scroll cue ---- */
+  .hud{
+    position:absolute; inset:0; pointer-events:none;
+    font-family:'Schibsted Grotesk',sans-serif; color:var(--tx3);
+    font-size:12px; letter-spacing:.06em;
+  }
+  .hud .brand{position:absolute; top:30px; left:6vw; color:var(--tx2); letter-spacing:.02em;}
+  .hud .brand b{color:var(--tx); font-weight:600;}
+  .hud .tc{position:absolute; top:30px; right:6vw; display:flex; gap:10px; align-items:center;}
+  .hud .tc .live{width:6px;height:6px;border-radius:50%;background:var(--hair2); transition:background .4s;}
+  .hud .tc.on .live{background:var(--gulf);}
+  .hud .frame{
+    position:absolute; left:6vw; right:6vw; top:30px; bottom:30px;
+    border:1px solid var(--hair); opacity:.5;
+  }
+  .hud .corner{position:absolute; width:10px; height:10px; border:1px solid var(--hair2);}
+  .scrollcue{
+    position:absolute; left:50%; bottom:30px; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    color:var(--tx3); font-size:11px; letter-spacing:.12em;
+    opacity:.8;
+  }
+  .scrollcue .bar{width:1px;height:34px;background:linear-gradient(var(--tx3),transparent); overflow:hidden;}
+  .scrollcue .bar::after{content:"";position:absolute;width:1px;height:14px;background:var(--gulf);
+    animation:drop 2s infinite cubic-bezier(.7,0,.3,1);}
+  @keyframes drop{0%{transform:translateY(-14px);opacity:0}30%{opacity:1}100%{transform:translateY(34px);opacity:0}}
+
+  @media (prefers-reduced-motion: reduce){
+    .scrollcue .bar::after{animation:none}
+  }
+</style>
+</head>
+<body>
+  <div class="scrollspace"></div>
+
+  <div class="stage" id="stage">
+    <div class="sky" id="sky"></div>
+
+    <div class="carwrap" id="carwrap">
+      <img src="./r8.jpg" alt="Audi R8 at first light on a mountain road">
+    </div>
+
+    <div class="dawn" id="dawn"></div>
+    <div class="horizon" id="horizon"></div>
+
+    <div class="vignette"></div>
+    <div class="grain" id="grain"></div>
+
+    <div class="flash" id="flash"></div>
+    <div class="spark" id="spark"></div>
+
+    <div class="copy" id="copy">
+      <div class="pretitle" id="pretitle"><span class="dot"></span><span>Drive Exotiq — invite-only morning drives</span></div>
+      <h1 class="head" id="head">
+        <span class="line"><span class="word">We</span> <span class="word">start</span> <span class="word">them</span></span>
+        <span class="line"><span class="word">at</span> <span class="word">sunrise.</span></span>
+      </h1>
+      <p class="voice" id="voice">Before the cities wake, before the traffic, before the noise — there is one window of light. Built for the people who actually drive the car.</p>
+      <a class="cta" id="cta" href="#"><span>Request the drive</span><span class="arr">→</span></a>
+    </div>
+
+    <div class="hud">
+      <div class="brand">DRIVE&nbsp;<b>EXOTIQ</b></div>
+      <div class="tc" id="tc"><span class="live"></span><span id="tcval">05:42</span><span>MDT</span></div>
+      <div class="frame">
+        <span class="corner" style="top:-1px;left:-1px;border-right:0;border-bottom:0"></span>
+        <span class="corner" style="top:-1px;right:-1px;border-left:0;border-bottom:0"></span>
+        <span class="corner" style="bottom:-1px;left:-1px;border-right:0;border-top:0"></span>
+        <span class="corner" style="bottom:-1px;right:-1px;border-left:0;border-top:0"></span>
+      </div>
+      <div class="scrollcue" id="cue"><span>TURN THE KEY</span><span class="bar"></span></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // elements
+  var sky=document.getElementById('sky'),
+      carwrap=document.getElementById('carwrap'),
+      car=carwrap.querySelector('img'),
+      dawn=document.getElementById('dawn'),
+      horizon=document.getElementById('horizon'),
+      flash=document.getElementById('flash'),
+      spark=document.getElementById('spark'),
+      grain=document.getElementById('grain'),
+      pretitle=document.getElementById('pretitle'),
+      head=document.getElementById('head'),
+      words=[].slice.call(head.querySelectorAll('.word')),
+      voice=document.getElementById('voice'),
+      cta=document.getElementById('cta'),
+      tc=document.getElementById('tc'),
+      tcval=document.getElementById('tcval'),
+      cue=document.getElementById('cue'),
+      copy=document.getElementById('copy');
+
+  cta.addEventListener('click',function(e){e.preventDefault();});
+
+  function clamp(v,a,b){return v<a?a:v>b?b:v;}
+  function map(v,a,b,c,d){return c+(d-c)*clamp((v-a)/(b-a),0,1);}
+  // ease
+  function easeOut(x){return 1-Math.pow(1-x,3);}
+  function easeInOut(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;}
+
+  var sp=0, target=0;          // smoothed scroll progress 0..1
+  var ignited=0;               // ignition transient envelope
+  var t=0;                     // ambient time
+
+  var IGNITE=0.40;             // ignition threshold (fires mid-scroll for the recording)
+  var lastP=0;
+
+  function readScroll(){
+    var max=document.documentElement.scrollHeight-window.innerHeight;
+    target=max>0?(window.scrollY/max):0;
+  }
+  window.addEventListener('scroll',readScroll,{passive:true});
+  window.addEventListener('resize',readScroll);
+  readScroll();
+
+  function frame(){
+    t+=0.016;
+    // smooth toward scroll target — weighted, never snaps
+    sp += (target-sp)*(reduce?0.2:0.08);
+    var p=sp;
+
+    /* ---------- AMBIENT: pre-dawn engine tremor ---------- */
+    // tremor strongest before ignition, decays after
+    var idleEnv = clamp(1-(p/IGNITE),0,1);          // 1 before key, 0 after
+    var trem = reduce?0:(Math.sin(t*38)*0.5+Math.sin(t*23.3)*0.5);
+    var tremAmt = (0.4*idleEnv + 0.15) * trem;       // px
+    // breathing vignette handled via copy micro-move
+    copy.style.transform='translateY('+(tremAmt*0.6)+'px)';
+    head.style.transform='translateX('+(tremAmt*0.5)+'px)';
+
+    /* ---------- IGNITION transient ---------- */
+    // detect crossing the threshold to kick the envelope
+    if(lastP<IGNITE && p>=IGNITE){ ignited=1; }
+    lastP=p;
+    if(ignited>0.001){ ignited*= (reduce?0.82:0.9); } else { ignited=0; }
+    // also drive a positional component so the flash reads on a steady scroll
+    var igZone = 1-clamp(Math.abs(p-IGNITE)/0.05,0,1); // bump near threshold
+    var ig = Math.max(ignited, igZone*0.9);
+
+    flash.style.opacity = (ig*0.9).toFixed(3);
+    flash.style.transform='translateX('+map(ig,0,1,-8,8)+'%)';
+    spark.style.opacity=(ig).toFixed(3);
+    spark.style.transform='translate(-50%,-50%) scale('+(ig*ig*26)+')';
+    // spark fades its fill toward white-warm core but never glows
+    spark.style.background = ig>0.5 ? '#9fd6f0' : '#6CBDE6';
+    tc.classList.toggle('on', p>IGNITE*0.5);
+
+    /* ---------- DAWN BLOOM (after ignition) ---------- */
+    // light begins at ignition, blooms over the next stretch
+    var d = clamp(map(p, IGNITE, 0.82, 0, 1),0,1);
+    var de = easeOut(d);
+    dawn.style.opacity=de.toFixed(3);
+    dawn.style.transform='translate(-50%,'+map(de,0,1,40,-6)+'%) scale('+map(de,0,1,0.6,1.18)+')';
+
+    horizon.style.opacity=map(d,0.15,0.6,0,0.9).toFixed(3);
+    horizon.style.transform='scaleX('+map(de,0,1,0.4,1)+')';
+
+    /* sky warms from near-black toward first light */
+    var warm=de;
+    sky.style.opacity=1;
+    // shift the radial center brightness by overlaying via opacity of dawn; tint sky subtly
+    sky.style.filter='brightness('+map(warm,0,1,1,1.18)+') saturate('+map(warm,0,1,1,1.15)+')';
+
+    /* ---------- CAR REVEALED BY THE LIGHT ---------- */
+    var cv=clamp(map(p, IGNITE-0.03, 0.7, 0, 1),0,1);
+    var cve=easeInOut(cv);
+    carwrap.style.opacity=cve.toFixed(3);
+    // exposure rises with dawn: brightness/contrast/warmth driven by scroll
+    var br=map(de,0,1,0.18,0.92),
+        ct=map(de,0,1,1.05,1.12),
+        sa=map(de,0,1,0.5,1.0),
+        se=map(de,0,1,0.05,0.0);
+    car.style.filter='brightness('+br.toFixed(3)+') contrast('+ct.toFixed(3)+') saturate('+sa.toFixed(3)+') sepia('+se.toFixed(3)+')';
+    // slow cinematic camera drift / parallax on the car
+    var drift=map(p,0,1,0,-6);
+    carwrap.style.transform='translate(-50%,'+( -46 + map(de,0,1,2,0))+'%) scale('+map(de,0,1,1.12,1.0)+') translateX('+drift+'px)';
+
+    /* ---------- TYPE: pretitle + scrubbed word reveal ---------- */
+    pretitle.style.opacity=map(p,0.02,0.12,0,1).toFixed(3);
+    pretitle.style.transform='translateY('+map(p,0.02,0.12,10,0)+'px)';
+
+    // words rise as light reaches them — staggered across dawn
+    for(var i=0;i<words.length;i++){
+      var start=0.42 + i*0.045;
+      var wp=easeOut(clamp(map(p,start,start+0.12,0,1),0,1));
+      words[i].style.transform='translateY('+(108-108*wp)+'%)';
+    }
+
+    voice.style.opacity=map(p,0.72,0.84,0,1).toFixed(3);
+    voice.style.transform='translateY('+map(p,0.72,0.84,16,0)+'px)';
+    cta.style.opacity=map(p,0.82,0.92,0,1).toFixed(3);
+    cta.style.transform='translateY('+map(p,0.82,0.92,16,0)+'px)';
+
+    /* scroll cue fades once you've turned the key */
+    cue.style.opacity=map(p,0,IGNITE*0.7,0.85,0).toFixed(3);
+
+    /* timecode counts up 05:42 -> 05:58 as dawn breaks */
+    var mins=42+Math.round(map(p,0.05,0.85,0,16));
+    tcval.textContent='05:'+(mins<10?'0'+mins:mins);
+
+    /* grain drifts so the dark frame stays alive */
+    if(!reduce){
+      grain.style.transform='translate('+(Math.sin(t*0.7)*8)+'px,'+(Math.cos(t*0.5)*8)+'px)';
+    }
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
