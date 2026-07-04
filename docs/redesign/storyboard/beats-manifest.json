@@ -1,0 +1,501 @@
+{
+  "$comment": "Living-scenes source of truth. One entry per beat in stage order. generate-videos.mjs, encode-web.mjs, and build-motion-sheet.mjs all read this. Treatments/prompts from docs/redesign/04-LIVING-SCENES-HANDOFF.md Part 3; real-asset overrides from §1.5c. status: pending -> drafted -> generated -> selected -> encoded -> live.",
+  "stillsDir": "public/images/experience/photo",
+  "rendersDir": "docs/redesign/storyboard/renders",
+  "webVideoDir": "public/videos/experience",
+  "posterDir": "public/images/experience/poster",
+  "defaults": {
+    "aspect_ratio": "16:9",
+    "generate_audio": false,
+    "resolution": "1080p",
+    "takes": 3
+  },
+  "beats": [
+    {
+      "id": "SB-01",
+      "act": 1,
+      "treatment": "loop",
+      "priority": "hero",
+      "still": "cold-open.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "draftModel": "google/veo-3.1-lite",
+      "backupModel": "google/veo-3.1",
+      "duration": 8,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "cold-open.png",
+        "last": "cold-open.png"
+      },
+      "prompt": "Locked-off camera on a tripod, zero camera movement. Inside a pitch-dark garage a car sleeps under a taut fabric cover, lit by one low warm tungsten key. Animate atmosphere only: fine dust motes drifting slowly through the warm pool of light, a single subtle breath of air moving across the fabric cover, the warm practical light breathing very slightly in intensity like an old filament. Everything else frozen. Film-noir grade: deep matte-black shadows stay fully crushed, desaturated graphite palette, warm highlights only, subtle 35mm film grain, shallow anamorphic depth of field. The clip must end on exactly its first frame.",
+      "negativePrompt": "no camera push, pan or drift; the cover never slips or reveals the car; no new light sources; no lens flares; no blue or teal color shift; no text, logos or people; no warping of floor, wall or cover geometry; no exposed wheels or grille",
+      "qa": "cover silhouette must not swim; blacks must not lift",
+      "status": "live",
+      "selectedTake": "SB-01-t2-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-02",
+      "act": 1,
+      "treatment": "scrub",
+      "priority": "hero",
+      "still": "garage-exterior.png",
+      "videoModel": "google/veo-3.1",
+      "draftModel": "google/veo-3.1-lite",
+      "backupModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 8,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "garage-exterior.png"
+      },
+      "prompt": "Locked-off exterior night shot, camera on a tripod at hood height, absolutely no camera movement. The sectional garage door rises slowly and steadily through the entire clip — one continuous mechanical motion at constant velocity, no pauses, no bounce. The horizontal blade of warm tungsten light beneath it widens from a thin slit into a tall glowing doorway, its reflection stretching and blooming across the wet asphalt toward the lens. The air is clear — no fog, no smoke, no haze; only the light itself widens. The interior beyond the door remains underexposed: dim warm shapes only. Film-noir grade: crushed matte-black night, desaturated graphite walls, warm tungsten light only, subtle 35mm grain.",
+      "negativePrompt": "no fog, smoke, haze or mist of any kind, no billowing atmosphere, no tripod, light stand or equipment anywhere in frame, interior must stay too dark to read — no recognizable vehicle inside, no exposure bloom or blown highlights, no camera push, pan or shake; no people; no readable car detail, wheels or grille inside; no text or signage; no door panel warping or wobble; no flicker or strobing; no blue/teal shift; no lens flare streaks",
+      "post": "trim best 3-4s of the lift, all-intra encode for scrubbing; mobile plays trimmed clip once and holds final frame",
+      "qa": "door leading edge must stay straight across all frames; asphalt reflection must track the blade, not swim",
+      "status": "live",
+      "selectedTake": "SB-02-t2-veo-3.1-v2.mp4 (full lift, 2x setpts)"
+    },
+    {
+      "id": "SB-03",
+      "act": 1,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "threshold-rush.png",
+      "videoModel": "minimax/hailuo-2.3",
+      "backupModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 6,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "threshold-rush.png"
+      },
+      "loopSeam": "code-crossfade-or-baked-xfade",
+      "prompt": "First-person POV camera already moving fast down a dark garage corridor toward the vanishing point — continuous forward rush for the entire clip at constant high speed, never slowing, never stopping. Walls and concrete columns streak past with heavy horizontal motion blur; the single warm ceiling light fixture sweeps overhead and exits frame top while another dim fixture appears far ahead; warm reflections smear along the polished concrete floor. Slight hood-mounted camera micro-shake. The corridor is endless — no door, no wall, no destination visible. Film-noir grade: crushed matte-black shadows, desaturated graphite palette, warm tungsten highlights only, subtle 35mm grain, anamorphic motion-blur character.",
+      "negativePrompt": "no visible vehicle parts, hands, steering wheel, wheels or grille; no text or signage on walls; no people; no camera reversal, stop or speed change; no strobe flicker; no blue/teal shift; no wall or floor geometry warping",
+      "status": "live",
+      "durationNote": "Hailuo 2.3 upstream: 10s and 1080p mutually exclusive (MiniMax 2013, 2026-07-03) — 1080p kept, 6s accepted",
+      "selectedTake": "SB-03-t2-hailuo-2.3.mp4 (0.5s seam)"
+    },
+    {
+      "id": "SB-04",
+      "act": 2,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "garage-interior.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 8,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "garage-interior.png",
+        "last": "garage-interior.png"
+      },
+      "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. Locked-off tripod camera in a dark underground garage aisle. All parked supercars remain perfectly motionless. The only motion: overhead ceiling lights breathe very subtly, the distant warm light at the vanishing point flickers gently like sodium vapor warming up, a faint layer of atmospheric haze drifts slowly left to right through the light shafts, and the wet-look floor reflections shimmer in response. Extremely subtle, slow, ambient. The clip must loop seamlessly, ending on exactly the first frame.",
+      "negativePrompt": "no camera movement, no car movement, no wheel rotation, no grille or panel warping, no people, no text or badges resolving, no color shift, no blue light, hold the film-noir warm-key grade throughout",
+      "status": "live",
+      "selectedTake": "SB-04-t1-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-05",
+      "act": 2,
+      "treatment": "loop",
+      "priority": "hero",
+      "still": "mclaren-720s.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "draftModel": "google/veo-3.1-lite",
+      "duration": 8,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "mclaren-720s.png",
+        "last": "mclaren-720s.png"
+      },
+      "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. A McLaren 720S front three-quarter portrait in a black studio void. The car is completely stationary. Motion: the camera drifts laterally right by roughly two degrees of orbit and returns to its exact start position; the single warm key light slowly intensifies and travels across the front fender and door, its reflection blooming softly on the dark polished floor; the headlight daytime-running-light signature brightens gently by half a stop then settles. Slow, museum-quiet, seductive. Must loop seamlessly, last frame identical to first frame.",
+      "negativePrompt": "no wheel rotation, no spoke morphing, no grille mesh warping, no badge or text artifacts, no body panel movement or reflections swimming independently of the camera, no blue light, no lens flare spikes, hold the film-noir grade",
+      "reuse": "SB-08b serves this exact file at playbackRate 0.7",
+      "status": "live",
+      "selectedTake": "SB-05-t1-kling-v3-direct.mp4 (1080p direct)"
+    },
+    {
+      "id": "SB-06",
+      "act": 2,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "porsche-gt3rs.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 6,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "porsche-gt3rs.png",
+        "last": "porsche-gt3rs.png"
+      },
+      "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. A Porsche 911 GT3 RS rear three-quarter portrait in a black studio void, engine just switched off. The car is completely stationary, camera locked. Motion: faint heat-haze shimmer rises from the exhaust tips and diffuser, subtly distorting the darkness directly behind the car; the full-width LED taillight bar glows and dims very gently like a breathing ember; the warm key light slides slowly along the upper edge of the large swan-neck rear wing and returns. Quiet, patient, cooling-down energy. Must loop seamlessly, last frame identical to first frame.",
+      "negativePrompt": "no wheel rotation or spoke morphing, no bodywork or wing deformation, no badge or text artifacts, no reflections swimming, no camera movement, no blue light, no smoke plumes — heat shimmer only, hold the film-noir grade",
+      "status": "live",
+      "selectedTake": "SB-06-t2-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-07",
+      "act": 2,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "lambo-ferrari.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 8,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "lambo-ferrari.png",
+        "last": "lambo-ferrari.png"
+      },
+      "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. A Lamborghini Aventador with its scissor door raised, front three-quarter, a second supercar in deep shadow behind. Both cars and the raised door are completely stationary, camera locked. Motion: a slow blade of warm light travels down the inner face of the raised scissor door and fades back, fine dust motes drift through the open door aperture within the light, the daytime running lights flicker awake briefly then settle into a steady low glow. Slow, reverent, an invitation. Must loop seamlessly, last frame identical to first frame.",
+      "negativePrompt": "the door must not move or close, no wheel rotation, no grille or intake warping, no badge or text artifacts, no body deformation, no reflections swimming, no camera movement, no blue light, hold the film-noir grade",
+      "realAssetOverride": "§1.5c: real 458 shots (refs/shoots/r8-458/Sam and Gregory (Mobile)-11/-13/-1) are candidate replacement stills — regrade autumn→noir, or keep generated Lambo + real Ferrari mix. Phase 3 still-upgrade decision.",
+      "status": "live",
+      "selectedTake": "SB-07-t2-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-07b",
+      "act": 2,
+      "treatment": "code",
+      "priority": "standard",
+      "still": "waitlist-still.png",
+      "codeSpec": "LampBreath radial-gradient overlay (±7% opacity swell, 9s easeInOut loop) + 3 DustMotes spans sinking through the lamp cone (14/17/21s staggered), both gated behind useReducedMotion. Zero media bytes.",
+      "status": "live"
+    },
+    {
+      "id": "SB-08",
+      "act": 2,
+      "treatment": "scrub",
+      "priority": "hero",
+      "still": "choose.png",
+      "videoModel": "google/veo-3.1",
+      "draftModel": "google/veo-3.1-lite",
+      "duration": 8,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "choose.png"
+      },
+      "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. Five supercars fanned in darkness, the center Lamborghini Huracan facing camera with headlights lit. Camera locked at low hood height. Motion: the center car alone rolls forward very slowly toward camera — about one meter of travel over the full clip — its headlights flaring gently as it advances, the floor reflection stretching under the nose; it decelerates and settles to a stop, nose slightly larger in frame. The four flanking cars remain perfectly motionless. Wheels stay in deep shadow with no visible spoke detail; motion is conveyed entirely by the body advancing and the reflection moving. Slow, inevitable, gravitational.",
+      "negativePrompt": "no visible wheel spokes or spoke rotation, no grille mesh warping, no badge or text artifacts, no body panel deformation, no movement from the flanking cars, no camera movement, no blue light, hold the film-noir grade",
+      "post": "trim best ~3s of the creep, all-intra encode; desktop-only scrub, mobile = still or play-once",
+      "status": "live",
+      "selectedTake": "SB-08-t1-veo-3.1.mp4 (trim 1.0:3.5)"
+    },
+    {
+      "id": "SB-08b",
+      "act": 2,
+      "treatment": "reuse",
+      "priority": "standard",
+      "still": "mclaren-720s.png",
+      "reuse": "SB-05 loop asset at playbackRate 0.7 + iris-open scrim (code)",
+      "status": "live",
+      "selectedTake": "(reuses SB-05)"
+    },
+    {
+      "id": "SB-09",
+      "act": 3,
+      "treatment": "scrub",
+      "priority": "hero",
+      "still": "door-up.png",
+      "prepImage": {
+        "output": "door-closed.png",
+        "model": "openai/gpt-image-2",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "door-up.png"
+        ],
+        "prompt": "Edit the reference photograph with one single change: close the raised dihedral driver door so it sits fully CLOSED, panel seams flush and aligned with the front fender and roofline. EVERYTHING else must remain pixel-identical to the reference: same crop, same zoom, the car occupying exactly the same area of frame at exactly the same scale and position, same camera height and angle, same single warm key light from the right, same matte-black studio void, same floor reflection, same film-noir grade and grain. This is a continuity frame for a film: any change in framing, car scale, lighting or grade is a failure."
+      },
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "backupModel": "google/veo-3.1",
+      "duration": 4,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "door-closed.png",
+        "last": "door-up.png"
+      },
+      "prompt": "Locked-off static camera, zero camera movement. In a pitch-black studio, the dihedral driver door of the McLaren 720S rises smoothly and slowly through its full upward arc, rotating up and forward on its front hinge, warm rim light sweeping across the door panel and glass as it moves, motion decelerating gently as the door reaches full height and settles. The car body, wheels, and background remain perfectly still. Film-noir grade, single warm key light, deep matte-black shadows, subtle film grain.",
+      "negativePrompt": "camera movement, camera shake, zoom, pan, wheels rotating, wheel spokes morphing, grille mesh warping, body panels flexing, badge text, license plate, any text or logos changing, reflections swimming independently of the door, color shift, brightening of shadows, added light sources",
+      "qa": "panel-gap drift and reflection swim; select from 3-5 takes",
+      "status": "live",
+      "selectedTake": "SB-09-t1-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-10",
+      "act": 3,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "cockpit-pov-v2.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 6,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "cockpit-pov-v2.png",
+        "last": "cockpit-pov-v2.png"
+      },
+      "prompt": "Completely static first-person driver point of view inside a dark supercar cabin at dawn, locked-off camera, zero camera movement. Subtle living motion only: the warm dawn glow on the horizon through the windscreen gently brightens and dims as if clouds are slowly thinning, soft light shifting slightly across the dashboard; the driver's hands make one slow, small adjustment of grip on the steering wheel and settle; faint dust motes drift in the dawn light; the amber instrument glow pulses very faintly. All motion returns to rest. Film-noir grade, deep matte-black cabin shadows, warm highlights only on the horizon and gauge glow, subtle film grain, shallow depth of field.",
+      "negativePrompt": "camera movement, camera shake, pan, zoom, steering wheel turning, hands leaving the wheel, extra fingers, hand deformation, gauge needles sweeping, dashboard text or numbers changing, any readable text, windshield wipers, scenery moving past as if driving, brightness jumps, color shift away from the graphite-and-amber palette",
+      "qa": "QA hands hardest — finger morphing is the failure mode; budget 4-6 takes",
+      "takes": 5,
+      "status": "live",
+      "prepImage": {
+        "output": "cockpit-pov-v2.png",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "cockpit-pov.png"
+        ],
+        "prompt": "Recreate this photograph with the same composition, camera position, dawn lighting and film-noir grade — but make the cabin an authentic McLaren 720S interior, faithful to the real car: slim floating carbon-fiber center console, McLaren driver display screen behind the compact flat-bottom steering wheel (plain wheel face, no buttons), circular air vents, exposed carbon structure on the sills, black alcantara with minimal stitching, low scuttle and thin A-pillars with the deep panoramic 720S windscreen. Both hands resting naturally on the wheel, five fingers each, relaxed grip. Keep: the soft dawn glow band across the top of the windscreen, deep matte-black cabin shadow, warm amber instrument glow, shallow depth of field, subtle 35mm film grain, desaturated graphite palette with warm highlights, 16:9. Restrained and quiet — a real pre-dawn moment, not an advertisement. No readable text, numbers or logos anywhere."
+      },
+      "rerenderNote": "v2 plate re-rendered 2026-07-03 via Nano Banana Pro (owner: prior plates read AI-lame) — authentic 720S cabin; loop regenerated from v2.",
+      "selectedTake": "SB-10-t1-kling-v3.0-pro-kdirect.mp4 (1080p direct)"
+    },
+    {
+      "id": "SB-11",
+      "act": 3,
+      "treatment": "hybrid-gauge",
+      "priority": "hero",
+      "still": "ignition-v2.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 6,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "ignition-v2.png",
+        "last": "ignition-v2.png"
+      },
+      "prompt": "Extreme macro, locked-off static camera, zero camera movement. A finger rests lightly on the engine start button inside a dark supercar cabin. Subtle living motion only: the warm ring of light around the start button breathes in a slow, faint pulse; the finger applies the slightest micro-pressure and relaxes, skin texture shifting almost imperceptibly; behind, heavily out-of-focus gauge needles quiver minutely at rest, their orange glow flickering softly. All motion returns exactly to the starting pose. Film-noir grade, deep matte-black shadows, warm amber highlights, extremely shallow depth of field, subtle film grain.",
+      "negativePrompt": "camera movement, zoom, pan, focus pulling, finger fully pressing the button, hand or finger deformation or extra fingers, extra fingers, gauge needles making large sweeps, dial text or numbers becoming legible, any readable text, brightness jumps, glow blooming into the whole frame, color shift, lens flare",
+      "codeSpec": "Gauge-sweep instrument overlay driven by plate-local scroll progress (0-30 dormant / 30-55 cold-start sweep to 8500 / 55 Gulf-blue redline tick / 55-72 damped fall-back to 1100 idle / 72-100 idle micro-tick). Design modeled on real S8 cluster photos DSC02086 (tach) + DSC02096 (speedo needle). 1.5px line weights, 2px corners, no glow fills.",
+      "realAssetOverride": "§1.5c: instrument modeled on refs/shoots/s8 DSC02086/DSC02096 — the definitive design reference",
+      "status": "live",
+      "selectedTake": "SB-11-t1-kling-v3.0-pro-kdirect.mp4 (1080p direct)",
+      "prepImage": {
+        "output": "ignition-v2.png",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "ignition.png"
+        ],
+        "prompt": "Recreate this photograph with the same extreme-macro composition, framing and film-noir grade — but grounded in an authentic McLaren 720S cabin: the round engine start button sits in the slim vertical carbon-fiber center console of a 720S, brushed dark metal face with a thin warm amber halo ring, surrounded by real carbon-fiber weave texture. A thumb rests lightly on the button, natural skin texture, no pressure yet. Behind, heavily out-of-focus, the soft warm bokeh of the McLaren driver display — subtle amber shapes, NOT bright orange needle gauges. Quieter and more restrained than the reference: less glow, deeper blacks, the button barely lit, documentary realism over advertisement drama. Extremely shallow depth of field, subtle 35mm film grain, desaturated graphite palette, warm highlights only, 16:9. Absolutely no readable lettering, symbols or logos on the button or anywhere."
+      },
+      "rerenderNote": "v2 plate re-rendered 2026-07-03 via Nano Banana Pro (owner: prior plates read AI-lame) — authentic 720S cabin; loop regenerated from v2."
+    },
+    {
+      "id": "SB-11b",
+      "act": 4,
+      "treatment": "play-once",
+      "priority": "high",
+      "still": "roll-out.png",
+      "videoModel": "google/veo-3.1",
+      "draftModel": "google/veo-3.1-fast",
+      "duration": 8,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "cockpit-pov-v2.png"
+      },
+      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir grade, subtle grain, desaturated graphite palette with warm highlights. First frame is the supplied still: pre-dawn driver POV inside the McLaren cabin, hands resting on the alcantara wheel, amber driver display glowing softly under its hood, dawn band on the horizon through the windscreen. Camera locked to the cockpit; the cabin, dashboard, steering wheel and hands remain rigid, dark and pixel-stable for the entire clip — the wheel center stays in shadow. The car creeps forward at walking pace out of a garage mouth onto open asphalt: the last edge of garage shadow wipes up and off the top of the windscreen in the first two seconds, the amber horizon steadies and widens, foreground asphalt slides slowly toward camera with a breath of suspension sway, exposure through the GLASS lifts almost imperceptibly while the cabin interior stays dark. The final second is near-steady — constant slow creep, stable horizon — so the last frame can hold.",
+      "negativePrompt": "no badges, crests, emblems or logos anywhere — the steering wheel center remains dark and unreadable; no brightening of the cabin interior, dashboard or wheel; no warping or melting dashboard geometry; no morphing steering wheel or hands, no extra fingers; no text, icons or invented digits; no people outside; no other cars; no camera shake beyond gentle suspension sway; do not change the grade",
+      "status": "live",
+      "selectedTake": "SB-11b-t1-veo-3.1-v2.mp4"
+    },
+    {
+      "id": "SB-12",
+      "act": 4,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "open-road.png",
+      "videoModel": "minimax/hailuo-2.3",
+      "backupModel": "google/veo-3.1-fast",
+      "duration": 6,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "open-road.png"
+      },
+      "loopSeam": "baked-xfade-0.5s",
+      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. First frame is the supplied still: POV through a sports-car windscreen at dawn, a dead-straight two-lane road running to a vanishing point between dark mountain silhouettes, warm glow at the horizon, headlights catching the twin yellow center lines, rear-view mirror silhouette at top. Camera locked to the cockpit. Continuous smooth cruise at constant speed: yellow center lines stream steadily beneath the nose in an even cadence, mountain silhouettes parallax slowly past on both sides, the dawn glow at the vanishing point holds position and intensity, mirror and dashboard silhouettes remain rigid and stable. Constant speed for the entire clip — no acceleration, no braking, no steering input, no lane change, no bends; the road stays dead straight to the horizon so the clip reads as an endless steady-state cruise.",
+      "negativePrompt": "no oncoming traffic, no signage or text anywhere, no dashboard warping, no wipers, no hands, no sudden exposure shifts, no camera shake, horizon must not drift vertically, do not lighten the cockpit, do not change the grade",
+      "status": "live",
+      "durationNote": "Hailuo 2.3 upstream: 10s and 1080p mutually exclusive (MiniMax 2013, 2026-07-03) — 1080p kept, 6s accepted",
+      "selectedTake": "SB-12-t1-hailuo-2.3.mp4 (0.5s seam)"
+    },
+    {
+      "id": "SB-13",
+      "act": 4,
+      "treatment": "loop",
+      "priority": "hero",
+      "still": "drive-mountain.png",
+      "videoModel": "minimax/hailuo-2.3",
+      "backupModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 6,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "drive-mountain.png"
+      },
+      "loopSeam": "baked-xfade-0.5s (kling/veo first=last takes loop natively)",
+      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. First frame is the supplied still: low side-tracking shot of a dark graphite McLaren 720S at speed on a mountain road at golden hour, front three-quarter view, warm key raking the body, rock face motion-blurred behind, yellow center line in the foreground. Camera tracks parallel at identical speed: the car holds its exact position and size in frame — locked formation — while the rock wall and roadside streak past as continuous motion blur and the center line strobes beneath. Paint reflections slide slowly along the flank, moving consistently with camera motion; subtle suspension breathing over road texture; the wheels remain completely featureless motion-blurred discs for every single frame — no spokes, no rim detail, no hub, just a smooth blurred rotation disc, as in a long-exposure photograph. Constant speed, no steering, the car never gains or loses ground in frame; steady-state tracking energy throughout.",
+      "negativePrompt": "wheel spokes visible in any frame, spoke rotation, rim or hub detail resolving, wagon-wheel effect, absolutely no visible wheel spokes or spoke rotation (wheels stay blurred discs), no grille-mesh or intake warping, no badges, license plates or text of any kind, no panel-gap drift or bodywork melting, no reflections swimming against camera motion, no headlight geometry change, no other vehicles, no people, do not change the grade",
+      "realAssetOverride": "§1.5c: rolling library DSC02203+ (esp. DSC02582 golden blur) as plates/i2v first-frames — real S8 rolling footage candidates for Movement II drive beats; generated 720S stays for Movement I",
+      "takes": 5,
+      "status": "live",
+      "selectedTake": "SB-13-t2-hailuo-2.3-h.mp4 (0.5s baked seam)",
+      "durationNote": "Hailuo 2.3 upstream: 10s and 1080p mutually exclusive (MiniMax 2013, 2026-07-03) — 1080p kept, 6s accepted"
+    },
+    {
+      "id": "SB-14",
+      "act": 5,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "coast-aerial.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "backupModel": "google/veo-3.1",
+      "duration": 8,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "coast-aerial.png",
+        "last": "coast-aerial.png"
+      },
+      "prompt": "Cinematic aerial drone footage, 35mm anamorphic, golden hour. A dark coupe glides along a coastal cliff road; the drone tracks it in perfect formation so the car holds its exact position in frame while the asphalt slides slowly beneath it. The ocean breathes: the sun-glitter path shimmers and drifts, long slow swell lines roll toward the cliff, the headland stays motionless on the horizon. Single warm key from the low sun against deep matte-black shadow, subtle film grain, desaturated graphite palette with warm golden highlights, restrained luxury automotive film. Slow, stately, omniscient camera — no zoom, no crash moves, only a barely perceptible forward float. The clip must end on exactly its opening frame (seamless loop).",
+      "negativePrompt": "no wheel spokes resolving or morphing — wheels stay motion-soft at this distance; no warping of body panels or roofline; no text, badges, or license plates; no boats, birds, people, or other vehicles; no color shift toward daylight; do not brighten the shadows; no camera shake",
+      "codeSpec": "exit dive: scale 1→1.14 + y 0→-3% over plate progress [0.78,1], accelerating bezier",
+      "status": "live",
+      "selectedTake": "SB-14-t1-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-15",
+      "act": 5,
+      "treatment": "loop",
+      "priority": "hero",
+      "still": "coastline-run.png",
+      "videoModel": "google/veo-3.1",
+      "draftModel": "google/veo-3.1-fast",
+      "secondLook": "minimax/hailuo-2.3 10s first-frame-only for aggressive speed read",
+      "duration": 8,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "coastline-run.png",
+        "last": "coastline-run.png"
+      },
+      "prompt": "Cinematic footage, 35mm anamorphic, road-level tracking shot at golden hour. A dark coupe runs a coastal road at speed, locked in frame by a chase rig: front three-quarter view, headlight signature lit. The low sun sits fixed just above the ocean horizon behind it; cliff silhouette and guardrail stream past in shallow-focus motion blur; heat shimmer rises off the asphalt; the sun's anamorphic flare breathes subtly across the windscreen. Wheels read as one continuous motion blur — never as distinct spokes. Paint reflections move coherently with the passing world. Film-noir single warm key against deep matte-black shadow, subtle grain, desaturated graphite palette with warm golden highlights, restrained luxury automotive film — speed conveyed by the streaming world, not by camera shake. The clip must end on exactly its opening frame (seamless loop).",
+      "negativePrompt": "no wheel-spoke morphing or wagon-wheeling; no grille-mesh warping; no badge, logo, or license-plate text; no oncoming traffic, people, or birds; the sun does not move, duplicate, or set; no rainbow flare artifacts; horizon stays level; no color shift; no brightening of shadows",
+      "codeSpec": "entry settle scale 1.06→1 over [0,0.15]; exit whip-zoom origin front wheel, scale 1→1.22 over [0.82,1] + brightness bloom 1→1.18→1 at dissolve midpoint",
+      "status": "live",
+      "selectedTake": "SB-15-t1-veo-3.1-gdirect.mp4"
+    },
+    {
+      "id": "SB-16",
+      "act": 5,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "wheel-detail.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "backupModel": "bytedance/seedance-2.0",
+      "duration": 6,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "wheel-detail.png",
+        "last": "wheel-detail.png"
+      },
+      "prompt": "Cinematic macro footage, 35mm anamorphic, locked-off close-up of the front wheel and fender of a dark sports car at speed, golden hour. The spinning wheel remains one continuous ring of motion blur for the entire clip — it never slows and never resolves into individual spokes. Tire sidewall texture streaks past; a sliver of road surface rushes beneath in shallow focus; the warm golden rim light raking the fender crease flickers gently as unseen roadside shapes pass between the car and the low sun; the bodywork carries a barely visible high-frequency vibration of speed. Deep matte-black surround, single warm key, subtle film grain, desaturated graphite palette with warm highlights. Camera absolutely locked, shallow depth of field. Restrained, mechanical, hypnotic. The clip must end on exactly its opening frame (seamless loop).",
+      "negativePrompt": "spokes must never become individually visible, morph, or wagon-wheel; no brake-caliper text, logos, or badges; the wheel must not change diameter or drift position in frame; fender crease and panel gaps stay perfectly rigid; no sparks, smoke, or debris; no color shift; no camera movement of any kind",
+      "codeSpec": "coast-down: playbackRate 1→0.5 mapped over plate progress [0.6,1] into the pivot",
+      "realAssetOverride": "§1.5c: real macros (DSC02037 grille, DSC02052 wheel, TF-14 V8T badge, (Mobile)-7 Ferrari script) are Phase 3 still-replacement candidates",
+      "status": "live",
+      "selectedTake": "SB-16-t1-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-18",
+      "act": 6,
+      "treatment": "loop",
+      "priority": "high",
+      "still": "s8-pivot.jpg",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "backupModel": "google/veo-3.1",
+      "duration": 6,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "s8-pivot.jpg",
+        "last": "s8-pivot.jpg"
+      },
+      "prompt": "Static locked-off tripod shot, zero camera movement. A parked graphite Audi S8 sedan, rear three-quarter view, late golden hour in high desert. The car is a statue: body panels, wheels, tires, badges, taillight graphics, glass and paint reflections remain perfectly still for the entire duration. Only the environment breathes: faint heat shimmer rising from the sun-warmed dirt behind the car, a few backlit dust motes drifting slowly through the warm raking golden light, desert scrub on the far hillside stirring almost imperceptibly in a light breeze, long shadows holding steady. Restrained luxury automotive documentary. Warm single golden key against deep shadow, subtle film grain, desaturated graphite palette with warm highlights. Seamless loop: the final frame must match the first frame exactly.",
+      "negativePrompt": "no camera motion, no wheel rotation or spoke morphing, no grille/panel warping, no added text, license-plate or badge hallucination, no people, no birds, no new light sources, no color/exposure pumping",
+      "realAssetOverride": "§1.5c: DSC02122/2126 (founder at overlook) available as alternate stills",
+      "status": "live",
+      "selectedTake": "SB-18-t1-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-17",
+      "act": 6,
+      "treatment": "loop",
+      "priority": "standard",
+      "still": "s8-vista.jpg",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "draftModel": "google/veo-3.1-lite",
+      "duration": 8,
+      "resolution": "720p",
+      "frameImages": {
+        "first": "s8-vista.jpg",
+        "last": "s8-vista.jpg"
+      },
+      "prompt": "Static locked-off wide landscape shot, zero camera movement. A graphite Audi S8 sedan parked alone in a dirt clearing before towering desert canyon walls, clear morning sky, long early shadows. The car is perfectly stationary: body, wheels, grille, headlights, reflections pixel-still throughout. The landscape lives quietly: a thin low veil of fine dust drifting slowly left to right across the sunlit clearing in the foreground, desert brush and cactus swaying gently in a light wind, faint heat shimmer on the far canyon rim. Documentary stillness, restrained luxury automotive photography, warm sunlight with deep natural shadow, subtle film grain, desaturated palette with warm highlights. Seamless loop: final frame identical to the first frame.",
+      "negativePrompt": "no camera motion or drift, no wheel rotation, no grille-mesh warping, no badge/plate text artifacts, no clouds forming, no shadow direction change, no people or vehicles entering, no exposure pumping",
+      "codeSpec": "odometer count-up 0→5,000 (tabular-nums, 1.8s) on useInView; lateral drift ken-burns",
+      "status": "live",
+      "selectedTake": "SB-17-t1-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-19",
+      "act": 6,
+      "treatment": "scrub",
+      "priority": "hero",
+      "still": "wrap-photoreal.png",
+      "prepImage": {
+        "output": "wrap-dark.png",
+        "model": "gemini-3-pro-image (DIRECT Gemini API — OpenRouter Google image route 403s)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "wrap-photoreal.png"
+        ],
+        "prompt": "Same exact composition, framing and dusk sky as the reference: the liveried Audi S8 side profile now sits in pre-reveal darkness — key light off, body a near-black silhouette, livery unreadable, only the faintest cool rim of dusk light along the roofline. Change nothing else."
+      },
+      "videoModel": "google/veo-3.1",
+      "draftModel": "google/veo-3.1-fast",
+      "backupModel": "bytedance/seedance-2.0",
+      "duration": 8,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "wrap-dark.png",
+        "last": "wrap-photoreal.png"
+      },
+      "prompt": "Locked-off static side-profile shot of a parked Audi S8 at dusk, camera absolutely still. From darkness, a single warm low key light sweeps steadily and continuously from the nose to the tail along the car's flank, progressively revealing a heritage red, white and black diagonal racing livery on the bodywork. The light's leading edge blooms softly on the paint; specular highlights travel across the doors and rear quarter; then the entire car settles fully lit and holds motionless, matching the final frame exactly. The car never moves: wheels stationary, panels rigid, livery graphics locked to the body like vinyl. Film-noir dusk grade: deep matte-black shadow, restrained warm highlights, subtle grain, no lens flare.",
+      "negativePrompt": "no camera movement, no wheel/spoke morphing, no grille warping, no text or logo hallucination beyond the existing livery shapes, no people, no sky change, no color pumping, livery stripe geometry must not swim or redraw",
+      "post": "desktop: trim 3-4s, all-intra scrub. mobile + instant layer: code mask-wipe between wrap-dark.png and wrap-photoreal.png",
+      "qa": "livery stripe geometry must not swim; budget 5 takes; Seedance reference-to-video if drift",
+      "takes": 5,
+      "status": "live",
+      "inputReferencesDisabled": [
+        "refs/livery-heritage-audi90-imsa.jpeg",
+        "refs/s8-side-profile.jpg"
+      ],
+      "notes": "referenceImages disabled for direct-Gemini Veo (400 Unsupported when combined with lastFrame, 2026-07-03); first+last frames pin livery at both ends; Seedance r2v is the drift backup via OpenRouter.",
+      "selectedTake": "SB-19-t4-veo-3.1-gdirect.mp4"
+    },
+    {
+      "id": "SB-19b",
+      "act": 6,
+      "treatment": "real-footage",
+      "priority": "high",
+      "still": "gregory-getin.jpg",
+      "realSource": "docs/redesign/storyboard/refs/video/S8 Roller Video.mov (get-in ~6-20s; canyon roller 26-77s)",
+      "post": "extract get-in segment, regrade dusk-noir (LUT/eq pass per §1.5b COMPARE proof), encode play-once clip; NOTHING generative touches the founder frame",
+      "codeSpec": "play-once real footage on plate entry, hold final frame; depth-parallax on gregory-getin.jpg deferred to Phase 3",
+      "realAssetOverride": "§1.5c: DSC02110-2113 (in seat) + TF -15…-22 (door series B&W near-noir) as alternates",
+      "status": "live",
+      "selectedTake": "SB-19b-getin-graded.mp4"
+    },
+    {
+      "id": "SB-20",
+      "act": 6,
+      "treatment": "reuse",
+      "priority": "high",
+      "still": "cold-open.png",
+      "reuse": "SB-01 loop asset — identical file URL (browser cache hit, the bookend statement). No ken-burns; finale CTA choreography per Part 3.",
+      "status": "live",
+      "selectedTake": "(reuses SB-01)"
+    }
+  ]
+}

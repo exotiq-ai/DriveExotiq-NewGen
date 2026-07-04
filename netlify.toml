@@ -6,6 +6,9 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Living-scenes video ships from Cloudflare R2 (zero egress) — serving it from
+  # Netlify would burn ~20 credits/GB of bandwidth. Posters stay on Netlify.
+  NEXT_PUBLIC_MEDIA_BASE = "https://media.driveexotiq.com/videos"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

@@ -17,6 +17,8 @@ export interface Frame {
   /** The one Spectral-italic emotional line. */
   jewel?: string;
   body?: string;
+  /** Animates a "{n}" placeholder in body as a count-up (SB-17's 5,000). */
+  odometerTarget?: number;
   cta?: string;
   ctaHref?: string;
   secondaryCta?: string;
@@ -51,8 +53,8 @@ export const FRAMES: Frame[] = [
   { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Choose your car.' },
   { id: 'SB-08b', media: `${M}/mclaren-720s.png`, movement: 'I', align: 'left', jewel: 'This one’s yours.', cta: 'Reserve it', ctaHref: '/apply' },
   { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.' },
-  { id: 'SB-10', media: `${M}/cockpit-pov.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
-  { id: 'SB-11', media: `${M}/ignition.png`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start, the gauges sweep' },
+  { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
+  { id: 'SB-11', media: `${M}/ignition-v2.png`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start, the gauges sweep' },
   { id: 'SB-11b', media: `${M}/roll-out.png`, movement: 'I', aria: 'The nose eases out of the garage' },
   { id: 'SB-12', media: `${M}/open-road.png`, movement: 'I', align: 'center', headline: 'The road opens.' },
   { id: 'SB-13', media: `${M}/drive-mountain.png`, movement: 'I', align: 'left', jewel: 'This is the drive.' },
@@ -69,7 +71,7 @@ export const FRAMES: Frame[] = [
   // ---------- Movement II — The Tour (sponsors) ----------
   {
     id: 'SB-17', media: `${M}/s8-vista.jpg`, movement: 'II', align: 'left',
-    kicker: 'The tour', headline: 'One car. Denver to Miami.', body: 'Ten markets. 5,000 miles.',
+    kicker: 'The tour', headline: 'One car. Denver to Miami.', body: 'Ten markets. {n} miles.', odometerTarget: 5000,
   },
   {
     id: 'SB-19', media: `${M}/wrap-photoreal.png`, movement: 'II', align: 'center',

@@ -38,3 +38,11 @@ docs/redesign/storyboard/refs/video/
 docs/redesign/storyboard/refs/shoots/s8/S8.Video.Standard4k.REVISE-002.mov
 docs/redesign/storyboard/refs/shoots/s8/e0083bd86f9a4aff981cdb02b511e9c8.mov
 docs/redesign/storyboard/refs/shoots/r8-458/Gregory and Sam  S8 and 458 Shoot Telluride.mp4
+
+# generated take library + working caches (439MB+; selections are recorded in
+# beats-manifest.json and web encodes live in public/videos/experience)
+docs/redesign/storyboard/renders/**
+!docs/redesign/storyboard/renders/cost-ledger.json
+
+# Netlify CLI local build cache
+.netlify/

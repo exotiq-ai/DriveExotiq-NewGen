@@ -1,17 +1,29 @@
 'use client';
 
 import Link from 'next/link';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import CinematicStage from './CinematicStage';
 
 /**
  * The scroll experience: a persistent chrome (wordmark + the two audience CTAs,
  * with the sponsor ask as the single Gulf action) over the sequence of frames.
  * Lenis smooth-scroll is provided globally by the root layout.
+ *
+ * The chrome bows out over the finale band — SB-20's in-frame CTAs take the
+ * one-Gulf-accent baton (the persistent buttons are redundant there anyway).
  */
 export default function ExperienceScroll() {
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const chromeOpacity = useTransform(scrollYProgress, [0.965, 0.985], [1, 0]);
+  const chromeEvents = useTransform(chromeOpacity, (o) => (o < 0.2 ? ('none' as const) : ('auto' as const)));
+
   return (
     <>
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      <motion.header
+        className="pointer-events-none fixed inset-x-0 top-0 z-50"
+        style={reduce ? undefined : { opacity: chromeOpacity, pointerEvents: chromeEvents }}
+      >
         <div
           aria-hidden="true"
           className="absolute inset-0"
@@ -36,7 +48,7 @@ export default function ExperienceScroll() {
             </Link>
           </nav>
         </div>
-      </header>
+      </motion.header>
 
       <CinematicStage />
     </>

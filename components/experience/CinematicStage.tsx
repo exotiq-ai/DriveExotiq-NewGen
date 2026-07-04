@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -9,10 +9,16 @@ import {
   useTransform,
   useInView,
   useReducedMotion,
+  useMotionValueEvent,
   type MotionValue,
 } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { FRAMES, type Frame } from './frames';
+import { LIVING, OVERLAYS, EXITS } from './living';
+import LivingLayer from './LivingLayer';
+import GaugeSweep from './GaugeSweep';
+import LampBreath from './LampBreath';
+import Odometer from './Odometer';
 
 const N = FRAMES.length;
 // Copy block k is viewport-centered at progress k/(N-1) — media bands must use
@@ -55,20 +61,45 @@ function Copy({ frame }: { frame: Frame }) {
             </h2>
           )}
           {frame.jewel && <p className="mt-4 font-serif text-2xl italic text-ink-2 md:text-3xl">{frame.jewel}</p>}
-          {frame.body && <p className="mt-4 max-w-prose text-base text-ink-2 md:text-lg">{frame.body}</p>}
+          {frame.body && (
+            <p className="mt-4 max-w-prose text-base text-ink-2 md:text-lg">
+              {frame.odometerTarget && frame.body.includes('{n}')
+                ? frame.body.split('{n}').flatMap((part, i, arr) =>
+                    i < arr.length - 1 ? [part, <Odometer key={i} to={frame.odometerTarget!} />] : [part])
+                : frame.body}
+            </p>
+          )}
           {(frame.cta || frame.secondaryCta) && (
-            <div className={cn('mt-8 flex flex-wrap gap-3', justify)}>
+            // The finale's ask arrives as film: the CTA row rises a beat after
+            // the jewel line, each button staggered (SB-20 only; elsewhere the
+            // row resolves with the block).
+            <motion.div
+              className={cn('mt-8 flex flex-wrap gap-3', justify)}
+              initial={false}
+              animate={
+                reduce || frame.id !== 'SB-20'
+                  ? undefined
+                  : { opacity: show ? 1 : 0, y: show ? 0 : 24, filter: show ? 'blur(0px)' : 'blur(6px)' }
+              }
+              transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            >
               {frame.cta && (
                 <Link href={frame.ctaHref || '#'} className="rounded-sm bg-gulf px-6 py-3 text-sm font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2">
                   {frame.cta}
                 </Link>
               )}
               {frame.secondaryCta && (
-                <Link href={frame.secondaryCtaHref || '#'} className="rounded-sm border border-line-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3">
-                  {frame.secondaryCta}
-                </Link>
+                <motion.span
+                  initial={false}
+                  animate={reduce || frame.id !== 'SB-20' ? undefined : { opacity: show ? 1 : 0, y: show ? 0 : 24 }}
+                  transition={{ duration: 0.7, delay: 0.47, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Link href={frame.secondaryCtaHref || '#'} className="rounded-sm border border-line-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3">
+                    {frame.secondaryCta}
+                  </Link>
+                </motion.span>
               )}
-            </div>
+            </motion.div>
           )}
         </motion.div>
       </div>
@@ -77,7 +108,7 @@ function Copy({ frame }: { frame: Frame }) {
 }
 
 /** One cross-fading, slowly-zooming media plate in the pinned stage. */
-function Plate({ frame, index, progress, priority }: { frame: Frame; index: number; progress: MotionValue<number>; priority?: boolean }) {
+function Plate({ frame, index, progress, priority, active }: { frame: Frame; index: number; progress: MotionValue<number>; priority?: boolean; active: number }) {
   // Plate k is fully opaque around its copy's center (k*D), cross-fading over
   // the half-viewport on either side. First/last plates hold at the edges.
   const stops =
@@ -86,23 +117,77 @@ function Plate({ frame, index, progress, priority }: { frame: Frame; index: numb
     : [(index - 0.5) * D, (index - 0.15) * D, (index + 0.15) * D, (index + 0.5) * D];
   const values = index === 0 ? [1, 1, 0] : index === N - 1 ? [0, 1, 1] : [0, 1, 1, 0];
   const opacity = useTransform(progress, stops, values);
-  const scale = useTransform(progress, [Math.max(0, (index - 0.6) * D), Math.min(1, (index + 0.6) * D)], [1.06, 1.16]);
+  // SB-20 is locked-off (the finale holds its breath) — no ken-burns.
+  const finale = frame.id === 'SB-20';
+  const scale = useTransform(
+    progress,
+    [Math.max(0, (index - 0.6) * D), Math.min(1, (index + 0.6) * D)],
+    finale ? [1, 1] : [1.06, 1.16],
+  );
+  // Plate-local progress: 0 at band entry, 1 at band exit (same N-1 math).
+  const p = useTransform(progress, [(index - 0.5) * D, (index + 0.5) * D], [0, 1]);
+
+  // Treatment exit moves (crane-away / dive / whip) over the band's final
+  // stretch — on the outer wrapper so they compose with the ken-burns.
+  const exit = EXITS[frame.id];
+  const exitScale = useTransform(p, [exit?.from ?? 2, 1], [1, exit?.scale ?? 1]);
+  const exitY = useTransform(p, [exit?.from ?? 2, 1], ['0%', exit?.y ?? '0%']);
+
+  const living = LIVING[frame.id];
+  const overlay = OVERLAYS[frame.id];
+  const dist = Math.abs(index - active);
 
   return (
-    <motion.div className="absolute inset-0 will-change-[opacity]" style={{ opacity }}>
+    <motion.div
+      className="absolute inset-0 will-change-[opacity]"
+      style={{ opacity, scale: exitScale, y: exitY, transformOrigin: exit?.origin }}
+    >
       <motion.div className="absolute inset-0 will-change-transform" style={{ scale }}>
         <Image src={frame.media} alt="" fill sizes="100vw" priority={priority} className="object-cover" />
+        {/* Living layer: poster-first enhancement, mounted ±2 bands (buffer), playing ±1. */}
+        {living && dist <= 2 && <LivingLayer cfg={living} p={p} near={dist <= 1} />}
       </motion.div>
+      {/* Instrument/code overlays sit outside the ken-burns wrapper — razor-sharp, no zoom. */}
+      {overlay === 'gauge' && dist <= 1 && <GaugeSweep p={p} />}
+      {overlay === 'lamp' && dist <= 1 && <LampBreath />}
+      {/* Finale vignette settle — the theater lights coming down. */}
+      {finale && <FinaleVignette p={p} />}
     </motion.div>
+  );
+}
+
+function FinaleVignette({ p }: { p: MotionValue<number> }) {
+  const vignette = useTransform(p, [0.5, 1], [0.35, 0.5]);
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0"
+      style={{
+        opacity: vignette,
+        background: 'radial-gradient(120% 95% at 50% 45%, transparent 35%, rgba(7,7,8,1) 100%)',
+      }}
+    />
   );
 }
 
 /** Pinned full-viewport media layer: all plates stacked, cross-fading on scroll. */
 function StageMedia({ progress }: { progress: MotionValue<number> }) {
+  // Active plate index — drives windowed mounting of living layers only; the
+  // cross-dissolve itself stays purely motion-value-driven.
+  const [active, setActive] = useState(0);
+  useMotionValueEvent(progress, 'change', (v) => {
+    const i = Math.round(v / D);
+    setActive((cur) => (cur === i ? cur : i));
+  });
+  // 'change' never fires for a restored scroll position — sync once on mount.
+  useEffect(() => {
+    setActive(Math.round(progress.get() / D));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-canvas">
       {FRAMES.map((f, i) => (
-        <Plate key={f.id} frame={f} index={i} progress={progress} priority={i === 0} />
+        <Plate key={f.id} frame={f} index={i} progress={progress} priority={i === 0} active={active} />
       ))}
       <div
         aria-hidden="true"
