@@ -64,9 +64,25 @@ export type Overlay = 'gauge' | 'lamp';
  * SB-14 drone dive, SB-15 whip-into-detail (origin = front wheel).
  */
 export const EXITS: Record<string, { from: number; scale?: number; y?: string; origin?: string }> = {
+  // NOTE: any `y` displacement must stay under the ken-burns overscan at its
+  // trigger point (~1.15 scale = ~7% overhang) — under the opaque-underneath
+  // crossfade the outgoing plate holds full opacity while transformed, so an
+  // uncovered translate would expose the canvas at the viewport edge.
   'SB-13': { from: 0.85, scale: 1.02, y: '-4%' },
   'SB-14': { from: 0.78, scale: 1.14, y: '-3%' },
   'SB-15': { from: 0.82, scale: 1.22, origin: '30% 72%' },
+};
+
+/**
+ * Per-boundary fade-band width scalars, keyed by the OUTGOING plate id.
+ * 1 = the standard dissolve width; <1 compresses toward a film cut, >1
+ * lingers. Centered on the band boundary so reverse scroll stays symmetric.
+ * Treatment-mandated entries only — the rest is later art direction.
+ */
+export const FADES: Record<string, number> = {
+  // "cut — not dissolve" into the founder frame, and the money frame must
+  // HOLD past p=0.85 while its copy resolves (handoff SB-19 transition).
+  'SB-19': 0.5,
 };
 
 /**

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -14,7 +14,7 @@ import {
 } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { FRAMES, type Frame } from './frames';
-import { LIVING, OVERLAYS, EXITS } from './living';
+import { LIVING, OVERLAYS, EXITS, FADES } from './living';
 import LivingLayer from './LivingLayer';
 import GaugeSweep from './GaugeSweep';
 import LampBreath from './LampBreath';
@@ -25,10 +25,24 @@ const N = FRAMES.length;
 // the same denominator or the two drift apart down the page.
 const D = 1 / (N - 1);
 
-/** The copy for one beat — resolves into focus (lift + de-blur) when centered. */
+/**
+ * The copy for one beat — resolves into focus (lift + de-blur) when centered.
+ * The de-blur is desktop-only: animating filter on text forces per-frame
+ * re-rasterization during iOS momentum scroll (review finding), so coarse
+ * pointers get the same lift with opacity only.
+ */
+function useNoTextBlur() {
+  const [noBlur, setNoBlur] = useState(false);
+  useEffect(() => {
+    setNoBlur(window.matchMedia('(max-width: 767px), (pointer: coarse)').matches);
+  }, []);
+  return noBlur;
+}
+
 function Copy({ frame }: { frame: Frame }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const noBlur = useNoTextBlur();
   const inView = useInView(ref, { amount: 0.55 });
   const show = reduce || inView;
 
@@ -51,7 +65,13 @@ function Copy({ frame }: { frame: Frame }) {
           ref={ref}
           className={cn('flex w-full flex-col', alignItems)}
           initial={false}
-          animate={reduce ? undefined : { opacity: show ? 1 : 0, y: show ? 0 : 30, filter: show ? 'blur(0px)' : 'blur(6px)' }}
+          animate={
+            reduce
+              ? undefined
+              : noBlur
+                ? { opacity: show ? 1 : 0, y: show ? 0 : 30 }
+                : { opacity: show ? 1 : 0, y: show ? 0 : 30, filter: show ? 'blur(0px)' : 'blur(6px)' }
+          }
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
         >
           {frame.kicker && <span className="mb-5 text-[11px] uppercase tracking-[0.2em] text-ink-3">{frame.kicker}</span>}
@@ -79,7 +99,9 @@ function Copy({ frame }: { frame: Frame }) {
               animate={
                 reduce || frame.id !== 'SB-20'
                   ? undefined
-                  : { opacity: show ? 1 : 0, y: show ? 0 : 24, filter: show ? 'blur(0px)' : 'blur(6px)' }
+                  : noBlur
+                    ? { opacity: show ? 1 : 0, y: show ? 0 : 24 }
+                    : { opacity: show ? 1 : 0, y: show ? 0 : 24, filter: show ? 'blur(0px)' : 'blur(6px)' }
               }
               transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
@@ -109,14 +131,37 @@ function Copy({ frame }: { frame: Frame }) {
 
 /** One cross-fading, slowly-zooming media plate in the pinned stage. */
 function Plate({ frame, index, progress, priority, active }: { frame: Frame; index: number; progress: MotionValue<number>; priority?: boolean; active: number }) {
-  // Plate k is fully opaque around its copy's center (k*D), cross-fading over
-  // the half-viewport on either side. First/last plates hold at the edges.
+  // Opaque-underneath crossfade: the incoming plate fades in OVER a still
+  // fully-opaque outgoing plate (later sibling paints above — keep DOM order,
+  // never add z-index), and the outgoing drops to 0 only once provably
+  // covered. True film dissolve: no canvas/vignette dip at any boundary, in
+  // either scroll direction. Per-boundary width via FADES (keyed by the
+  // OUTGOING plate id), centered on the boundary (k±0.5)·D so reverse scroll
+  // stays symmetric. The fade-in completes at plate-local p≈0.15 — the scrub
+  // deadZones (living.ts) start there so scrubbing begins only once the plate
+  // is fully visible; retune both together.
+  const HALF = 0.15;
+  const sIn = FADES[FRAMES[index - 1]?.id ?? ''] ?? 1;
+  const sOut = FADES[frame.id] ?? 1;
+  const inStart = (index - 0.5 - HALF * sIn) * D;
+  const inEnd = (index - 0.5 + HALF * sIn) * D;
+  const nextOpaque = (index + 0.5 + HALF * sOut) * D; // the plate above is at opacity 1
+  const outStart = nextOpaque + 0.03 * D;
+  const outEnd = outStart + 0.12 * D;
   const stops =
-    index === 0 ? [0, 0.35 * D, 0.6 * D]
-    : index === N - 1 ? [1 - 0.6 * D, 1 - 0.35 * D, 1]
-    : [(index - 0.5) * D, (index - 0.15) * D, (index + 0.15) * D, (index + 0.5) * D];
+    index === 0 ? [0, outStart, outEnd]
+    : index === N - 1 ? [inStart, inEnd, 1]
+    : [inStart, inEnd, outStart, outEnd];
   const values = index === 0 ? [1, 1, 0] : index === N - 1 ? [0, 1, 1] : [0, 1, 1, 0];
   const opacity = useTransform(progress, stops, values);
+
+  // Once covered, the plate's video decodes invisibly — pause it (resumes the
+  // moment upward scroll uncovers it, just before the reveal).
+  const [covered, setCovered] = useState(index !== 0);
+  useMotionValueEvent(progress, 'change', (v) => {
+    const c = v > nextOpaque || v < inStart;
+    setCovered((cur) => (cur === c ? cur : c));
+  });
   // SB-20 is locked-off (the finale holds its breath) — no ken-burns.
   const finale = frame.id === 'SB-20';
   const scale = useTransform(
@@ -137,15 +182,21 @@ function Plate({ frame, index, progress, priority, active }: { frame: Frame; ind
   const overlay = OVERLAYS[frame.id];
   const dist = Math.abs(index - active);
 
+  // GPU promotion only for the working set (incoming/active/outgoing) — a
+  // permanently promoted 24-plate stack pins ~48 viewport-sized compositor
+  // buffers and blows the iOS Safari tile budget. Stills stay mounted for all
+  // plates (teleports/fast flicks must never land on an unpainted layer).
+  const promote = dist <= 1;
+
   return (
     <motion.div
-      className="absolute inset-0 will-change-[opacity]"
-      style={{ opacity, scale: exitScale, y: exitY, transformOrigin: exit?.origin }}
+      className="absolute inset-0"
+      style={{ opacity, scale: exitScale, y: exitY, transformOrigin: exit?.origin, willChange: promote ? 'opacity, transform' : undefined }}
     >
-      <motion.div className="absolute inset-0 will-change-transform" style={{ scale }}>
+      <motion.div className="absolute inset-0" style={{ scale, willChange: promote ? 'transform' : undefined }}>
         <Image src={frame.media} alt="" fill sizes="100vw" priority={priority} className="object-cover" />
-        {/* Living layer: poster-first enhancement, mounted ±2 bands (buffer), playing ±1. */}
-        {living && dist <= 2 && <LivingLayer cfg={living} p={p} near={dist <= 1} />}
+        {/* Living layer: poster-first enhancement, mounted ±2 bands (buffer), playing ±1 while uncovered. */}
+        {living && dist <= 2 && <LivingLayer cfg={living} p={p} near={dist <= 1 && !covered} />}
       </motion.div>
       {/* Instrument/code overlays sit outside the ken-burns wrapper — razor-sharp, no zoom. */}
       {overlay === 'gauge' && dist <= 1 && <GaugeSweep p={p} />}
@@ -179,8 +230,10 @@ function StageMedia({ progress }: { progress: MotionValue<number> }) {
     const i = Math.round(v / D);
     setActive((cur) => (cur === i ? cur : i));
   });
-  // 'change' never fires for a restored scroll position — sync once on mount.
-  useEffect(() => {
+  // 'change' never fires for a restored scroll position — sync before paint
+  // (iOS Safari restores scroll aggressively; a post-paint sync would commit
+  // one frame with the wrong working set promoted).
+  useLayoutEffect(() => {
     setActive(Math.round(progress.get() / D));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
