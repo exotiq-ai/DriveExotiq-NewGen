@@ -1,6 +1,6 @@
 # 07 — Cut the AI, use the real film: footage-swap + copy proposal
 
-> **Status: AWAITING OWNER APPROVAL (2026-07-04).** Nothing here is executed.
+> **Status: EXECUTED 2026-07-04 PM (commit e5b3374)** — owner approved; all 7 swaps live at $0 gen spend. SB-07 shipped still-only; SB-14 kept (real motion); copy landed per the 3-lens-amended 06 plan.
 > Full shot logs: `docs/redesign/storyboard/FOOTAGE-SURVEY.md`
 > (per-clip in/out timecodes, quality notes, contact sheets).
 
