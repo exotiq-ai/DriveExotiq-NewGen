@@ -36,9 +36,9 @@ The film moves; now it gains *physical depth* and swaps generation for reality w
 - **JSON-LD — DONE** (WebPage + hero-loop VideoObject).
 - **SB-02→SB-03 bloom assist — DONE** (screen-blend swell peaking on the cut).
 
-## Real-footage swap proposal (NEW — awaiting owner)
+## Real-footage swap — EXECUTED 2026-07-04 PM (commit e5b3374, owner-approved)
 
-See **07-REAL-FOOTAGE-PROPOSAL.md**: 7 beats can go real at $0 generation cost (SB-07/11/12/13/14/15/16), killing three earmarked generations and the weak-beat re-take tail. Full shot logs in storyboard/FOOTAGE-SURVEY.md. Decisions: per-beat go/no-go, SB-14 kicker, SB-13 grille foreshadow.
+All 7 beats from **07-REAL-FOOTAGE-PROPOSAL.md** went real at $0 gen spend (SB-07 as a still-only beat; SB-14 saved from the cut — its real clip genuinely moves). SB-07b cut (23 beats), ask merged into SB-08b. The 06 words layer landed the same push with 3-lens review amendments (see the annotation block atop 06-COPY-SEO-PLAN.md). Owner taste items still open: S8 appears 3× in Movement I before its SB-18 reveal; SB-08b still plates the McLaren while the real drive beats star the 458; SB-15's wet-dirt FPV positioning.
 
 Encode-tightening data (Phase 4 §2): sb-19-scrub CRF22 = 11M→8.3M (SSIM .993, ready); sb-02-scrub already at its floor; sb-19b must be re-cut from its 4K master. Apply after the footage decision — several of these assets may be replaced anyway.
 
