@@ -2,11 +2,14 @@ import type { Metadata } from 'next';
 import ExperienceScroll from '@/components/experience/ExperienceScroll';
 import { FRAMES } from '@/components/experience/frames';
 
+// Keyword-forward but honest (≤155 ch; rentals always "coming soon"). One
+// DESCRIPTION const so search snippets and social shares pitch the same film.
 const DESCRIPTION =
-  'Scroll the car out of the dark and down the road — the Drive Exotiq experience, from the garage to the Denver→Miami tour.';
+  'Exotic car rentals coming soon at exotiq.rent — McLaren, Porsche, Lamborghini. Invite-only drives, monthly Cars & Coffee, and the Denver→Miami tour.';
 
 export const metadata: Metadata = {
-  title: 'The Drive',
+  // 50 ch with the "· Drive Exotiq" template suffix (brief law: ≤60).
+  title: 'Exotic Car Rentals & Curated Drives',
   description: DESCRIPTION,
   alternates: { canonical: '/experience' },
   // Explicit per-page social card — metadata inheritance would otherwise ship
@@ -65,8 +68,11 @@ export default function ExperiencePage() {
       >
         Skip the film
       </a>
+      {/* The spine stays FILM-EQUIVALENT (every hidden word has a visible
+          counterpart on the page) — the review moved the keyword freight to
+          the visible end-card pillars, where Google actually weights it. */}
       <div className="sr-only">
-        <h1>Drive Exotiq — the drive</h1>
+        <h1>Drive Exotiq — built for the people who actually drive the car</h1>
         <p>Drive Exotiq is the community front door to the exotiq.rent exotic-car marketplace.</p>
         <ol>
           {FRAMES.map((f) => (

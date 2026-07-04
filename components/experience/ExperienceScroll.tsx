@@ -97,7 +97,7 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
               href="/apply"
               className="hidden rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-block"
             >
-              Join the waitlist
+              Get on the list
             </Link>
             <Link
               href="/sponsor"
@@ -170,7 +170,7 @@ function StaticChrome() {
             href="/apply"
             className="hidden rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-block"
           >
-            Join the waitlist
+            Get on the list
           </Link>
           <Link
             href="/sponsor"
@@ -260,20 +260,69 @@ export default function ExperienceScroll() {
         <CinematicStage />
       </div>
 
-      {/* End-card: the scroll must never dead-end after the ask. */}
+      {/* End-card: the scroll must never dead-end after the ask. The four
+          pillars are the film's crawlable layer — REAL on-page H2s carry the
+          keyword freight (visible text outranks any sr-only prose); every
+          pillar link is ghost so the card's single Gulf CTA keeps the
+          one-accent law. */}
       <section id="experience-end" className="border-t border-line bg-canvas">
-        <div className="mx-auto flex max-w-content flex-col gap-6 px-6 py-14 md:flex-row md:items-center md:justify-between md:px-8">
-          <div>
-            <p className="font-display text-sm font-bold tracking-tight-exotiq text-ink">Drive Exotiq</p>
-            <p className="mt-1 text-xs text-ink-3">An Exotiq Inc. brand — the community front door to the exotiq.rent marketplace.</p>
+        <div className="mx-auto max-w-content px-6 py-16 md:px-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <h2 className="font-display text-2xl font-bold tracking-tight-exotiq text-ink md:text-3xl">
+              Rent. Drive. Gather. Partner.
+            </h2>
+            <Link
+              href="/apply"
+              className="w-fit rounded-sm bg-gulf px-6 py-3 text-sm font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
+            >
+              Get on the list
+            </Link>
           </div>
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ink-2">
-            <Link href="/" className="transition-colors hover:text-ink">Home</Link>
-            <Link href="/tour" className="transition-colors hover:text-ink">The tour</Link>
-            <Link href="/sponsor" className="transition-colors hover:text-ink">Sponsor</Link>
-            <Link href="/apply" className="transition-colors hover:text-ink">Apply</Link>
-            <span className="text-ink-3">© {new Date().getFullYear()} Exotiq Inc.</span>
-          </nav>
+          <div className="mt-10 grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                name: 'Rent',
+                copy: 'The exotiq.rent marketplace — McLaren, Porsche, Lamborghini, Rolls-Royce, and the rest of the dream garage. Coming soon.',
+                cta: 'Get on the list', href: '/apply',
+              },
+              {
+                name: 'Drive',
+                copy: 'Curated, invite-only drives. The last Sunday of every month, at sunrise.',
+                cta: 'Request your invite', href: '/apply',
+              },
+              {
+                name: 'Gather',
+                copy: 'A monthly Cars & Coffee worth parking at — the cars and the people who actually drive them.',
+                cta: 'Get on the list', href: '/apply',
+              },
+              {
+                name: 'Partner',
+                copy: 'We partner with events and brands that get it. Bring us yours.',
+                cta: 'Partner with us', href: '/sponsor?interest=partnership',
+              },
+            ].map((p) => (
+              <div key={p.name} className="flex flex-col gap-3 bg-canvas p-6">
+                <h3 className="text-[11px] font-semibold tracking-[0.08em] text-ink-2">{p.name}</h3>
+                <p className="text-sm leading-relaxed text-ink-2">{p.copy}</p>
+                <Link href={p.href} className="mt-auto w-fit text-xs font-semibold text-ink transition-colors hover:text-gulf">
+                  {p.cta} →
+                </Link>
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="font-display text-sm font-bold tracking-tight-exotiq text-ink">Drive Exotiq</p>
+              <p className="mt-1 text-xs text-ink-3">An Exotiq Inc. brand — the community front door to the exotiq.rent marketplace.</p>
+            </div>
+            <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ink-2">
+              <Link href="/" className="transition-colors hover:text-ink">Home</Link>
+              <Link href="/tour" className="transition-colors hover:text-ink">The tour</Link>
+              <Link href="/sponsor" className="transition-colors hover:text-ink">Sponsor</Link>
+              <Link href="/apply" className="transition-colors hover:text-ink">Apply</Link>
+              <span className="text-ink-3">© {new Date().getFullYear()} Exotiq Inc.</span>
+            </nav>
+          </div>
         </div>
       </section>
     </>

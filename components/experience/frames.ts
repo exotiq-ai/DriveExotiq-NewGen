@@ -61,28 +61,60 @@ export const FRAMES: Frame[] = [
   {
     id: 'SB-04', media: `${M}/garage-interior-v2.png`, movement: 'I', align: 'center',
     kicker: 'The fleet', headline: 'Every one of them, driven.',
+    body: 'The marketplace opens soon — exotiq.rent.',
   },
-  { id: 'SB-05', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left', kicker: '01', headline: 'McLaren 720S', body: 'Twin-turbo V8. Full specs at launch.' },
-  { id: 'SB-06', media: `${M}/porsche-gt3rs.png`, movement: 'I', align: 'right', kicker: '02', headline: 'Porsche 911 GT3 RS' },
-  { id: 'SB-07', media: `${M}/lambo-ferrari.png`, movement: 'I', align: 'left', kicker: '03', headline: 'The icons.', body: 'Lamborghini. Ferrari.' },
   {
-    id: 'SB-07b', media: `${M}/waitlist-still.png`, movement: 'I', align: 'center',
-    kicker: 'The list', headline: 'First keys to the fleet.', cta: 'Get on the list', ctaHref: '/apply',
+    id: 'SB-05', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left', kicker: '01', headline: 'McLaren 720S',
+    body: 'Twin-turbo V8 behind your shoulders. The one that rewards the driver, not the parking lot.',
   },
+  {
+    id: 'SB-06', media: `${M}/porsche-gt3rs.png`, movement: 'I', align: 'right', kicker: '02', headline: 'Porsche 911 GT3 RS',
+    jewel: 'The canyon carver.',
+    body: 'GT3 is Porsche’s motorsport bloodline, naturally aspirated in every generation. RS is that bloodline, concentrated.',
+  },
+  // Real 458 nose macro (Telluride shoot) — still-only beat: the source shot is
+  // locked-off, so the plate + ken-burns + global grain carry it (zero video
+  // bytes). Copy completes the 01/02/03 model pattern; the badge on screen
+  // leads, the rest of the dial rides one sentence.
+  {
+    id: 'SB-07', media: `${M}/icons-458.jpg`, movement: 'I', align: 'left', kicker: '03', headline: 'Ferrari 458',
+    body: 'The rest of the dial — Lamborghini, Rolls-Royce, Aston Martin, G-Wagon.',
+  },
+  // SB-07b cut (owner + copy plan §4): the film asked before the viewer had
+  // chosen. Its ask now lands on SB-08b — desire → choice → possession → ask.
   { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Choose your car.', weight: 2, mobileWeight: 1 },
-  { id: 'SB-08b', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left', jewel: 'This one’s yours.', cta: 'Get on the list', ctaHref: '/apply' },
+  {
+    id: 'SB-08b', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left',
+    // The Movement-I ask, landed at possession (no kicker — the CTA already
+    // says "the list"; review: the near-duplication class SB-20 was cured of).
+    // Weight 1.5: the film's only in-movement conversion earns a held beat.
+    headline: 'First keys to the fleet.', jewel: 'This one’s yours.',
+    cta: 'Get on the list', ctaHref: '/apply',
+    weight: 1.5,
+  },
   { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.', weight: 2, mobileWeight: 1 },
   { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
   // Weight 1.5: the gauge sweep is plate-local-progress-driven, so it inherits
   // the longer band on every device — at weight 1 the whole sweep was 0.25
-  // viewports and a single flick skipped the ignition moment.
-  { id: 'SB-11', media: `${M}/ignition-v2.png`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start, the gauges sweep', weight: 1.5 },
+  // viewports and a single flick skipped the ignition moment. Real footage:
+  // the S8 Roller start-button press (24.9–28.4s), thumb on the red ring.
+  { id: 'SB-11', media: `${M}/ignition-real.jpg`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start, the gauges sweep', weight: 1.5 },
   { id: 'SB-11b', media: `${M}/roll-out.png`, movement: 'I', aria: 'The nose eases out of the garage' },
-  { id: 'SB-12', media: `${M}/open-road.png`, movement: 'I', align: 'center', headline: 'The road opens.' },
-  { id: 'SB-13', media: `${M}/drive-mountain.png`, movement: 'I', align: 'left', jewel: 'This is the drive.' },
-  { id: 'SB-14', media: `${M}/coast-aerial.png`, movement: 'I', align: 'center', kicker: 'The coast', aria: 'Golden-hour aerial over the coast road' },
-  { id: 'SB-15', media: `${M}/coastline-run.png`, movement: 'I', align: 'right', jewel: 'This could be you.' },
-  { id: 'SB-16', media: `${M}/wheel-detail.png`, movement: 'I', aria: 'Close detail along the flank' },
+  // The drive world goes REAL from here: Telluride aspen aerial, the S8 alone
+  // on the alpine pass, the high-country curve, the FPV chase, the rolling
+  // wheel — the owners' actual cars on actual Colorado roads.
+  { id: 'SB-12', media: `${M}/road-real.jpg`, movement: 'I', align: 'center', headline: 'The road opens.' },
+  // The lone dark sedan stays UNEXPLAINED — a plant, not a spoiler; SB-18's
+  // "One more thing" pays it off. The drives-pillar copy lives on SB-14,
+  // the plate that actually shows two cars running together.
+  { id: 'SB-13', media: `${M}/drive-real.jpg`, movement: 'I', align: 'left', kicker: 'The high country', jewel: 'This is the drive.' },
+  {
+    id: 'SB-14', media: `${M}/highcountry-real.jpg`, movement: 'I', align: 'center',
+    kicker: 'The drives', body: 'Invite-only, the last Sunday of every month. Sunrise, then Cars & Coffee.',
+    aria: 'Aerial over a high-country road, two cars in convoy',
+  },
+  { id: 'SB-15', media: `${M}/chase-real.jpg`, movement: 'I', align: 'right', jewel: 'This could be you.' },
+  { id: 'SB-16', media: `${M}/wheel-real.jpg`, movement: 'I', aria: 'The wheel, up close, slowing' },
 
   // ---------- The Pivot ----------
   {
@@ -115,11 +147,12 @@ export const FRAMES: Frame[] = [
   },
   {
     id: 'SB-20', media: `${M}/cold-open-v2.png`, movement: 'II', align: 'center',
-    // Audit fix: the headline duplicated its own CTA label in one viewport
-    // ("Sponsor the wrap." twice). The line now states the fact that sets up
-    // BOTH doors in: the route exists, the wrap is the open seat.
-    kicker: 'Two ways in', headline: 'The route is set. The wrap isn’t.',
+    // Owner-approved finale line: names both doors in — keys for renters,
+    // canvas for the wrap sponsor — matching the two CTAs beneath it.
+    // Secondary label is CTA-LIST ("Get on the list" ↔ /apply per the copy
+    // brief's library; "Join the waitlist" is bound to /marketplace).
+    kicker: 'Two ways in', headline: 'The keys, or the canvas.',
     cta: 'Sponsor the wrap', ctaHref: '/sponsor',
-    secondaryCta: 'Join the waitlist', secondaryCtaHref: '/apply',
+    secondaryCta: 'Get on the list', secondaryCtaHref: '/apply',
   },
 ];

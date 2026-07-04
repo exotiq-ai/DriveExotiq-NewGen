@@ -96,6 +96,17 @@ export const GRADE: Record<string, { wash?: number; grain?: number; vignette?: n
   'SB-17': { wash: 0.10, grain: 0.02, vignette: 0.12 },
   'SB-18': { wash: 0.10, grain: 0.02, vignette: 0.12 },
   'SB-19b': { wash: 0.14, grain: 0.03, vignette: 0.16 },
+  // 2026-07-04 real-footage swaps: these clips are dusk-noir graded at encode
+  // (SSIM-matched to the sb-19b recipe) but still lack the AI plates' baked
+  // grain — a light print seat welds them in. SB-11's interior is already
+  // near-black: grain only, no extra vignette.
+  'SB-07': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  'SB-11': { grain: 0.02 },
+  'SB-12': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  'SB-13': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  'SB-14': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  'SB-15': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  'SB-16': { wash: 0.06, grain: 0.02, vignette: 0.08 },
 };
 
 /**
@@ -189,10 +200,11 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-10.jpg'),
   },
 
-  // Phase 1v2 — SB-11: the living macro under the gauge overlay, re-rendered
-  // authentic (carbon weave console, restrained halo; Kling v2-t1, seam 0.980).
+  // SB-11 REAL: the S8 start-button press macro (Roller 24.9–28.4s) — plays
+  // once as the band enters, ends on the woken cluster and holds. The gauge
+  // overlay stays: it was modeled on this exact car's instruments.
   'SB-11': {
-    kind: 'loop',
+    kind: 'play-once',
     src: vid('sb-11.mp4'),
     mobileSrc: vid('sb-11.720.mp4'),
     poster: pos('/images/experience/poster/sb-11.jpg'),
@@ -222,13 +234,8 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-06.jpg'),
   },
 
-  // Phase 2 — SB-07: the open scissor door, DRLs waking (Kling t2).
-  'SB-07': {
-    kind: 'loop',
-    src: vid('sb-07.mp4'),
-    mobileSrc: vid('sb-07.720.mp4'),
-    poster: pos('/images/experience/poster/sb-07.jpg'),
-  },
+  // SB-07 is still-only since the real-458 swap (locked-off macro — the plate
+  // + ken-burns carry it; zero video bytes by design).
 
   // Phase 2 — SB-11b: the first movement of the film — the car creeps out of
   // the garage (Veo v2-t1 from the authentic cabin frame; plays once, holds).
@@ -336,6 +343,5 @@ export const LIVING: Record<string, LivingMedia> = {
 export const OVERLAYS: Record<string, Overlay> = {
   // Phase 1 — the ignition tach owned by the scroll (modeled on DSC02086/96).
   'SB-11': 'gauge',
-  // Phase 2 — SB-07b: silence with a pulse (zero media bytes by design).
-  'SB-07b': 'lamp',
+  // (SB-07b and its lamp overlay were cut 2026-07-04 — the ask moved to SB-08b.)
 };

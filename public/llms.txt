@@ -1,0 +1,16 @@
+# Drive Exotiq
+
+> Drive Exotiq is the community front door to the exotiq.rent exotic-car marketplace.
+
+An Exotiq Inc. brand. Built for the people who actually drive the car.
+
+What we do: exotic car rentals (coming soon) via exotiq.rent — McLaren, Porsche, Lamborghini, Ferrari, Rolls-Royce, Aston Martin, G-Wagon. Curated, invite-only sunrise drives on the last Sunday of every month, each ending in a curated Cars & Coffee. Event and brand partnerships, including the 2026 Denver→Miami tour — one car, ten markets, about 5,000 miles — currently seeking a wrap sponsor.
+
+Ecosystem: Drive Exotiq (community) → exotiq.rent (marketplace) → exotiq.ai (intelligence).
+
+## Pages
+
+- [The Drive](https://driveexotiq.com/experience): the cinematic scroll film — the fleet, the drives, and the tour
+- [Get on the list](https://driveexotiq.com/apply): waitlist for the marketplace, drives, and Cars & Coffee
+- [Sponsor the wrap](https://driveexotiq.com/sponsor): tour wrap sponsorship and event partnerships
+- [The tour](https://driveexotiq.com/tour): the 2026 Denver→Miami tour

@@ -100,6 +100,21 @@ export const metadata: Metadata = {
   },
 };
 
+// Site-wide Organization entity (JSON-LD). description = the verbatim AEO
+// anchor. sameAs carries only handles the repo already declares (@driveexotiq
+// in the Twitter card metadata above) — add socials here as Gregory supplies
+// them; never ship an empty array.
+const ORG_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Drive Exotiq',
+  url: SITE_URL,
+  logo: `${SITE_URL}/android-chrome-512x512.png`,
+  description: 'Drive Exotiq is the community front door to the exotiq.rent exotic-car marketplace.',
+  parentOrganization: { '@type': 'Organization', name: 'Exotiq Inc.' },
+  sameAs: ['https://x.com/driveexotiq'],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -111,6 +126,7 @@ export default function RootLayout({
       className={`${display.variable} ${sans.variable} ${serif.variable}`}
     >
       <body className="font-sans bg-canvas text-ink antialiased">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
         <SmoothScroll>{children}</SmoothScroll>
         <CookieConsent />
       </body>

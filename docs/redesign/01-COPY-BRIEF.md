@@ -97,6 +97,7 @@ Use **one gulf primary CTA per viewport** (design rule). Secondaries are ghost/t
 | `CTA-INVITE` | **Request your invite** | /apply (drive context) | /drives close |
 | `CTA-RSVP` | **RSVP for this drive** | /apply (pre-filled) | /drives next-drive card (when RSVP open) |
 | `CTA-READ` | **Read the story** | /blog/[slug] | blog index card |
+| `CTA-PARTNER` | **Partner with us** | /sponsor?interest=partnership | /experience end-card pillar 4, future partner touchpoints |
 | `CTA-STORIES` | **Read the stories** | /blog | secondary on HOME/footer |
 | `CTA-SCROLL` | **Walk the garage ↓** | scroll cue | HOME H0 |
 
@@ -470,7 +471,8 @@ Use **one gulf primary CTA per viewport** (design rule). Secondaries are ghost/t
 | `SP-FORM-EMAIL` | field label | Email address | ☐ |
 | `SP-FORM-PHONE` | field label | Phone (optional) | ☐ |
 | `SP-FORM-INTEREST` | select label | Sponsorship interest | ☐ |
-| `SP-FORM-INTEREST-OPTS` | select options | Title / Wrap · Tour · Drive · Not sure yet | ☐ |
+| `SP-FORM-INTEREST-OPTS` | select options | Title / Wrap · Tour · Drive · Event partnership · Not sure yet | ☐ |
+| | | *(`?interest=partnership` in the URL pre-selects Event partnership — the /experience end card already links this way; wire it when the form is built)* | |
 | `SP-FORM-BUDGET` | select label | Budget range | ☐ |
 | `SP-FORM-MESSAGE` | field label | Anything else? | ☐ |
 | `SP-FORM-CTA` | submit (gulf) | Start a sponsorship conversation | ☐ |
