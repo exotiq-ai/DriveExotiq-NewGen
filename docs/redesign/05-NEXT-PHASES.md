@@ -28,13 +28,19 @@ The film moves; now it gains *physical depth* and swaps generation for reality w
 
 **Exit criteria:** all gates green on hardware; budgets enforced; analytics live; submissions filed.
 
-## Deferred from the 2026-07-04 design audit (implement in Phase 4)
+## Deferred from the 2026-07-04 design audit — ALL SHIPPED 2026-07-04 PM (commits 1e8f139/8aebf63)
 
-- **Weighted beat pacing**: the four scrub money-beats (SB-02/08/09/19) complete in <1 viewport of scroll — a confident flick skips them. Design ready: `weight?: number` on Frame + cumulative-position array replacing every k·D expression + per-block `height: weight*100svh`. Touches all band math — do as its own reviewed change.
-- **Progress-hairline act ticks / skip-to-the-ask**: clickable ticks at the SB-18 pivot and SB-20 (lenis.scrollTo), or a Movement-I-only "Skip to the tour" ghost link.
-- **Copy polish (owner voice pass)**: three lines flagged slightly off-voice + the finale headline duplicating its CTA label ("Sponsor the wrap." twice in one viewport).
-- **JSON-LD** for /experience (VideoObject/WebPage schema).
-- **SB-02→SB-03 bloom assist**: under opaque-underneath layering, implement as a screen-blend overlay above both plates (the treatment's outgoing-plate brightness can't "swallow the frame" anymore).
+- **Weighted beat pacing — DONE.** 3-lens adversarial review reshaped the design: weights live in `bands.ts` as TWO tables (scrub-capable: SB-02/08/09 ×2, SB-11 ×1.5, SB-18 ×1.5, SB-19 ×2.5, SB-19b ×2 = 30.5 viewports; coarse pointers: scrubs stay ×1 — their play-once fallback can't fill a band). Fade widths constant in scroll distance; keyboard = band ownership (never nearest-anchor); block heights in CSS media queries; ticks mount-gated (React skips style-attr diffing at hydration).
+- **Act ticks / skip-to-the-ask — DONE** (hairline ticks at SB-18 + SB-20, lenis glide).
+- **Copy polish — finale dedupe DONE** ("The route is set. The wrap isn't."). The three off-voice lines folded into the 07 footage/copy proposal for the owner pass.
+- **JSON-LD — DONE** (WebPage + hero-loop VideoObject).
+- **SB-02→SB-03 bloom assist — DONE** (screen-blend swell peaking on the cut).
+
+## Real-footage swap proposal (NEW — awaiting owner)
+
+See **07-REAL-FOOTAGE-PROPOSAL.md**: 7 beats can go real at $0 generation cost (SB-07/11/12/13/14/15/16), killing three earmarked generations and the weak-beat re-take tail. Full shot logs in storyboard/FOOTAGE-SURVEY.md. Decisions: per-beat go/no-go, SB-14 kicker, SB-13 grille foreshadow.
+
+Encode-tightening data (Phase 4 §2): sb-19-scrub CRF22 = 11M→8.3M (SSIM .993, ready); sb-02-scrub already at its floor; sb-19b must be re-cut from its 4K master. Apply after the footage decision — several of these assets may be replaced anyway.
 
 ## Standing constraints (unchanged, non-negotiable)
 
