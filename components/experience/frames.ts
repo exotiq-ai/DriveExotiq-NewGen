@@ -78,13 +78,19 @@ export const FRAMES: Frame[] = [
   // leads, the rest of the dial rides one sentence.
   {
     id: 'SB-07', media: `${M}/icons-458.jpg`, movement: 'I', align: 'left', kicker: '03', headline: 'Ferrari 458',
-    body: 'The rest of the dial — Lamborghini, Rolls-Royce, Aston Martin, G-Wagon.',
+    // The 458 earns its clause (audit: the third model in the pattern got a
+    // brand list where 01/02 got love) — and the fact is exact: after the 458,
+    // every Ferrari V8 went turbo.
+    body: 'The last naturally aspirated Ferrari V8. Then the quiet end of the dial — Lamborghini, Rolls-Royce, Aston Martin, G-Wagon.',
   },
   // SB-07b cut (owner + copy plan §4): the film asked before the viewer had
   // chosen. Its ask now lands on SB-08b — desire → choice → possession → ask.
   { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Choose your car.', weight: 2, mobileWeight: 1 },
   {
-    id: 'SB-08b', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left',
+    // REAL plate (owner: don't re-show SB-05's portrait) — the rain-beaded
+    // 458+R8 pair at the lakeside. Choose the dream at SB-08; possess the
+    // real thing here.
+    id: 'SB-08b', media: `${M}/pair-real.jpg`, movement: 'I', align: 'left',
     // The Movement-I ask, landed at possession (no kicker — the CTA already
     // says "the list"; review: the near-duplication class SB-20 was cured of).
     // Weight 1.5: the film's only in-movement conversion earns a held beat.
@@ -110,7 +116,9 @@ export const FRAMES: Frame[] = [
   { id: 'SB-13', media: `${M}/drive-real.jpg`, movement: 'I', align: 'left', kicker: 'The high country', jewel: 'This is the drive.' },
   {
     id: 'SB-14', media: `${M}/highcountry-real.jpg`, movement: 'I', align: 'center',
-    kicker: 'The drives', body: 'Invite-only, the last Sunday of every month. Sunrise, then Cars & Coffee.',
+    // "Colorado's high country" is the film's one geography anchor (audit:
+    // no persona could say WHERE any of this happens until the end card).
+    kicker: 'The drives', body: 'Invite-only, the last Sunday of every month. Sunrise in Colorado’s high country, then Cars & Coffee.',
     aria: 'Aerial over a high-country road, two cars in convoy',
   },
   { id: 'SB-15', media: `${M}/chase-real.jpg`, movement: 'I', align: 'right', jewel: 'This could be you.' },

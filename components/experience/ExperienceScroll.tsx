@@ -60,6 +60,18 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
   const progressScale = useTransform(progress, [0, 1], [0, 1]);
   const cueOpacity = useTransform(progress, [0, 0.8 * bands.end[0]], [1, 0]);
 
+  // The chrome's Gulf button follows the film's audience (visitor audit: a
+  // stranger stared at "Sponsor the wrap" for 20 beats before the film
+  // explained the wrap). Movement I: the renter ask is primary. From the
+  // SB-18 pivot on: the sponsor ask takes the Gulf. Cross-faded on the same
+  // stage progress that drives everything else.
+  const pivotK = FRAMES.findIndex((f) => f.id === 'SB-18');
+  const pivotAt = bands.start[Math.max(0, pivotK)];
+  const renterNavOpacity = useTransform(progress, [pivotAt - 0.15 * bands.unit, pivotAt + 0.15 * bands.unit], [1, 0]);
+  const sponsorNavOpacity = useTransform(progress, [pivotAt - 0.15 * bands.unit, pivotAt + 0.15 * bands.unit], [0, 1]);
+  const renterNavEvents = useTransform(renterNavOpacity, (o) => (o < 0.5 ? ('none' as const) : ('auto' as const)));
+  const sponsorNavEvents = useTransform(sponsorNavOpacity, (o) => (o < 0.5 ? ('none' as const) : ('auto' as const)));
+
   // Act ticks on the hairline (audit item: skip-to-the-ask): the pivot and the
   // finale, clickable. Quiet by design — 1px marks that brighten on hover; the
   // returning sponsor shouldn't need 30 viewports of scroll to reach the ask.
@@ -92,20 +104,44 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
           <Link href="/" className="font-display text-sm font-bold tracking-tight-exotiq text-ink">
             Drive Exotiq
           </Link>
-          <nav className="flex items-center gap-2">
-            <Link
-              href="/apply"
-              className="hidden rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-block"
+          <div className="relative">
+            {/* Movement-I nav: the renter ask holds the Gulf. */}
+            <motion.nav
+              className="flex items-center gap-2"
+              style={{ opacity: renterNavOpacity, pointerEvents: renterNavEvents }}
             >
-              Get on the list
-            </Link>
-            <Link
-              href="/sponsor"
-              className="rounded-sm bg-gulf px-4 py-2 text-xs font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
+              <Link
+                href="/sponsor"
+                className="hidden rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-block"
+              >
+                Sponsor the wrap
+              </Link>
+              <Link
+                href="/apply"
+                className="rounded-sm bg-gulf px-4 py-2 text-xs font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
+              >
+                Get on the list
+              </Link>
+            </motion.nav>
+            {/* Movement-II nav: the sponsor ask takes over at the pivot. */}
+            <motion.nav
+              className="absolute inset-y-0 right-0 flex items-center gap-2"
+              style={{ opacity: sponsorNavOpacity, pointerEvents: sponsorNavEvents }}
             >
-              Sponsor the wrap
-            </Link>
-          </nav>
+              <Link
+                href="/apply"
+                className="hidden rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-block"
+              >
+                Get on the list
+              </Link>
+              <Link
+                href="/sponsor"
+                className="rounded-sm bg-gulf px-4 py-2 text-xs font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
+              >
+                Sponsor the wrap
+              </Link>
+            </motion.nav>
+          </div>
         </div>
       </motion.header>
 

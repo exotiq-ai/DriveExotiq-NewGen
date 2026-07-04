@@ -101,6 +101,7 @@ export const GRADE: Record<string, { wash?: number; grain?: number; vignette?: n
   // grain — a light print seat welds them in. SB-11's interior is already
   // near-black: grain only, no extra vignette.
   'SB-07': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  'SB-08b': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-11': { grain: 0.02 },
   'SB-12': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-13': { wash: 0.06, grain: 0.02, vignette: 0.08 },
@@ -159,14 +160,14 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-05.jpg'),
   },
 
-  // SB-08b: the same portrait, slowed — a decision already made (reuses SB-05's
-  // file URL: warm cache, zero new bytes).
+  // SB-08b REAL: the rain-beaded pair at the lakeside (Telluride 143.5–147.5,
+  // slow pan) — the possession beat gets its own plate (owner: re-showing
+  // SB-05's portrait here read as a repeat, not a decision).
   'SB-08b': {
     kind: 'loop',
-    src: vid('sb-05.mp4'),
-    mobileSrc: vid('sb-05.720.mp4'),
-    poster: pos('/images/experience/poster/sb-05.jpg'),
-    playbackRate: 0.7,
+    src: vid('sb-08b.mp4'),
+    mobileSrc: vid('sb-08b.720.mp4'),
+    poster: pos('/images/experience/poster/sb-08b.jpg'),
   },
 
   // Phase 1 — SB-08: "Choose your car." — the Huracán creeps toward you under
@@ -341,7 +342,10 @@ export const LIVING: Record<string, LivingMedia> = {
 };
 
 export const OVERLAYS: Record<string, Overlay> = {
-  // Phase 1 — the ignition tach owned by the scroll (modeled on DSC02086/96).
-  'SB-11': 'gauge',
+  // (SB-11's gauge overlay retired 2026-07-04 with the real-footage swap: the
+  // REAL cluster wakes on camera — a synthetic tach on top of documentary
+  // footage undercut the honesty the swap bought, and the scroll-scrubbed
+  // sweep desynced from the time-based play-once press. GaugeSweep stays in
+  // the codebase for future instrument moments.)
   // (SB-07b and its lamp overlay were cut 2026-07-04 — the ask moved to SB-08b.)
 };
