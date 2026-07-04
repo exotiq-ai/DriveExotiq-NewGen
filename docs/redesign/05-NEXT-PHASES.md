@@ -28,6 +28,14 @@ The film moves; now it gains *physical depth* and swaps generation for reality w
 
 **Exit criteria:** all gates green on hardware; budgets enforced; analytics live; submissions filed.
 
+## Deferred from the 2026-07-04 design audit (implement in Phase 4)
+
+- **Weighted beat pacing**: the four scrub money-beats (SB-02/08/09/19) complete in <1 viewport of scroll — a confident flick skips them. Design ready: `weight?: number` on Frame + cumulative-position array replacing every k·D expression + per-block `height: weight*100svh`. Touches all band math — do as its own reviewed change.
+- **Progress-hairline act ticks / skip-to-the-ask**: clickable ticks at the SB-18 pivot and SB-20 (lenis.scrollTo), or a Movement-I-only "Skip to the tour" ghost link.
+- **Copy polish (owner voice pass)**: three lines flagged slightly off-voice + the finale headline duplicating its CTA label ("Sponsor the wrap." twice in one viewport).
+- **JSON-LD** for /experience (VideoObject/WebPage schema).
+- **SB-02→SB-03 bloom assist**: under opaque-underneath layering, implement as a screen-blend overlay above both plates (the treatment's outgoing-plate brightness can't "swallow the frame" anymore).
+
 ## Standing constraints (unchanged, non-negotiable)
 
 Poster-first everywhere · crawlable spine + verbatim AEO anchor · one Gulf accent per viewport · banned-word list · no invented specs · commit only when the owner asks · Netlify never serves video.
