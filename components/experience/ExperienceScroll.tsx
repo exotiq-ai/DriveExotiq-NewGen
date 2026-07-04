@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'framer-motion';
 import CinematicStage from './CinematicStage';
 import { FRAMES } from './frames';
@@ -63,6 +63,11 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
   // Act ticks on the hairline (audit item: skip-to-the-ask): the pivot and the
   // finale, clickable. Quiet by design — 1px marks that brighten on hover; the
   // returning sponsor shouldn't need 30 viewports of scroll to reach the ask.
+  // Mount-gated: tick positions depend on the weight table, which the server
+  // can't know — React skips style-attribute diffing during hydration, so an
+  // SSR-positioned tick would silently keep the wrong table's offset forever.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const TICKS = FRAMES
     .map((f, i) => ({ f, i }))
     .filter(({ f }) => f.id === 'SB-18' || f.id === 'SB-20')
@@ -113,7 +118,7 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
       />
       {/* Act ticks: generous hit areas, hairline-quiet marks. */}
       <div className="fixed inset-x-0 top-0 z-[61]">
-        {TICKS.map((t) => (
+        {mounted && TICKS.map((t) => (
           <button
             key={t.i}
             type="button"
