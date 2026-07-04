@@ -16,15 +16,16 @@ import { cn } from '@/lib/utils';
 import { FRAMES, type Frame } from './frames';
 import { LIVING, OVERLAYS, EXITS, FADES, GRADE } from './living';
 import { PLACEHOLDERS } from './placeholders';
+import { FINE_BANDS, COARSE_BANDS, useBands, bandAt, type Bands } from './bands';
 import LivingLayer from './LivingLayer';
 import GaugeSweep from './GaugeSweep';
 import LampBreath from './LampBreath';
 import Odometer from './Odometer';
 
 const N = FRAMES.length;
-// Copy block k is viewport-centered at progress k/(N-1) — media bands must use
-// the same denominator or the two drift apart down the page.
-const D = 1 / (N - 1);
+// Copy block k is viewport-centered at the band positions in bands.ts — media
+// bands must use the same cumulative-weight math or the two drift apart down
+// the page (weighted scrub pacing; all-weights-1 reduces to the old k/(N-1)).
 
 /**
  * The copy for one beat — resolves into focus (lift + de-blur) when centered.
@@ -40,12 +41,29 @@ function useNoTextBlur() {
   return noBlur;
 }
 
-function Copy({ frame }: { frame: Frame }) {
+function Copy({ frame, index }: { frame: Frame; index?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const noBlur = useNoTextBlur();
   const inView = useInView(ref, { amount: 0.55 });
   const show = reduce || inView;
+
+  // Weighted beat pacing — only the film path passes an index (StaticStage
+  // stays unweighted by design), and only beats whose weight differs from 1 on
+  // either table get the taller block + anchor-window markup; everything else
+  // keeps the exact legacy DOM. Heights/anchors are CSS vars resolved by the
+  // .beat-h/.beat-anchor media query (globals.css) so SSR paints the right
+  // column with zero hydration shift.
+  const heavy =
+    index !== undefined && (FINE_BANDS.weight[index] !== 1 || COARSE_BANDS.weight[index] !== 1);
+  const beatVars = heavy
+    ? ({
+        '--wf': FINE_BANDS.weight[index!],
+        '--wc': COARSE_BANDS.weight[index!],
+        '--af': FINE_BANDS.copyAt[index!] * FINE_BANDS.weight[index!] - 0.5,
+        '--ac': COARSE_BANDS.copyAt[index!] * COARSE_BANDS.weight[index!] - 0.5,
+      } as React.CSSProperties)
+    : undefined;
 
   const alignItems =
     frame.align === 'center' ? 'items-center text-center'
@@ -57,14 +75,17 @@ function Copy({ frame }: { frame: Frame }) {
     : 'justify-start';
 
   const has = frame.kicker || frame.headline || frame.jewel || frame.body || frame.cta || frame.secondaryCta;
-  if (!has) return <div className="h-[100svh]" aria-hidden="true" />;
+  if (!has)
+    return heavy
+      ? <div className="beat-h" style={beatVars} aria-hidden="true" />
+      : <div className="h-[100svh]" aria-hidden="true" />;
 
   // Copy sits at mid-viewport where the global scrim is most transparent —
   // a soft local scrim keyed to alignment protects contrast over live video.
   const scrimX = frame.align === 'center' ? '50%' : frame.align === 'right' ? '78%' : '22%';
 
-  return (
-    <div className="relative flex h-[100svh] items-center">
+  const inner = (
+    <>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -141,29 +162,43 @@ function Copy({ frame }: { frame: Frame }) {
           )}
         </motion.div>
       </div>
+    </>
+  );
+
+  return heavy ? (
+    // The weighted block: weight·100svh tall, with a 100svh anchor window
+    // absolutely positioned at copyAt so the copy centers at the treatment's
+    // chosen plate-local progress (SB-19's caption rides the held money frame).
+    <div className="beat-h relative" style={beatVars}>
+      <div className="beat-anchor absolute inset-x-0 flex h-[100svh] items-center">{inner}</div>
     </div>
+  ) : (
+    <div className="relative flex h-[100svh] items-center">{inner}</div>
   );
 }
 
 /** One cross-fading, slowly-zooming media plate in the pinned stage. */
-function Plate({ frame, index, progress, priority, active }: { frame: Frame; index: number; progress: MotionValue<number>; priority?: boolean; active: number }) {
+function Plate({ frame, index, progress, priority, active, bands }: { frame: Frame; index: number; progress: MotionValue<number>; priority?: boolean; active: number; bands: Bands }) {
   // Opaque-underneath crossfade: the incoming plate fades in OVER a still
   // fully-opaque outgoing plate (later sibling paints above — keep DOM order,
   // never add z-index), and the outgoing drops to 0 only once provably
   // covered. True film dissolve: no canvas/vignette dip at any boundary, in
   // either scroll direction. Per-boundary width via FADES (keyed by the
-  // OUTGOING plate id), centered on the boundary (k±0.5)·D so reverse scroll
-  // stays symmetric. The fade-in completes at plate-local p≈0.15 — the scrub
-  // deadZones (living.ts) start there so scrubbing begins only once the plate
-  // is fully visible; retune both together.
+  // OUTGOING plate id), centered on the band boundary so reverse scroll stays
+  // symmetric. Fade widths are constant in SCROLL distance (units of
+  // bands.unit = one viewport), NOT scaled by band weight — a dissolve reads
+  // in scroll-time, so weighted bands keep the same felt dissolve as the rest
+  // of the film. Consequence: on weighted beats the fade-in completes at
+  // plate-local p = 0.15/weight, safely before every scrub deadZone start
+  // (living.ts) — do not "restore" deadZones to 0.15, that margin is intended.
   const HALF = 0.15;
   const sIn = FADES[FRAMES[index - 1]?.id ?? ''] ?? 1;
   const sOut = FADES[frame.id] ?? 1;
-  const inStart = (index - 0.5 - HALF * sIn) * D;
-  const inEnd = (index - 0.5 + HALF * sIn) * D;
-  const nextOpaque = (index + 0.5 + HALF * sOut) * D; // the plate above is at opacity 1
-  const outStart = nextOpaque + 0.03 * D;
-  const outEnd = outStart + 0.12 * D;
+  const inStart = bands.start[index] - HALF * sIn * bands.unit;
+  const inEnd = bands.start[index] + HALF * sIn * bands.unit;
+  const nextOpaque = bands.end[index] + HALF * sOut * bands.unit; // the plate above is at opacity 1
+  const outStart = nextOpaque + 0.03 * bands.unit;
+  const outEnd = outStart + 0.12 * bands.unit;
   const stops =
     index === 0 ? [0, outStart, outEnd]
     : index === N - 1 ? [inStart, inEnd, 1]
@@ -179,14 +214,16 @@ function Plate({ frame, index, progress, priority, active }: { frame: Frame; ind
     setCovered((cur) => (cur === c ? cur : c));
   });
   // SB-20 is locked-off (the finale holds its breath) — no ken-burns.
+  // The [0,1] clamps are load-bearing: without them plate 0's range starts
+  // negative and the cold open would paint mid-zoom on the LCP frame.
   const finale = frame.id === 'SB-20';
   const scale = useTransform(
     progress,
-    [Math.max(0, (index - 0.6) * D), Math.min(1, (index + 0.6) * D)],
+    [Math.max(0, bands.start[index] - 0.1 * bands.unit), Math.min(1, bands.end[index] + 0.1 * bands.unit)],
     finale ? [1, 1] : [1.06, 1.16],
   );
-  // Plate-local progress: 0 at band entry, 1 at band exit (same N-1 math).
-  const p = useTransform(progress, [(index - 0.5) * D, (index + 0.5) * D], [0, 1]);
+  // Plate-local progress: 0 at band entry, 1 at band exit (same band math).
+  const p = useTransform(progress, [bands.start[index], bands.end[index]], [0, 1]);
 
   // Treatment exit moves (crane-away / dive / whip) over the band's final
   // stretch — on the outer wrapper so they compose with the ken-burns.
@@ -291,29 +328,68 @@ function FinaleVignette({ p }: { p: MotionValue<number> }) {
   );
 }
 
+/**
+ * The threshold bloom (SB-02→SB-03): warm light swelling over the cut as the
+ * camera flies through the open door. Screen-blend above both plates; peaks at
+ * the exact band boundary; ±0.35 viewports of scroll on either side.
+ */
+function Bloom({ progress, bands }: { progress: MotionValue<number>; bands: Bands }) {
+  const k = FRAMES.findIndex((f) => f.id === 'SB-02');
+  const cut = bands.end[k];
+  const opacity = useTransform(
+    progress,
+    [cut - 0.35 * bands.unit, cut, cut + 0.35 * bands.unit],
+    [0, 0.34, 0],
+  );
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0"
+      style={{
+        opacity,
+        mixBlendMode: 'screen',
+        background: 'radial-gradient(90% 70% at 50% 58%, rgba(255,214,160,0.9), rgba(255,190,120,0.25) 55%, transparent 78%)',
+      }}
+    />
+  );
+}
+
 /** Pinned full-viewport media layer: all plates stacked, cross-fading on scroll. */
-function StageMedia({ progress }: { progress: MotionValue<number> }) {
+function StageMedia({ progress, bands }: { progress: MotionValue<number>; bands: Bands }) {
   // Active plate index — drives windowed mounting of living layers only; the
-  // cross-dissolve itself stays purely motion-value-driven.
+  // cross-dissolve itself stays purely motion-value-driven. bandAt (band
+  // containment) replaces Math.round(v/D): identical at all-weights-1,
+  // correct ownership on weighted bands.
   const [active, setActive] = useState(0);
   useMotionValueEvent(progress, 'change', (v) => {
-    const i = Math.round(v / D);
+    const i = bandAt(v, bands);
     setActive((cur) => (cur === i ? cur : i));
   });
   // 'change' never fires for a restored scroll position — sync before paint
   // (iOS Safari restores scroll aggressively; a post-paint sync would commit
-  // one frame with the wrong working set promoted).
+  // one frame with the wrong working set promoted). Re-runs when the weight
+  // table flips (breakpoint crossing) — same restore semantics, new bands.
   useLayoutEffect(() => {
-    setActive(Math.round(progress.get() / D));
+    setActive(bandAt(progress.get(), bands));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [bands]);
+  // Plates are keyed by table identity: framer's useTransform captures its
+  // stop arrays at hook time, so a breakpoint flip must remount the stack to
+  // rebuild every dissolve with the new geometry (rare event, poster-first
+  // makes the remount invisible).
+  const mode = bands === FINE_BANDS ? 'f' : 'c';
   return (
     // aria-hidden: the whole media stack is decorative — the story lives in
     // the copy blocks and the server-rendered spine.
     <div aria-hidden="true" className="sticky top-0 h-[100svh] w-full overflow-hidden bg-canvas">
       {FRAMES.map((f, i) => (
-        <Plate key={f.id} frame={f} index={i} progress={progress} priority={i === 0} active={active} />
+        <Plate key={`${f.id}-${mode}`} frame={f} index={i} progress={progress} priority={i === 0} active={active} bands={bands} />
       ))}
+      {/* SB-02→SB-03 bloom assist (treatment: the light past the door swallows
+          the frame). Under opaque-underneath layering the outgoing plate can't
+          brighten itself out, so a screen-blend swell ABOVE both plates peaks
+          exactly on the cut, constant scroll width like every dissolve. */}
+      <Bloom progress={progress} bands={bands} />
       {/* One film, one print: 5% grain over every plate (spec §2.5) welds the
           generative and real footage; static tile, zero per-frame cost. */}
       <div
@@ -378,16 +454,17 @@ function StaticStage() {
 export default function CinematicStage() {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const bands = useBands();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
 
   if (reduce) return <StaticStage />;
 
   return (
     <section ref={ref} className="relative">
-      <StageMedia progress={scrollYProgress} />
+      <StageMedia progress={scrollYProgress} bands={bands} />
       <div className="relative z-10 -mt-[100svh]">
-        {FRAMES.map((f) => (
-          <Copy key={f.id} frame={f} />
+        {FRAMES.map((f, i) => (
+          <Copy key={f.id} frame={f} index={i} />
         ))}
       </div>
     </section>

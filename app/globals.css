@@ -369,6 +369,20 @@
   .reveal { transform: none; transition: opacity 0.2s ease; }
 }
 
+/* Weighted beat pacing (/experience): a beat's copy block is weight·100svh tall.
+   Two weight tables — scrub-capable viewports get the full weights; coarse
+   pointers get reduced ones (their scrub beats fall back to play-once video,
+   which can't fill a long band). The media query MUST stay in sync with
+   SCRUB_MQ in components/experience/bands.ts and useCanScrub in
+   LivingLayer.tsx. Heights live in CSS (not JS state) so SSR paints the right
+   column height with zero hydration shift. */
+.beat-h { height: calc(var(--wc, 1) * 100svh); }
+.beat-anchor { top: calc(var(--ac, 0) * 100svh); }
+@media (min-width: 1024px) and (pointer: fine) {
+  .beat-h { height: calc(var(--wf, 1) * 100svh); }
+  .beat-anchor { top: calc(var(--af, 0) * 100svh); }
+}
+
 /* Lenis smooth scroll */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }

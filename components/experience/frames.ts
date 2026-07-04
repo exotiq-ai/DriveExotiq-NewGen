@@ -25,6 +25,25 @@ export interface Frame {
   secondaryCtaHref?: string;
   /** Accessible label when the frame carries no headline. */
   aria?: string;
+  /**
+   * Scroll weight on scrub-capable viewports (≥1024px, fine pointer): the
+   * beat's copy block is weight·100svh tall, so it owns `weight` viewports of
+   * scroll (default 1). Reviewed change — see bands.ts for the band math.
+   */
+  weight?: number;
+  /**
+   * Weight on coarse pointers / <1024px, defaulting to `weight`. Scrub beats
+   * set 1 here: their mobile fallback is a play-once clip that finishes in
+   * wall-clock time, so a long band would just hold a dead frame.
+   */
+  mobileWeight?: number;
+  /**
+   * Copy anchor inside a weighted block, as plate-local progress (default 0.5
+   * = band center; clamped so the 100svh anchor window stays inside the
+   * block). SB-19 anchors late so the caption resolves while the completed
+   * livery reveal holds; SB-19b so it lands after the get-in resolves.
+   */
+  copyAt?: number;
 }
 
 const M = '/images/experience/photo';
@@ -37,7 +56,7 @@ export const FRAMES: Frame[] = [
     jewel: 'Built for the people who actually drive the car.',
     body: 'An Exotiq Inc. brand — the community front door to the exotiq.rent marketplace.',
   },
-  { id: 'SB-02', media: `${M}/garage-exterior.png`, movement: 'I', align: 'left', headline: 'The door is open.' },
+  { id: 'SB-02', media: `${M}/garage-exterior.png`, movement: 'I', align: 'left', headline: 'The door is open.', weight: 2, mobileWeight: 1 },
   { id: 'SB-03', media: `${M}/threshold-rush.png`, movement: 'I', aria: 'Flying through the threshold into the garage' },
   {
     id: 'SB-04', media: `${M}/garage-interior-v2.png`, movement: 'I', align: 'center',
@@ -50,11 +69,14 @@ export const FRAMES: Frame[] = [
     id: 'SB-07b', media: `${M}/waitlist-still.png`, movement: 'I', align: 'center',
     kicker: 'The list', headline: 'First keys to the fleet.', cta: 'Get on the list', ctaHref: '/apply',
   },
-  { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Choose your car.' },
+  { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Choose your car.', weight: 2, mobileWeight: 1 },
   { id: 'SB-08b', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left', jewel: 'This one’s yours.', cta: 'Get on the list', ctaHref: '/apply' },
-  { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.' },
+  { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.', weight: 2, mobileWeight: 1 },
   { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
-  { id: 'SB-11', media: `${M}/ignition-v2.png`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start, the gauges sweep' },
+  // Weight 1.5: the gauge sweep is plate-local-progress-driven, so it inherits
+  // the longer band on every device — at weight 1 the whole sweep was 0.25
+  // viewports and a single flick skipped the ignition moment.
+  { id: 'SB-11', media: `${M}/ignition-v2.png`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start, the gauges sweep', weight: 1.5 },
   { id: 'SB-11b', media: `${M}/roll-out.png`, movement: 'I', aria: 'The nose eases out of the garage' },
   { id: 'SB-12', media: `${M}/open-road.png`, movement: 'I', align: 'center', headline: 'The road opens.' },
   { id: 'SB-13', media: `${M}/drive-mountain.png`, movement: 'I', align: 'left', jewel: 'This is the drive.' },
@@ -66,6 +88,9 @@ export const FRAMES: Frame[] = [
   {
     id: 'SB-18', media: `${M}/s8-pivot.jpg`, movement: 'pivot', align: 'center',
     kicker: 'One more thing', headline: 'The drive is the product.', jewel: 'The story goes further.',
+    // The narrative hinge holds a breath: three copy elements over the
+    // statue-still S8 earn more than one viewport.
+    weight: 1.5,
   },
 
   // ---------- Movement II — The Tour (sponsors) ----------
@@ -76,14 +101,24 @@ export const FRAMES: Frame[] = [
   {
     id: 'SB-19', media: `${M}/wrap-photoreal.png`, movement: 'II', align: 'center',
     headline: 'Your livery on this car.', jewel: 'Down this line, through ten cities.',
+    // The sponsor money shot: full weight everywhere — the mobile path is the
+    // code wipe, which is scroll-driven and genuinely fills the band.
+    weight: 2.5, copyAt: 0.78,
   },
   {
     id: 'SB-19b', media: `${M}/gregory-getin.jpg`, movement: 'II', align: 'left',
     headline: 'The garage door is open.', jewel: 'The road starts here.',
+    // The real founder get-in (8.3s play-once) — at weight 1 the film cut away
+    // ~25% into the one human money shot. Play-once ends settled, so the tail
+    // of the band is a composed held frame on every device.
+    weight: 2, copyAt: 0.65,
   },
   {
     id: 'SB-20', media: `${M}/cold-open-v2.png`, movement: 'II', align: 'center',
-    kicker: 'Two ways in', headline: 'Sponsor the wrap.',
+    // Audit fix: the headline duplicated its own CTA label in one viewport
+    // ("Sponsor the wrap." twice). The line now states the fact that sets up
+    // BOTH doors in: the route exists, the wrap is the open seat.
+    kicker: 'Two ways in', headline: 'The route is set. The wrap isn’t.',
     cta: 'Sponsor the wrap', ctaHref: '/sponsor',
     secondaryCta: 'Join the waitlist', secondaryCtaHref: '/apply',
   },

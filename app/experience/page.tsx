@@ -27,6 +27,29 @@ export const metadata: Metadata = {
   },
 };
 
+// Structured data for the film page (audit item: JSON-LD). One truthful
+// VideoObject — the hero loop that actually streams from R2 — under a WebPage
+// node; the scroll film itself is an interaction, not a watchable video file.
+const SITE = 'https://driveexotiq.com';
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'The Drive — Drive Exotiq',
+  url: `${SITE}/experience`,
+  description: DESCRIPTION,
+  primaryImageOfPage: { '@type': 'ImageObject', contentUrl: `${SITE}/og-experience.jpg`, width: 1200, height: 630 },
+  isPartOf: { '@type': 'WebSite', name: 'Drive Exotiq', url: SITE },
+  video: {
+    '@type': 'VideoObject',
+    name: 'Drive Exotiq — the cold open',
+    description: 'The opening scene of the Drive Exotiq scroll film: the garage at dusk, breathing.',
+    contentUrl: 'https://media.driveexotiq.com/videos/sb-01.mp4',
+    thumbnailUrl: `${SITE}/images/experience/poster/sb-01.jpg`,
+    uploadDate: '2026-07-03',
+    duration: 'PT10S',
+  },
+};
+
 /**
  * The cinematic scroll landing (poster-first, no WebGL). The visible experience
  * is a client scroll island; a server-rendered, crawlable spine + the verbatim
@@ -35,6 +58,7 @@ export const metadata: Metadata = {
 export default function ExperiencePage() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <a
         href="#experience-end"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-sm focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:text-ink"

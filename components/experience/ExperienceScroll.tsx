@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'framer-motion';
 import CinematicStage from './CinematicStage';
 import { FRAMES } from './frames';
 import { OVERLAYS } from './living';
+import { FINE_BANDS, useBands, bandAtVh, type Bands } from './bands';
 
 const N = FRAMES.length;
-const D = 1 / (N - 1);
 
 /**
  * Beats whose in-frame Gulf accent owns the viewport — the chrome's Gulf CTA
@@ -22,74 +22,61 @@ const ACCENT_BEATS = FRAMES
   .filter(({ f }) => f.cta || OVERLAYS[f.id] === 'gauge')
   .map(({ i }) => i);
 
-function chromeFadeStops(): { stops: number[]; values: number[] } {
+/**
+ * Chrome bow-out bands around each accent beat. Ramps are constant in SCROLL
+ * distance (0.15 viewports, same reasoning as the plate dissolves) — on a
+ * weighted accent band (SB-11) the chrome stays out for the whole band but
+ * fades at the film's one tempo. All-weights-1 reduces to the shipped
+ * (k∓0.45)/(k∓0.3) stops exactly.
+ */
+function chromeFadeStops(b: Bands): { stops: number[]; values: number[] } {
   const stops: number[] = [0];
   const values: number[] = [1];
   for (const k of ACCENT_BEATS) {
-    const a = (k - 0.45) * D;
-    const b = (k - 0.3) * D;
-    const c = (k + 0.3) * D;
-    const d = (k + 0.45) * D;
+    const a = b.start[k] + 0.05 * b.unit;
+    const rIn = b.start[k] + 0.2 * b.unit;
+    const rOut = b.end[k] - 0.2 * b.unit;
+    const d = b.end[k] - 0.05 * b.unit;
     if (a > stops[stops.length - 1]) { stops.push(a); values.push(1); }
-    if (b > stops[stops.length - 1]) { stops.push(b); values.push(0); }
-    if (c < 1) { stops.push(Math.max(c, stops[stops.length - 1] + 1e-4)); values.push(0); }
+    if (rIn > stops[stops.length - 1]) { stops.push(rIn); values.push(0); }
+    if (rOut < 1) { stops.push(Math.max(rOut, stops[stops.length - 1] + 1e-4)); values.push(0); }
     if (d < 1) { stops.push(Math.max(d, stops[stops.length - 1] + 1e-4)); values.push(1); }
   }
   // The last accent beat is the finale — hold 0 through the end of the stage.
   if (values[values.length - 1] === 1) { stops.push(1); values.push(1); }
   return { stops, values };
 }
-const CHROME_FADE = chromeFadeStops();
 
 /**
- * The scroll experience: persistent chrome (wordmark + audience CTAs, the
- * sponsor ask as the single Gulf action), a 1px Gulf progress hairline, a
- * quiet scroll cue on the cold open, the pinned film, and an end-card so the
- * scroll never dead-ends. Lenis smooth-scroll is global; keyboard input steps
- * beat-by-beat through the film.
+ * All progress-driven chrome (header fade, hairline, scroll cue) lives here,
+ * KEYED by the active weight table in the parent: framer's useTransform
+ * captures its stop arrays, so a breakpoint flip remounts this shell to
+ * rebuild the choreography against the new band geometry.
  */
-export default function ExperienceScroll() {
-  const reduce = useReducedMotion();
-  const stageRef = useRef<HTMLDivElement>(null);
-  // All chrome choreography is scoped to the STAGE's progress, not the
-  // document's — the end-card below can grow without desynchronizing it.
-  const { scrollYProgress } = useScroll({ target: stageRef, offset: ['start start', 'end end'] });
-  const chromeOpacity = useTransform(scrollYProgress, CHROME_FADE.stops, CHROME_FADE.values);
+function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number>; bands: Bands; jumpTo: (k: number) => void }) {
+  const CHROME = useMemo(() => chromeFadeStops(bands), [bands]);
+  const chromeOpacity = useTransform(progress, CHROME.stops, CHROME.values);
   const chromeEvents = useTransform(chromeOpacity, (o) => (o < 0.2 ? ('none' as const) : ('auto' as const)));
-  const progressScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const cueOpacity = useTransform(scrollYProgress, [0, 0.4 * D], [1, 0]);
+  const progressScale = useTransform(progress, [0, 1], [0, 1]);
+  const cueOpacity = useTransform(progress, [0, 0.8 * bands.end[0]], [1, 0]);
 
-  // Keyboard: step the film beat-by-beat (Lenis smooths wheel only; raw key
-  // jumps snap through the dissolves). Space/PageDown/↓ next, PageUp/↑ prev.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const stage = stageRef.current;
-      if (!stage) return;
-      const keys = [' ', 'PageDown', 'ArrowDown', 'PageUp', 'ArrowUp', 'Home', 'End'];
-      if (!keys.includes(e.key)) return;
-      e.preventDefault();
-      const stageTop = stage.getBoundingClientRect().top + window.scrollY;
-      const beat = Math.round((window.scrollY - stageTop) / window.innerHeight);
-      const dir = e.key === 'PageUp' || e.key === 'ArrowUp' || (e.key === ' ' && e.shiftKey) ? -1 : 1;
-      const target =
-        e.key === 'Home' ? 0
-        : e.key === 'End' ? N - 1
-        : Math.min(N - 1, Math.max(0, beat + dir));
-      const y = stageTop + target * window.innerHeight;
-      const lenis = (window as unknown as { lenis?: { scrollTo: (y: number, o?: object) => void } }).lenis;
-      if (lenis) lenis.scrollTo(y, { duration: 1.1 });
-      else window.scrollTo({ top: y, behavior: 'smooth' });
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  // Act ticks on the hairline (audit item: skip-to-the-ask): the pivot and the
+  // finale, clickable. Quiet by design — 1px marks that brighten on hover; the
+  // returning sponsor shouldn't need 30 viewports of scroll to reach the ask.
+  const TICKS = FRAMES
+    .map((f, i) => ({ f, i }))
+    .filter(({ f }) => f.id === 'SB-18' || f.id === 'SB-20')
+    .map(({ f, i }) => ({
+      i,
+      at: (bands.anchorVh[i] / (bands.total - 1)) * 100,
+      label: f.id === 'SB-18' ? 'Skip to the tour' : 'Skip to the ask',
+    }));
 
   return (
     <>
       <motion.header
         className="pointer-events-none fixed inset-x-0 top-0 z-50"
-        style={reduce ? undefined : { opacity: chromeOpacity, pointerEvents: chromeEvents }}
+        style={{ opacity: chromeOpacity, pointerEvents: chromeEvents }}
       >
         <div
           aria-hidden="true"
@@ -119,35 +106,154 @@ export default function ExperienceScroll() {
 
       {/* The film's progress instrument — 1px Gulf hairline riding the top edge
           (spec §3.5: counts as the header's accent moment, not an extra one). */}
-      {!reduce && (
+      <motion.div
+        aria-hidden="true"
+        className="fixed inset-x-0 top-0 z-[60] h-px origin-left bg-gulf"
+        style={{ scaleX: progressScale }}
+      />
+      {/* Act ticks: generous hit areas, hairline-quiet marks. */}
+      <div className="fixed inset-x-0 top-0 z-[61]">
+        {TICKS.map((t) => (
+          <button
+            key={t.i}
+            type="button"
+            aria-label={t.label}
+            title={t.label}
+            onClick={() => jumpTo(t.i)}
+            className="group absolute -top-1 h-6 w-6 -translate-x-1/2 cursor-pointer"
+            style={{ left: `${t.at}%` }}
+          >
+            <span className="absolute left-1/2 top-1 block h-2 w-px -translate-x-1/2 bg-gulf opacity-50 transition-opacity duration-250 ease-de group-hover:opacity-100 group-focus-visible:opacity-100" />
+          </button>
+        ))}
+      </div>
+
+      {/* Quiet scroll cue over the cold open only. */}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none fixed bottom-8 left-1/2 z-40 -translate-x-1/2"
+        style={{ opacity: cueOpacity }}
+      >
         <motion.div
-          aria-hidden="true"
-          className="fixed inset-x-0 top-0 z-[60] h-px origin-left bg-gulf"
-          style={{ scaleX: progressScale }}
-        />
+          className="flex flex-col items-center gap-3"
+          animate={{ opacity: [0.45, 1, 0.45] }}
+          transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }}
+        >
+          <span className="text-[11px] tracking-[0.08em] text-ink-2">Scroll</span>
+          <span className="block h-8 w-px bg-ink-3" />
+        </motion.div>
+      </motion.div>
+    </>
+  );
+}
+
+/** Static header for the reduced-motion path — no choreography, always visible. */
+function StaticChrome() {
+  return (
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(180deg, rgba(7,7,8,.85), transparent)' }}
+      />
+      <div className="relative mx-auto flex max-w-content items-center justify-between px-6 py-4 md:px-8">
+        <Link href="/" className="font-display text-sm font-bold tracking-tight-exotiq text-ink">
+          Drive Exotiq
+        </Link>
+        <nav className="flex items-center gap-2">
+          <Link
+            href="/apply"
+            className="hidden rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-block"
+          >
+            Join the waitlist
+          </Link>
+          <Link
+            href="/sponsor"
+            className="rounded-sm bg-gulf px-4 py-2 text-xs font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
+          >
+            Sponsor the wrap
+          </Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+/**
+ * The scroll experience: persistent chrome (wordmark + audience CTAs, the
+ * sponsor ask as the single Gulf action), a 1px Gulf progress hairline, a
+ * quiet scroll cue on the cold open, the pinned film, and an end-card so the
+ * scroll never dead-ends. Lenis smooth-scroll is global; keyboard input steps
+ * beat-by-beat through the film.
+ */
+export default function ExperienceScroll() {
+  const reduce = useReducedMotion();
+  const bands = useBands();
+  const stageRef = useRef<HTMLDivElement>(null);
+  // All chrome choreography is scoped to the STAGE's progress, not the
+  // document's — the end-card below can grow without desynchronizing it.
+  const { scrollYProgress } = useScroll({ target: stageRef, offset: ['start start', 'end end'] });
+
+  // Glide to a beat's copy anchor. Measured viewport unit (svh-true):
+  // innerHeight diverges from svh when mobile toolbars collapse, and the
+  // drift would now scale by ~30 bands. Distance-scaled duration: jumps span
+  // 1–2.4+ viewports; a fixed duration would fast-forward the long ones and
+  // crawl the short ones.
+  const jumpTo = useCallback((k: number) => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const stageTop = stage.getBoundingClientRect().top + window.scrollY;
+    const unit = stage.offsetHeight / bands.total;
+    const y = stageTop + bands.anchorVh[k] * unit;
+    const lenis = (window as unknown as { lenis?: { scrollTo: (y: number, o?: object) => void } }).lenis;
+    const dvp = Math.abs(y - window.scrollY) / unit;
+    const duration = Math.min(1.6, Math.max(0.9, 0.55 * dvp + 0.5));
+    if (lenis) lenis.scrollTo(y, { duration });
+    else window.scrollTo({ top: y, behavior: 'smooth' });
+  }, [bands]);
+
+  // Keyboard: step the film beat-by-beat (Lenis smooths wheel only; raw key
+  // jumps snap through the dissolves). Space/PageDown/↓ next, PageUp/↑ prev.
+  // Current beat comes from band OWNERSHIP (the plate on screen), never
+  // nearest-anchor — on weighted bands the post-deadZone money-frame hold
+  // sits past the anchor midpoint and nearest-anchor would skip the next
+  // beat from exactly where viewers rest (3-lens review consensus).
+  useEffect(() => {
+    // Reduced motion renders the unweighted StaticStage — leave the keys to
+    // the browser's native scrolling instead of hijacking with film geometry.
+    if (reduce) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const stage = stageRef.current;
+      if (!stage) return;
+      const keys = [' ', 'PageDown', 'ArrowDown', 'PageUp', 'ArrowUp', 'Home', 'End'];
+      if (!keys.includes(e.key)) return;
+      e.preventDefault();
+      const stageTop = stage.getBoundingClientRect().top + window.scrollY;
+      const unit = stage.offsetHeight / bands.total;
+      const beat = bandAtVh((window.scrollY - stageTop) / unit, bands);
+      const dir = e.key === 'PageUp' || e.key === 'ArrowUp' || (e.key === ' ' && e.shiftKey) ? -1 : 1;
+      const target =
+        e.key === 'Home' ? 0
+        : e.key === 'End' ? N - 1
+        : Math.min(N - 1, Math.max(0, beat + dir));
+      jumpTo(target);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [reduce, bands, jumpTo]);
+
+  return (
+    <>
+      {reduce ? (
+        <StaticChrome />
+      ) : (
+        <StageChrome key={bands === FINE_BANDS ? 'f' : 'c'} progress={scrollYProgress} bands={bands} jumpTo={jumpTo} />
       )}
 
       <div ref={stageRef}>
         <CinematicStage />
       </div>
-
-      {/* Quiet scroll cue over the cold open only. */}
-      {!reduce && (
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none fixed bottom-8 left-1/2 z-40 -translate-x-1/2"
-          style={{ opacity: cueOpacity }}
-        >
-          <motion.div
-            className="flex flex-col items-center gap-3"
-            animate={{ opacity: [0.45, 1, 0.45] }}
-            transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }}
-          >
-            <span className="text-[11px] tracking-[0.08em] text-ink-2">Scroll</span>
-            <span className="block h-8 w-px bg-ink-3" />
-          </motion.div>
-        </motion.div>
-      )}
 
       {/* End-card: the scroll must never dead-end after the ask. */}
       <section id="experience-end" className="border-t border-line bg-canvas">
