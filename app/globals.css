@@ -105,7 +105,7 @@
 
   /* Focus States for Accessibility */
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-gulf-blue;
+    @apply outline outline-2 outline-offset-2 outline-gulf-blue;
   }
 
   /* Mobile optimizations */

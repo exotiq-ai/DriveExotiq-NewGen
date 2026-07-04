@@ -53,7 +53,7 @@ async function viaGemini(beat) {
         ...beat.prepImage.inputReferences.map((r) => ({ inline_data: { mime_type: 'image/jpeg', data: b64Of(r) } })),
       ],
     }],
-    generationConfig: { responseModalities: ['TEXT', 'IMAGE'], imageConfig: { aspectRatio: '16:9' } },
+    generationConfig: { responseModalities: ['TEXT', 'IMAGE'], imageConfig: { aspectRatio: '16:9', imageSize: beat.prepImage.size || '2K' } },
   };
   const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',

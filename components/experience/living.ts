@@ -86,6 +86,19 @@ export const FADES: Record<string, number> = {
 };
 
 /**
+ * Film-print unifier for the REAL-footage beats (owner note: the jump from the
+ * graded AI film world to clean 4K digital reads as a different movie). Keeps
+ * the documentary legibility — the car stays clean — but seats the shots in
+ * the same print: a warm soft-light wash, 35mm-style grain (the AI plates have
+ * it baked in; real digital footage lacks it), and a touch more vignette.
+ */
+export const GRADE: Record<string, { wash?: number; grain?: number; vignette?: number }> = {
+  'SB-17': { wash: 0.10, grain: 0.02, vignette: 0.12 },
+  'SB-18': { wash: 0.10, grain: 0.02, vignette: 0.12 },
+  'SB-19b': { wash: 0.14, grain: 0.03, vignette: 0.16 },
+};
+
+/**
  * Video delivery base. Dev serves from /public; production serves from
  * Cloudflare R2 (zero egress, byte-range verified 2026-07-03) via
  * media.driveexotiq.com — set NEXT_PUBLIC_MEDIA_BASE=https://media.driveexotiq.com/videos

@@ -14,7 +14,8 @@ import {
 } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { FRAMES, type Frame } from './frames';
-import { LIVING, OVERLAYS, EXITS, FADES } from './living';
+import { LIVING, OVERLAYS, EXITS, FADES, GRADE } from './living';
+import { PLACEHOLDERS } from './placeholders';
 import LivingLayer from './LivingLayer';
 import GaugeSweep from './GaugeSweep';
 import LampBreath from './LampBreath';
@@ -58,9 +59,18 @@ function Copy({ frame }: { frame: Frame }) {
   const has = frame.kicker || frame.headline || frame.jewel || frame.body || frame.cta || frame.secondaryCta;
   if (!has) return <div className="h-[100svh]" aria-hidden="true" />;
 
+  // Copy sits at mid-viewport where the global scrim is most transparent —
+  // a soft local scrim keyed to alignment protects contrast over live video.
+  const scrimX = frame.align === 'center' ? '50%' : frame.align === 'right' ? '78%' : '22%';
+
   return (
-    <div className="flex h-[100svh] items-center">
-      <div className="mx-auto w-full max-w-content px-6 md:px-8">
+    <div className="relative flex h-[100svh] items-center">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: `radial-gradient(58% 52% at ${scrimX} 50%, rgba(11,11,12,0.42), transparent 72%)` }}
+      />
+      <div className="relative mx-auto w-full max-w-content px-6 md:px-8">
         <motion.div
           ref={ref}
           className={cn('flex w-full flex-col', alignItems)}
@@ -74,7 +84,13 @@ function Copy({ frame }: { frame: Frame }) {
           }
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
         >
-          {frame.kicker && <span className="mb-5 text-[11px] uppercase tracking-[0.2em] text-ink-3">{frame.kicker}</span>}
+          {frame.kicker && (
+            // Brand law: kickers are sentence-case (never uppercase); purely
+            // numeric kickers render as the Spectral-italic .idx numeral.
+            /^\d+$/.test(frame.kicker)
+              ? <span className="idx mb-5 text-lg text-ink-2">{frame.kicker}</span>
+              : <span className="mb-5 text-[11px] tracking-[0.08em] text-ink-2">{frame.kicker}</span>
+          )}
           {frame.headline && (
             <h2 className="max-w-[16ch] font-display text-4xl font-bold leading-[1.03] tracking-tight-exotiq text-ink md:text-6xl">
               {frame.headline}
@@ -194,9 +210,20 @@ function Plate({ frame, index, progress, priority, active }: { frame: Frame; ind
       style={{ opacity, scale: exitScale, y: exitY, transformOrigin: exit?.origin, willChange: promote ? 'opacity, transform' : undefined }}
     >
       <motion.div className="absolute inset-0" style={{ scale, willChange: promote ? 'transform' : undefined }}>
-        <Image src={frame.media} alt="" fill sizes="100vw" priority={priority} className="object-cover" />
+        <Image
+          src={frame.media}
+          alt=""
+          fill
+          sizes="100vw"
+          priority={priority}
+          placeholder={PLACEHOLDERS[frame.media] ? 'blur' : 'empty'}
+          blurDataURL={PLACEHOLDERS[frame.media]}
+          className="object-cover"
+        />
         {/* Living layer: poster-first enhancement, mounted ±2 bands (buffer), playing ±1 while uncovered. */}
         {living && dist <= 2 && <LivingLayer cfg={living} p={p} near={dist <= 1 && !covered} />}
+        {/* Film-print unifier for real-footage beats (see GRADE in living.ts). */}
+        {GRADE[frame.id] && <FilmGrade cfg={GRADE[frame.id]} />}
       </motion.div>
       {/* Instrument/code overlays sit outside the ken-burns wrapper — razor-sharp, no zoom. */}
       {overlay === 'gauge' && dist <= 1 && <GaugeSweep p={p} />}
@@ -204,6 +231,49 @@ function Plate({ frame, index, progress, priority, active }: { frame: Frame; ind
       {/* Finale vignette settle — the theater lights coming down. */}
       {finale && <FinaleVignette p={p} />}
     </motion.div>
+  );
+}
+
+/**
+ * Seats real-footage beats in the film's print: warm soft-light wash, tiled
+ * 35mm-style grain, extra vignette. Static layers — zero per-frame cost; the
+ * plate's own opacity/transform wrappers carry them through dissolves.
+ */
+function FilmGrade({ cfg }: { cfg: { wash?: number; grain?: number; vignette?: number } }) {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+      {cfg.wash && (
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: cfg.wash,
+            mixBlendMode: 'soft-light',
+            background: 'linear-gradient(160deg, #FFB870 0%, #7A5A3A 45%, #1A1410 100%)',
+          }}
+        />
+      )}
+      {cfg.grain && (
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: cfg.grain,
+            mixBlendMode: 'overlay',
+            backgroundImage: 'url(/images/experience/grain.png)',
+            backgroundRepeat: 'repeat',
+            backgroundSize: '256px 256px',
+          }}
+        />
+      )}
+      {cfg.vignette && (
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: cfg.vignette,
+            background: 'radial-gradient(115% 90% at 50% 45%, transparent 45%, rgba(7,7,8,1) 100%)',
+          }}
+        />
+      )}
+    </div>
   );
 }
 
@@ -238,12 +308,19 @@ function StageMedia({ progress }: { progress: MotionValue<number> }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-canvas">
+    // aria-hidden: the whole media stack is decorative — the story lives in
+    // the copy blocks and the server-rendered spine.
+    <div aria-hidden="true" className="sticky top-0 h-[100svh] w-full overflow-hidden bg-canvas">
       {FRAMES.map((f, i) => (
         <Plate key={f.id} frame={f} index={i} progress={progress} priority={i === 0} active={active} />
       ))}
+      {/* One film, one print: 5% grain over every plate (spec §2.5) welds the
+          generative and real footage; static tile, zero per-frame cost. */}
       <div
-        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
+        style={{ backgroundImage: 'url(/images/experience/grain.png)', backgroundRepeat: 'repeat', backgroundSize: '256px 256px' }}
+      />
+      <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
@@ -258,19 +335,37 @@ function StageMedia({ progress }: { progress: MotionValue<number> }) {
 function StaticStage() {
   return (
     <div>
-      {FRAMES.map((f) => (
-        <section key={f.id} className="relative flex min-h-[100svh] items-center overflow-hidden bg-canvas">
-          <Image src={f.media} alt="" fill sizes="100vw" className="object-cover opacity-90" />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(180deg, rgba(11,11,12,.5), transparent 26%, transparent 56%, rgba(11,11,12,.85))' }}
-          />
-          <div className="relative z-[2] w-full">
-            <Copy frame={f} />
-          </div>
-        </section>
-      ))}
+      {FRAMES.map((f, i) => {
+        const wordless = !f.kicker && !f.headline && !f.jewel && !f.body && !f.cta;
+        return (
+          <section key={f.id} aria-label={f.aria} className="relative flex min-h-[100svh] items-center overflow-hidden bg-canvas">
+            <Image
+              src={f.media}
+              alt=""
+              fill
+              sizes="100vw"
+              priority={i === 0}
+              placeholder={PLACEHOLDERS[f.media] ? 'blur' : 'empty'}
+              blurDataURL={PLACEHOLDERS[f.media]}
+              className="object-cover opacity-90"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(180deg, rgba(11,11,12,.5), transparent 26%, transparent 56%, rgba(11,11,12,.85))' }}
+            />
+            <div className="relative z-[2] w-full">
+              {wordless && f.aria ? (
+                <div className="mx-auto w-full max-w-content px-6 md:px-8">
+                  <span className="text-[11px] tracking-[0.08em] text-ink-2">{f.aria}</span>
+                </div>
+              ) : (
+                <Copy frame={f} />
+              )}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

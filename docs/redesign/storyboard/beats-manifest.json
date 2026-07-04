@@ -16,21 +16,32 @@
       "act": 1,
       "treatment": "loop",
       "priority": "hero",
-      "still": "cold-open.png",
+      "still": "cold-open-v2.png",
       "videoModel": "kwaivgi/kling-v3.0-pro",
       "draftModel": "google/veo-3.1-lite",
       "backupModel": "google/veo-3.1",
       "duration": 8,
       "resolution": "720p",
       "frameImages": {
-        "first": "cold-open.png",
-        "last": "cold-open.png"
+        "first": "cold-open-v2.png",
+        "last": "cold-open-v2.png"
       },
       "prompt": "Locked-off camera on a tripod, zero camera movement. Inside a pitch-dark garage a car sleeps under a taut fabric cover, lit by one low warm tungsten key. Animate atmosphere only: fine dust motes drifting slowly through the warm pool of light, a single subtle breath of air moving across the fabric cover, the warm practical light breathing very slightly in intensity like an old filament. Everything else frozen. Film-noir grade: deep matte-black shadows stay fully crushed, desaturated graphite palette, warm highlights only, subtle 35mm film grain, shallow anamorphic depth of field. The clip must end on exactly its first frame.",
       "negativePrompt": "no camera push, pan or drift; the cover never slips or reveals the car; no new light sources; no lens flares; no blue or teal color shift; no text, logos or people; no warping of floor, wall or cover geometry; no exposed wheels or grille",
       "qa": "cover silhouette must not swim; blacks must not lift",
       "status": "live",
-      "selectedTake": "SB-01-t2-kling-v3.0-pro.mp4"
+      "selectedTake": "SB-01-t1-kling-v3.0-pro-kdirect-4k.mp4 (1080p from 4K master)",
+      "prepImage": {
+        "output": "cold-open-v2.png",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "cold-open.png"
+        ],
+        "prompt": "Recreate this photograph exactly — identical composition, camera position, framing and light: a near-black private supercar garage just before dawn, one car asleep under a fitted fabric cover, a single faint warm tungsten pool low on the polished concrete floor, vast negative space and stillness. Upgrade the execution to flawless large-format photorealism: real automotive-cover fabric with visible weave and natural drape tension over the silhouette, crisp concrete micro-texture and subtle reflection inside the light pool, true deep blacks with detail held at the edge of visibility, subtle 35mm film grain, desaturated graphite palette with warm highlights only. No text, no logos, no people. This is the opening and closing frame of a film — museum-grade restraint."
+      },
+      "rerenderNote": " 4K master 2026-07-04 (owner: opening plate read as sketch; retina desktops render stills at half-res from 1536px masters)."
     },
     {
       "id": "SB-02",
@@ -78,38 +89,60 @@
       "act": 2,
       "treatment": "loop",
       "priority": "high",
-      "still": "garage-interior.png",
+      "still": "garage-interior-v2.png",
       "videoModel": "kwaivgi/kling-v3.0-pro",
       "duration": 8,
       "resolution": "720p",
       "frameImages": {
-        "first": "garage-interior.png",
-        "last": "garage-interior.png"
+        "first": "garage-interior-v2.png",
+        "last": "garage-interior-v2.png"
       },
       "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. Locked-off tripod camera in a dark underground garage aisle. All parked supercars remain perfectly motionless. The only motion: overhead ceiling lights breathe very subtly, the distant warm light at the vanishing point flickers gently like sodium vapor warming up, a faint layer of atmospheric haze drifts slowly left to right through the light shafts, and the wet-look floor reflections shimmer in response. Extremely subtle, slow, ambient. The clip must loop seamlessly, ending on exactly the first frame.",
       "negativePrompt": "no camera movement, no car movement, no wheel rotation, no grille or panel warping, no people, no text or badges resolving, no color shift, no blue light, hold the film-noir warm-key grade throughout",
       "status": "live",
-      "selectedTake": "SB-04-t1-kling-v3.0-pro.mp4"
+      "selectedTake": "SB-04-t1-kling-v3.0-pro-kdirect-4k.mp4 (1080p from 4K master)",
+      "prepImage": {
+        "output": "garage-interior-v2.png",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "garage-interior.png"
+        ],
+        "prompt": "Recreate this photograph exactly — identical composition, camera position, framing and light: a dark underground garage aisle, two facing rows of low exotic supercars angled inward, central aisle receding to a single warm vanishing-point light, polished concrete with mirror reflections, overhead pools of light, deep shadow. Upgrade to flawless large-format photorealism: accurate supercar body language and stance, crisp paint and floor reflections, real concrete texture, atmospheric haze in the light shafts, true deep blacks, subtle 35mm grain, desaturated graphite palette with warm highlights. No readable badges, text, logos or people."
+      },
+      "rerenderNote": " 4K master 2026-07-04 (owner: opening plate read as sketch; retina desktops render stills at half-res from 1536px masters)."
     },
     {
       "id": "SB-05",
       "act": 2,
       "treatment": "loop",
       "priority": "hero",
-      "still": "mclaren-720s.png",
+      "still": "mclaren-720s-v2.png",
       "videoModel": "kwaivgi/kling-v3.0-pro",
       "draftModel": "google/veo-3.1-lite",
       "duration": 8,
       "resolution": "720p",
       "frameImages": {
-        "first": "mclaren-720s.png",
-        "last": "mclaren-720s.png"
+        "first": "mclaren-720s-v2.png",
+        "last": "mclaren-720s-v2.png"
       },
       "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. A McLaren 720S front three-quarter portrait in a black studio void. The car is completely stationary. Motion: the camera drifts laterally right by roughly two degrees of orbit and returns to its exact start position; the single warm key light slowly intensifies and travels across the front fender and door, its reflection blooming softly on the dark polished floor; the headlight daytime-running-light signature brightens gently by half a stop then settles. Slow, museum-quiet, seductive. Must loop seamlessly, last frame identical to first frame.",
       "negativePrompt": "no wheel rotation, no spoke morphing, no grille mesh warping, no badge or text artifacts, no body panel movement or reflections swimming independently of the camera, no blue light, no lens flare spikes, hold the film-noir grade",
       "reuse": "SB-08b serves this exact file at playbackRate 0.7",
       "status": "live",
-      "selectedTake": "SB-05-t1-kling-v3-direct.mp4 (1080p direct)"
+      "selectedTake": "SB-05-t1-kling-v3.0-pro-kdirect-4k.mp4 (1080p from 4K master)",
+      "prepImage": {
+        "output": "mclaren-720s-v2.png",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "mclaren-720s.png"
+        ],
+        "prompt": "Recreate this photograph exactly — identical composition, camera angle, framing and light: a McLaren 720S front three-quarter portrait in a black studio void, one dramatic warm key light raking the bodywork, matte grey paint, crisp floor reflection. Upgrade to flawless large-format photorealism faithful to the real 720S: accurate proportions, the hollow eye-socket headlight signature, correct intake and panel geometry, real matte paint texture under the raking key, true deep blacks, subtle 35mm grain, desaturated graphite palette with warm highlights. No badges rendered as readable text, no logos, no people."
+      },
+      "rerenderNote": " 4K master 2026-07-04 (owner: opening plate read as sketch; retina desktops render stills at half-res from 1536px masters)."
     },
     {
       "id": "SB-06",

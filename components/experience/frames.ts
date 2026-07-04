@@ -32,7 +32,7 @@ const M = '/images/experience/photo';
 export const FRAMES: Frame[] = [
   // ---------- Movement I — The Experience (renters) ----------
   {
-    id: 'SB-01', media: `${M}/cold-open.png`, movement: 'I', align: 'center',
+    id: 'SB-01', media: `${M}/cold-open-v2.png`, movement: 'I', align: 'center',
     headline: 'Drive Exotiq',
     jewel: 'Built for the people who actually drive the car.',
     body: 'An Exotiq Inc. brand — the community front door to the exotiq.rent marketplace.',
@@ -40,10 +40,10 @@ export const FRAMES: Frame[] = [
   { id: 'SB-02', media: `${M}/garage-exterior.png`, movement: 'I', align: 'left', headline: 'The door is open.' },
   { id: 'SB-03', media: `${M}/threshold-rush.png`, movement: 'I', aria: 'Flying through the threshold into the garage' },
   {
-    id: 'SB-04', media: `${M}/garage-interior.png`, movement: 'I', align: 'center',
+    id: 'SB-04', media: `${M}/garage-interior-v2.png`, movement: 'I', align: 'center',
     kicker: 'The fleet', headline: 'Every one of them, driven.',
   },
-  { id: 'SB-05', media: `${M}/mclaren-720s.png`, movement: 'I', align: 'left', kicker: '01', headline: 'McLaren 720S', body: 'Twin-turbo V8. Full specs at launch.' },
+  { id: 'SB-05', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left', kicker: '01', headline: 'McLaren 720S', body: 'Twin-turbo V8. Full specs at launch.' },
   { id: 'SB-06', media: `${M}/porsche-gt3rs.png`, movement: 'I', align: 'right', kicker: '02', headline: 'Porsche 911 GT3 RS' },
   { id: 'SB-07', media: `${M}/lambo-ferrari.png`, movement: 'I', align: 'left', kicker: '03', headline: 'The icons.', body: 'Lamborghini. Ferrari.' },
   {
@@ -51,7 +51,7 @@ export const FRAMES: Frame[] = [
     kicker: 'The list', headline: 'First keys to the fleet.', cta: 'Get on the list', ctaHref: '/apply',
   },
   { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Choose your car.' },
-  { id: 'SB-08b', media: `${M}/mclaren-720s.png`, movement: 'I', align: 'left', jewel: 'This one’s yours.', cta: 'Reserve it', ctaHref: '/apply' },
+  { id: 'SB-08b', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left', jewel: 'This one’s yours.', cta: 'Get on the list', ctaHref: '/apply' },
   { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.' },
   { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
   { id: 'SB-11', media: `${M}/ignition-v2.png`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start, the gauges sweep' },
@@ -75,16 +75,16 @@ export const FRAMES: Frame[] = [
   },
   {
     id: 'SB-19', media: `${M}/wrap-photoreal.png`, movement: 'II', align: 'center',
-    jewel: 'Your livery on this car.', headline: 'Down this line. Ten cities.',
+    headline: 'Your livery on this car.', jewel: 'Down this line, through ten cities.',
   },
   {
     id: 'SB-19b', media: `${M}/gregory-getin.jpg`, movement: 'II', align: 'left',
     headline: 'The garage door is open.', jewel: 'The road starts here.',
   },
   {
-    id: 'SB-20', media: `${M}/cold-open.png`, movement: 'II', align: 'center',
+    id: 'SB-20', media: `${M}/cold-open-v2.png`, movement: 'II', align: 'center',
     kicker: 'Two ways in', headline: 'Sponsor the wrap.',
     cta: 'Sponsor the wrap', ctaHref: '/sponsor',
-    secondaryCta: 'Reserve an exotic', secondaryCtaHref: '/apply',
+    secondaryCta: 'Join the waitlist', secondaryCtaHref: '/apply',
   },
 ];

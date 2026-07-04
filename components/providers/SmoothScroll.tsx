@@ -17,9 +17,9 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
-    // Dev-only handle: lets scripted walkthroughs drive the scroll (Lenis
-    // otherwise fights window.scrollTo in automation).
-    if (process.env.NODE_ENV !== 'production') (window as unknown as { lenis?: Lenis }).lenis = lenis;
+    // Exposed handle: the experience's keyboard beat-navigation rides it (and
+    // scripted walkthroughs — Lenis otherwise fights window.scrollTo).
+    (window as unknown as { lenis?: Lenis }).lenis = lenis;
 
     let rafId = 0;
     const raf = (time: number) => {

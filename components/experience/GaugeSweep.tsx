@@ -53,7 +53,7 @@ function Tick({ rpm, major }: { rpm: number; major: boolean }) {
   const a = angleOf(rpm);
   const [x1, y1] = polar(a, R);
   const [x2, y2] = polar(a, R - (major ? 16 : 9));
-  return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#E7E5E0" strokeWidth={major ? 2 : 1.2} opacity={major ? 0.95 : 0.6} />;
+  return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--de-text)" strokeWidth={major ? 2 : 1.2} opacity={major ? 0.95 : 0.6} />;
 }
 
 /** Red dashes riding the rim over the top of the scale, as on the real cluster. */
@@ -63,7 +63,7 @@ function RedlineDashes() {
     const a = angleOf(r);
     const [x1, y1] = polar(a, R + 4);
     const [x2, y2] = polar(a, R - 4);
-    dashes.push(<line key={r} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#B33A2B" strokeWidth={3} opacity={0.9} />);
+    dashes.push(<line key={r} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#B33A2B" /* diegetic instrument red (real cluster), exempt from the papaya flag rule */ strokeWidth={3} opacity={0.9} />);
   }
   return <>{dashes}</>;
 }
@@ -119,23 +119,23 @@ export default function GaugeSweep({ p }: { p: MotionValue<number> }) {
             const a = angleOf(MAX);
             const [x1, y1] = polar(a, R + 7);
             const [x2, y2] = polar(a, R - 18);
-            return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#6CBDE6" strokeWidth={2.5} />;
+            return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--de-gulf)" strokeWidth={2.5} />;
           })()}
         </g>
         {/* needle — slim, tapered, counterweighted, per DSC02096 */}
         <g ref={needleRef} transform={`rotate(${angleOf(0)} ${C} ${C})`}>
-          <polygon points={`${C - 2.6},${C + 18} ${C + 2.6},${C + 18} ${C + 1},${C - 150} ${C - 1},${C - 150}`} fill="#EDEBE6" />
-          <polygon points={`${C - 3.4},${C + 18} ${C + 3.4},${C + 18} ${C + 2.2},${C + 34} ${C - 2.2},${C + 34}`} fill="#2A2A2E" />
+          <polygon points={`${C - 2.6},${C + 18} ${C + 2.6},${C + 18} ${C + 1},${C - 150} ${C - 1},${C - 150}`} fill="var(--de-text)" />
+          <polygon points={`${C - 3.4},${C + 18} ${C + 3.4},${C + 18} ${C + 2.2},${C + 34} ${C - 2.2},${C + 34}`} fill="var(--de-surface-2)" />
         </g>
-        <circle cx={C} cy={C} r={17} fill="#141416" stroke="#3A3A40" strokeWidth={1.5} />
+        <circle cx={C} cy={C} r={17} fill="var(--de-surface)" stroke="var(--de-line-2)" strokeWidth={1.5} />
         {/* rpm digits in a hairline frame, Schibsted/tabular per brand */}
-        <rect x={C - 38} y={C + 96} width={76} height={26} rx={2} fill="rgba(11,11,12,0.55)" stroke="#3A3A40" strokeWidth={1} />
+        <rect x={C - 38} y={C + 96} width={76} height={26} rx={2} fill="rgba(11,11,12,0.55)" stroke="var(--de-line-2)" strokeWidth={1} />
         <text
           ref={digitsRef}
           x={C}
           y={C + 114}
           textAnchor="middle"
-          fill="#E7E5E0"
+          fill="var(--de-text)"
           opacity={0.3}
           style={{ font: '600 17px var(--font-sans, ui-sans-serif)', fontVariantNumeric: 'tabular-nums', letterSpacing: '0.08em' }}
         >
@@ -153,7 +153,7 @@ function DialChrome() {
     const a = angleOf(k * 1000);
     const [x, y] = polar(a, R - 34);
     nums.push(
-      <text key={k} x={x} y={y + 7} textAnchor="middle" fill="#E7E5E0" opacity={0.92}
+      <text key={k} x={x} y={y + 7} textAnchor="middle" fill="var(--de-text)" opacity={0.92}
         style={{ font: '500 26px var(--font-sans, ui-sans-serif)', fontVariantNumeric: 'tabular-nums' }}>
         {k}
       </text>,
@@ -166,11 +166,11 @@ function DialChrome() {
   }
   return (
     <>
-      <circle cx={C} cy={C} r={R + 12} fill="none" stroke="#3A3A40" strokeWidth={1.5} opacity={0.8} />
+      <circle cx={C} cy={C} r={R + 12} fill="none" stroke="var(--de-line-2)" strokeWidth={1.5} opacity={0.8} />
       {ticks}
       <RedlineDashes />
       {nums}
-      <text x={C + 64} y={C + 152} fill="#9A978F" opacity={0.75} style={{ font: '400 13px var(--font-sans, ui-sans-serif)' }}>
+      <text x={C + 64} y={C + 152} fill="var(--de-text-3)" opacity={0.75} style={{ font: '400 13px var(--font-sans, ui-sans-serif)' }}>
         1/min ×1000
       </text>
     </>
@@ -182,9 +182,9 @@ function Dial({ needleAngle }: { needleAngle: number }) {
     <svg viewBox="0 0 400 400" className="w-full">
       <DialChrome />
       <g transform={`rotate(${needleAngle} ${C} ${C})`}>
-        <polygon points={`${C - 2.6},${C + 18} ${C + 2.6},${C + 18} ${C + 1},${C - 150} ${C - 1},${C - 150}`} fill="#EDEBE6" />
+        <polygon points={`${C - 2.6},${C + 18} ${C + 2.6},${C + 18} ${C + 1},${C - 150} ${C - 1},${C - 150}`} fill="var(--de-text)" />
       </g>
-      <circle cx={C} cy={C} r={17} fill="#141416" stroke="#3A3A40" strokeWidth={1.5} />
+      <circle cx={C} cy={C} r={17} fill="var(--de-surface)" stroke="var(--de-line-2)" strokeWidth={1.5} />
     </svg>
   );
 }
