@@ -104,8 +104,19 @@ export const GRADE: Record<string, { wash?: number; grain?: number; vignette?: n
  * media.driveexotiq.com — set NEXT_PUBLIC_MEDIA_BASE=https://media.driveexotiq.com/videos
  * in the Netlify environment. Posters stay on Netlify: they are the LCP path.
  */
-const vid = (file: string) =>
-  `${process.env.NEXT_PUBLIC_MEDIA_BASE ?? '/videos/experience'}/${file}`;
+import MEDIA_VERSIONS from './media-versions.json';
+
+const vid = (file: string) => {
+  const p = `/videos/experience/${file}`;
+  const v = (MEDIA_VERSIONS as Record<string, string>)[p];
+  return `${process.env.NEXT_PUBLIC_MEDIA_BASE ?? '/videos/experience'}/${file}${v ? `?v=${v}` : ''}`;
+};
+
+/** Poster/still delivery with the same content-version cache busting. */
+const pos = (path: string) => {
+  const v = (MEDIA_VERSIONS as Record<string, string>)[path];
+  return `${path}${v ? `?v=${v}` : ''}`;
+};
 
 export const LIVING: Record<string, LivingMedia> = {
   // Populated per phase as encodes land — a beat without an entry = today's still, unchanged.
@@ -115,7 +126,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-01.mp4'),
     mobileSrc: vid('sb-01.720.mp4'),
-    poster: '/images/experience/poster/sb-01.jpg',
+    poster: pos('/images/experience/poster/sb-01.jpg'),
   },
 
   // Phase 1 — SB-02: the sectional door rises under the visitor's scroll
@@ -125,7 +136,7 @@ export const LIVING: Record<string, LivingMedia> = {
     src: vid('sb-02-scrub.mp4'),
     webmSrc: vid('sb-02-scrub.webm'),
     mobileSrc: vid('sb-02.mp4'),
-    poster: '/images/experience/poster/sb-02.jpg', // frame 0 = door-closed slit
+    poster: pos('/images/experience/poster/sb-02.jpg'), // frame 0 = door-closed slit
     deadZone: [0.12, 0.88],
   },
 
@@ -134,7 +145,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-05.mp4'),
     mobileSrc: vid('sb-05.720.mp4'),
-    poster: '/images/experience/poster/sb-05.jpg',
+    poster: pos('/images/experience/poster/sb-05.jpg'),
   },
 
   // SB-08b: the same portrait, slowed — a decision already made (reuses SB-05's
@@ -143,7 +154,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-05.mp4'),
     mobileSrc: vid('sb-05.720.mp4'),
-    poster: '/images/experience/poster/sb-05.jpg',
+    poster: pos('/images/experience/poster/sb-05.jpg'),
     playbackRate: 0.7,
   },
 
@@ -154,7 +165,7 @@ export const LIVING: Record<string, LivingMedia> = {
     src: vid('sb-08-scrub.mp4'),
     webmSrc: vid('sb-08-scrub.webm'),
     mobileSrc: vid('sb-08.mp4'),
-    poster: '/images/experience/poster/sb-08.jpg',
+    poster: pos('/images/experience/poster/sb-08.jpg'),
     deadZone: [0.15, 0.85],
   },
 
@@ -165,7 +176,7 @@ export const LIVING: Record<string, LivingMedia> = {
     src: vid('sb-09-scrub.mp4'),
     webmSrc: vid('sb-09-scrub.webm'),
     mobileSrc: vid('sb-09.mp4'),
-    poster: '/images/experience/poster/sb-09.jpg', // frame 0 = door closed (scrub start)
+    poster: pos('/images/experience/poster/sb-09.jpg'), // frame 0 = door closed (scrub start)
     deadZone: [0.15, 0.85],
   },
 
@@ -175,7 +186,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-10.mp4'),
     mobileSrc: vid('sb-10.720.mp4'),
-    poster: '/images/experience/poster/sb-10.jpg',
+    poster: pos('/images/experience/poster/sb-10.jpg'),
   },
 
   // Phase 1v2 — SB-11: the living macro under the gauge overlay, re-rendered
@@ -184,7 +195,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-11.mp4'),
     mobileSrc: vid('sb-11.720.mp4'),
-    poster: '/images/experience/poster/sb-11.jpg',
+    poster: pos('/images/experience/poster/sb-11.jpg'),
   },
 
   // Phase 2 — SB-03: the threshold rush (Hailuo t2, baked seam).
@@ -192,7 +203,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-03.mp4'),
     mobileSrc: vid('sb-03.720.mp4'),
-    poster: '/images/experience/poster/sb-03.jpg',
+    poster: pos('/images/experience/poster/sb-03.jpg'),
   },
 
   // Phase 2 — SB-04: the fleet aisle inhales (Kling t1).
@@ -200,7 +211,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-04.mp4'),
     mobileSrc: vid('sb-04.720.mp4'),
-    poster: '/images/experience/poster/sb-04.jpg',
+    poster: pos('/images/experience/poster/sb-04.jpg'),
   },
 
   // Phase 2 — SB-06: the GT3 RS cooling down, taillight ember (Kling t2).
@@ -208,7 +219,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-06.mp4'),
     mobileSrc: vid('sb-06.720.mp4'),
-    poster: '/images/experience/poster/sb-06.jpg',
+    poster: pos('/images/experience/poster/sb-06.jpg'),
   },
 
   // Phase 2 — SB-07: the open scissor door, DRLs waking (Kling t2).
@@ -216,7 +227,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-07.mp4'),
     mobileSrc: vid('sb-07.720.mp4'),
-    poster: '/images/experience/poster/sb-07.jpg',
+    poster: pos('/images/experience/poster/sb-07.jpg'),
   },
 
   // Phase 2 — SB-11b: the first movement of the film — the car creeps out of
@@ -225,7 +236,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'play-once',
     src: vid('sb-11b.mp4'),
     mobileSrc: vid('sb-11b.720.mp4'),
-    poster: '/images/experience/poster/sb-11b.jpg',
+    poster: pos('/images/experience/poster/sb-11b.jpg'),
   },
 
   // Phase 2 — SB-12: steady-state flight down the dawn highway (Hailuo t1, baked seam).
@@ -233,7 +244,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-12.mp4'),
     mobileSrc: vid('sb-12.720.mp4'),
-    poster: '/images/experience/poster/sb-12.jpg',
+    poster: pos('/images/experience/poster/sb-12.jpg'),
   },
 
   // Phase 2 — SB-14: formation-tracking drone hold over the coast (Kling t1).
@@ -241,7 +252,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-14.mp4'),
     mobileSrc: vid('sb-14.720.mp4'),
-    poster: '/images/experience/poster/sb-14.jpg',
+    poster: pos('/images/experience/poster/sb-14.jpg'),
   },
 
   // Phase 2 — SB-16: the machine's heartbeat in macro (Kling t1) + coast-down
@@ -250,7 +261,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-16.mp4'),
     mobileSrc: vid('sb-16.720.mp4'),
-    poster: '/images/experience/poster/sb-16.jpg',
+    poster: pos('/images/experience/poster/sb-16.jpg'),
     coastDown: [0.6, 1, 0.5],
   },
 
@@ -259,7 +270,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-17.mp4'),
     mobileSrc: vid('sb-17.720.mp4'),
-    poster: '/images/experience/poster/sb-17.jpg',
+    poster: pos('/images/experience/poster/sb-17.jpg'),
   },
 
   // Phase 2 — SB-18: THE PIVOT — the real S8 a statue, only the world breathes (Kling t1).
@@ -267,7 +278,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-18.mp4'),
     mobileSrc: vid('sb-18.720.mp4'),
-    poster: '/images/experience/poster/sb-18.jpg',
+    poster: pos('/images/experience/poster/sb-18.jpg'),
   },
 
   // Phase 1 — SB-13: "This is the drive." (Veo t2 + baked seam; provisional —
@@ -276,7 +287,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-13.mp4'),
     mobileSrc: vid('sb-13.720.mp4'),
-    poster: '/images/experience/poster/sb-13.jpg',
+    poster: pos('/images/experience/poster/sb-13.jpg'),
   },
 
   // Phase 1 — SB-15: "This could be you." — road-level chase at golden hour
@@ -285,7 +296,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-15.mp4'),
     mobileSrc: vid('sb-15.720.mp4'),
-    poster: '/images/experience/poster/sb-15.jpg',
+    poster: pos('/images/experience/poster/sb-15.jpg'),
   },
 
   // SB-20: the bookend — the identical SB-01 loop, the film returning home.
@@ -293,7 +304,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-01.mp4'),
     mobileSrc: vid('sb-01.720.mp4'),
-    poster: '/images/experience/poster/sb-01.jpg',
+    poster: pos('/images/experience/poster/sb-01.jpg'),
   },
 
   // Phase 1 — SB-19b: the REAL get-in (S8 Roller master 16.2–24.5s, dusk-noir
@@ -302,7 +313,7 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'play-once',
     src: vid('sb-19b.mp4'),
     mobileSrc: vid('sb-19b.720.mp4'),
-    poster: '/images/experience/poster/sb-19b.jpg',
+    poster: pos('/images/experience/poster/sb-19b.jpg'),
   },
 
   // Phase 1 — SB-19: the livery light-wipe reveal. Desktop scrubs the Veo take
@@ -312,11 +323,11 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'scrub',
     src: vid('sb-19-scrub.mp4'),
     webmSrc: vid('sb-19-scrub.webm'),
-    poster: '/images/experience/poster/sb-19.jpg',
+    poster: pos('/images/experience/poster/sb-19.jpg'),
     deadZone: [0.08, 0.85], // reveal completes at 85% — the money frame holds
     wipe: {
-      darkSrc: '/images/experience/poster/wrap-dark.webp',
-      litSrc: '/images/experience/poster/wrap-photoreal.webp',
+      darkSrc: pos('/images/experience/poster/wrap-dark.webp'),
+      litSrc: pos('/images/experience/poster/wrap-photoreal.webp'),
       completeAt: 0.85,
     },
   },
