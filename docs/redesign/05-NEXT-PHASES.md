@@ -50,4 +50,4 @@ Poster-first everywhere · crawlable spine + verbatim AEO anchor · one Gulf acc
 
 - **Wrap design:** the IMSA livery is still the sanctioned placeholder — when the real design lands, SB-19's prep frame + takes regenerate (~$10, one command).
 - **Water-crossing beat:** in or out (taste call).
-- **Audio:** page is silent; all SKUs bought no-audio. A tap-to-unmute ignition bark remains possible (one SB-11 retake with audio, ~$3).
+- **Audio: DONE 2026-07-04 at $0** — the REAL ignition bark (24-bit location audio off the roller master) ships on SB-11 with a "Hear it start" tap-to-unmute; the film stays silent by default.
