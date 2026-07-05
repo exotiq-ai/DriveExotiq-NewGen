@@ -50,6 +50,12 @@ export interface Frame {
    * ever plays on this explicit user gesture. Film path only.
    */
   sound?: string;
+  /**
+   * CSS object-position for the plate (still AND living layer). Portrait
+   * viewports crop 16:9 to the center ~46% of frame width — set this when the
+   * subject lives off-center (SB-16's wheel sits in the left half).
+   */
+  focus?: string;
 }
 
 const M = '/images/experience/photo';
@@ -141,7 +147,9 @@ export const FRAMES: Frame[] = [
     aria: 'Golden hour at the Cars & Coffee, rows of Ferraris and the crowd between them',
   },
   { id: 'SB-15', media: `${M}/chase-real.jpg`, movement: 'I', align: 'right', jewel: 'This could be you.' },
-  { id: 'SB-16', media: `${M}/wheel-real.jpg`, movement: 'I', aria: 'The wheel, up close, slowing' },
+  // focus 25%: the rolling wheel lives in the left half of the frame — a
+  // portrait center-crop would ship mostly empty flank on phones.
+  { id: 'SB-16', media: `${M}/wheel-real.jpg`, movement: 'I', aria: 'The wheel, up close, slowing', focus: '25% 50%' },
 
   // ---------- The Pivot ----------
   {

@@ -383,6 +383,24 @@
   .beat-anchor { top: calc(var(--af, 0) * 100svh); }
 }
 
+/* Copy legibility over the film (/experience). Desktop: the 16:9 frame keeps
+   its dark thirds behind the copy — a soft scrim suffices. Narrow/coarse
+   viewports portrait-crop the plates (only the center ~46% of frame width
+   survives at 375×812), which can leave white copy on a white car — so the
+   scrim strengthens and widens, and the copy gains a soft shadow. Media query
+   = NOT the scrub-capable query (see SCRUB_MQ in components/experience/bands.ts). */
+.copy-scrim {
+  background: radial-gradient(58% 52% at var(--sx, 50%) 50%, rgba(11, 11, 12, 0.42), transparent 72%);
+}
+@media (max-width: 1023px), (pointer: coarse) {
+  .copy-scrim {
+    background: radial-gradient(75% 62% at var(--sx, 50%) 50%, rgba(11, 11, 12, 0.6), transparent 80%);
+  }
+  .copy-block {
+    text-shadow: 0 1px 16px rgba(0, 0, 0, 0.5);
+  }
+}
+
 /* Lenis smooth scroll */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }

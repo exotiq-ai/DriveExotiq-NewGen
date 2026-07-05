@@ -152,8 +152,10 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
         className="fixed inset-x-0 top-0 z-[60] h-px origin-left bg-gulf"
         style={{ scaleX: progressScale }}
       />
-      {/* Act ticks: generous hit areas, hairline-quiet marks. */}
-      <div className="fixed inset-x-0 top-0 z-[61]">
+      {/* Act ticks: generous hit areas, hairline-quiet marks. Desktop-only —
+          on phones the SB-20 tick half-clips at the right edge and a 1px mark
+          is a poor touch affordance; mobile skip lives in the end card. */}
+      <div className="fixed inset-x-0 top-0 z-[61] hidden sm:block">
         {mounted && TICKS.map((t) => (
           <button
             key={t.i}

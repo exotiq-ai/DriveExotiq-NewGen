@@ -34,7 +34,14 @@ const N = FRAMES.length;
  * pointers get the same lift with opacity only.
  */
 function useNoTextBlur() {
-  const [noBlur, setNoBlur] = useState(false);
+  // Lazy init: the FIRST render must already know (mobile pass finding: with
+  // a false initial, the entrance variant applies blur(6px) before the effect
+  // flips the flag, and framer keeps orphaned values — every copy block on
+  // mobile stayed permanently blurred). SSR renders false; hydration computes
+  // the real value before any animation runs.
+  const [noBlur, setNoBlur] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px), (pointer: coarse)').matches,
+  );
   useEffect(() => {
     setNoBlur(window.matchMedia('(max-width: 767px), (pointer: coarse)').matches);
   }, []);
@@ -93,16 +100,20 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
 
   // Copy sits at mid-viewport where the global scrim is most transparent —
   // a soft local scrim keyed to alignment protects contrast over live video.
+  // The scrim is a CSS class (globals.css): portrait crops discard the plates'
+  // dark thirds, so narrow/coarse viewports get a stronger, wider scrim plus
+  // a text-shadow on .copy-block (mobile pass: white copy over the white 458
+  // hood measured effective luminance 113 behind the desktop scrim — illegible).
   const scrimX = frame.align === 'center' ? '50%' : frame.align === 'right' ? '78%' : '22%';
 
   const inner = (
     <>
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{ background: `radial-gradient(58% 52% at ${scrimX} 50%, rgba(11,11,12,0.42), transparent 72%)` }}
+        className="copy-scrim pointer-events-none absolute inset-0"
+        style={{ '--sx': scrimX } as React.CSSProperties}
       />
-      <div className="relative mx-auto w-full max-w-content px-6 md:px-8">
+      <div className="copy-block relative mx-auto w-full max-w-content px-6 md:px-8">
         <motion.div
           ref={ref}
           className={cn('flex w-full flex-col', alignItems)}
@@ -111,7 +122,9 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
             reduce
               ? undefined
               : noBlur
-                ? { opacity: show ? 1 : 0, y: show ? 0 : 30 }
+                // filter pinned to 0 (not omitted): clears any stale blur if
+                // the pointer class flips mid-session; a constant costs nothing.
+                ? { opacity: show ? 1 : 0, y: show ? 0 : 30, filter: 'blur(0px)' }
                 : { opacity: show ? 1 : 0, y: show ? 0 : 30, filter: show ? 'blur(0px)' : 'blur(6px)' }
           }
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
@@ -128,7 +141,8 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
               type="button"
               aria-pressed={soundOn}
               onClick={() => window.dispatchEvent(new CustomEvent('de:sound-toggle'))}
-              className="mb-4 w-fit rounded-sm border border-line-2 px-3 py-1.5 text-[11px] font-semibold tracking-[0.08em] text-ink-2 transition-colors duration-250 ease-de hover:border-ink-3 hover:text-ink"
+              // 44px min touch target on coarse pointers (Apple HIG).
+              className="mb-4 flex w-fit items-center rounded-sm border border-line-2 px-4 py-1.5 text-[11px] font-semibold tracking-[0.08em] text-ink-2 transition-colors duration-250 ease-de hover:border-ink-3 hover:text-ink max-sm:min-h-[44px]"
             >
               {soundOn ? 'Mute' : frame.sound}
             </button>
@@ -158,7 +172,7 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
                 reduce || frame.id !== 'SB-20'
                   ? undefined
                   : noBlur
-                    ? { opacity: show ? 1 : 0, y: show ? 0 : 24 }
+                    ? { opacity: show ? 1 : 0, y: show ? 0 : 24, filter: 'blur(0px)' }
                     : { opacity: show ? 1 : 0, y: show ? 0 : 24, filter: show ? 'blur(0px)' : 'blur(6px)' }
               }
               transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
@@ -277,9 +291,10 @@ function Plate({ frame, index, progress, priority, active, bands }: { frame: Fra
           placeholder={PLACEHOLDERS[frame.media] ? 'blur' : 'empty'}
           blurDataURL={PLACEHOLDERS[frame.media]}
           className="object-cover"
+          style={frame.focus ? { objectPosition: frame.focus } : undefined}
         />
         {/* Living layer: poster-first enhancement, mounted ±2 bands (buffer), playing ±1 while uncovered. */}
-        {living && dist <= 2 && <LivingLayer cfg={living} p={p} near={dist <= 1 && !covered} />}
+        {living && dist <= 2 && <LivingLayer cfg={living} p={p} near={dist <= 1 && !covered} focus={frame.focus} />}
         {/* Film-print unifier for real-footage beats (see GRADE in living.ts). */}
         {GRADE[frame.id] && <FilmGrade cfg={GRADE[frame.id]} />}
       </motion.div>

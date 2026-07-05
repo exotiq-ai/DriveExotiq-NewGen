@@ -62,7 +62,7 @@ function Fade({ ready, children }: { ready: boolean; children: React.ReactNode }
   );
 }
 
-function LoopLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'loop' }>; near: boolean; p: MotionValue<number> }) {
+function LoopLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 'loop' }>; near: boolean; p: MotionValue<number>; focus?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
   const mobile = useIsMobile();
@@ -104,6 +104,7 @@ function LoopLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'loop' 
       <video
         ref={ref}
         className="absolute inset-0 h-full w-full object-cover"
+        style={focus ? { objectPosition: focus } : undefined}
         src={src}
         poster={cfg.poster}
         muted
@@ -118,7 +119,7 @@ function LoopLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'loop' 
   );
 }
 
-function PlayOnceLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'play-once' }>; near: boolean; p: MotionValue<number> }) {
+function PlayOnceLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 'play-once' }>; near: boolean; p: MotionValue<number>; focus?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
   const played = useRef(false);
@@ -186,6 +187,7 @@ function PlayOnceLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'pl
       <video
         ref={ref}
         className="absolute inset-0 h-full w-full object-cover"
+        style={focus ? { objectPosition: focus } : undefined}
         src={src}
         poster={cfg.poster}
         muted
@@ -203,7 +205,7 @@ function PlayOnceLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'pl
   );
 }
 
-function ScrubLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'scrub' }>; near: boolean; p: MotionValue<number> }) {
+function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 'scrub' }>; near: boolean; p: MotionValue<number>; focus?: string }) {
   const canScrub = useCanScrub();
   const ref = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
@@ -252,12 +254,13 @@ function ScrubLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'scrub
   if (!canScrub) {
     // Mobile / coarse pointer: the code wipe when defined (SB-19 — zero video
     // bytes by design), otherwise a play-once of the normal encode.
-    if (cfg.wipe) return <WipeLayer cfg={{ kind: 'wipe', ...cfg.wipe }} p={p} />;
+    if (cfg.wipe) return <WipeLayer cfg={{ kind: 'wipe', ...cfg.wipe }} p={p} focus={focus} />;
     return (
       <PlayOnceLayer
         cfg={{ kind: 'play-once', src: cfg.mobileSrc ?? cfg.src, poster: cfg.poster }}
         near={near}
         p={p}
+        focus={focus}
       />
     );
   }
@@ -265,11 +268,12 @@ function ScrubLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'scrub
   return (
     <>
       {/* instant-render layer beneath the video (still-first, no CLS) */}
-      {cfg.wipe && !ready && <WipeLayer cfg={{ kind: 'wipe', ...cfg.wipe }} p={p} />}
+      {cfg.wipe && !ready && <WipeLayer cfg={{ kind: 'wipe', ...cfg.wipe }} p={p} focus={focus} />}
       <Fade ready={ready}>
         <video
           ref={ref}
           className="absolute inset-0 h-full w-full object-cover"
+          style={focus ? { objectPosition: focus } : undefined}
           poster={cfg.poster}
           muted
           playsInline
@@ -292,7 +296,7 @@ function ScrubLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'scrub
  * path): the lit still, masked by a feathered leading edge driven by plate
  * progress, sweeps nose-to-tail over the dark still. Zero video bytes.
  */
-function WipeLayer({ cfg, p }: { cfg: Extract<LivingMedia, { kind: 'wipe' }>; p: MotionValue<number> }) {
+function WipeLayer({ cfg, p, focus }: { cfg: Extract<LivingMedia, { kind: 'wipe' }>; p: MotionValue<number>; focus?: string }) {
   const complete = cfg.completeAt ?? 0.85;
   const reveal = useTransform(p, [0.08, complete], [0, 1]);
   const edge = useTransform(reveal, (r) => r * 140 - 20);
@@ -303,12 +307,12 @@ function WipeLayer({ cfg, p }: { cfg: Extract<LivingMedia, { kind: 'wipe' }>; p:
 
   return (
     <div className="absolute inset-0">
-      <img src={cfg.darkSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <img src={cfg.darkSrc} alt="" className="absolute inset-0 h-full w-full object-cover" style={focus ? { objectPosition: focus } : undefined} />
       <motion.img
         src={cfg.litSrc}
         alt=""
         className="absolute inset-0 h-full w-full object-cover"
-        style={{ WebkitMaskImage: mask, maskImage: mask } as any}
+        style={{ WebkitMaskImage: mask, maskImage: mask, ...(focus ? { objectPosition: focus } : {}) } as any}
       />
       {/* the traveling "lamp": a warm glow bar tracking the mask edge */}
       <motion.div
@@ -329,20 +333,23 @@ export default function LivingLayer({
   cfg,
   p,
   near,
+  focus,
 }: {
   cfg: LivingMedia;
   /** Plate-local progress 0..1 across this plate's band. */
   p: MotionValue<number>;
   /** Within the active±1 window (play); mounted within ±2 (buffer). */
   near: boolean;
+  /** object-position matching the plate still (off-center subjects on portrait crops). */
+  focus?: string;
 }) {
   const saveData = useSaveData();
   if (saveData && cfg.kind !== 'wipe') return null; // wipe is still-only, always allowed
 
   switch (cfg.kind) {
-    case 'loop': return <LoopLayer cfg={cfg} near={near} p={p} />;
-    case 'play-once': return <PlayOnceLayer cfg={cfg} near={near} p={p} />;
-    case 'scrub': return <ScrubLayer cfg={cfg} near={near} p={p} />;
-    case 'wipe': return <WipeLayer cfg={cfg} p={p} />;
+    case 'loop': return <LoopLayer cfg={cfg} near={near} p={p} focus={focus} />;
+    case 'play-once': return <PlayOnceLayer cfg={cfg} near={near} p={p} focus={focus} />;
+    case 'scrub': return <ScrubLayer cfg={cfg} near={near} p={p} focus={focus} />;
+    case 'wipe': return <WipeLayer cfg={cfg} p={p} focus={focus} />;
   }
 }
