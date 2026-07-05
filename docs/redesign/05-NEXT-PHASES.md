@@ -50,4 +50,4 @@ Poster-first everywhere · crawlable spine + verbatim AEO anchor · one Gulf acc
 
 - **Wrap design:** the IMSA livery is still the sanctioned placeholder — when the real design lands, SB-19's prep frame + takes regenerate (~$10, one command).
 - **Water-crossing beat:** in or out (taste call).
-- **Audio: DONE 2026-07-04 at $0** — the REAL ignition bark (24-bit location audio off the roller master) ships on SB-11 with a "Hear it start" tap-to-unmute; the film stays silent by default.
+- **Audio: LIVE 2026-07-04 ($0) — REPLACEMENT PENDING.** SB-11 ships the roller master's ignition audio behind "Hear it start", but that track carries the videographer's music overlay — Gregory is recording a CLEAN startup. When the file lands: remux over the existing clip (ffmpeg -map 0:v -map 1:a), re-encode --audio, gen-media-versions, R2. Do NOT remove the feature.

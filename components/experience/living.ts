@@ -212,6 +212,9 @@ export const LIVING: Record<string, LivingMedia> = {
   // the band enters, the cluster wakes, the V8 barks at ~3s and settles to
   // idle. The encode carries the REAL audio (24-bit location sound, loudness-
   // normalized); "Hear it start" unmutes and replays on tap.
+  // AUDIO REPLACEMENT PENDING (owner 2026-07-04): the master's track has the
+  // videographer's music overlay — a clean startup recording is coming.
+  // Swap = remux new audio over this clip + encode --audio + versions + R2.
   'SB-11': {
     kind: 'play-once',
     src: vid('sb-11.mp4'),
