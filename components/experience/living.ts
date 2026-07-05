@@ -259,30 +259,35 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-11b.jpg'),
   },
 
-  // Phase 2 — SB-12: steady-state flight down the dawn highway (Hailuo t1, baked seam).
+  // SB-12 REAL: the aspen-road aerial. Traveling shot → PLAY-ONCE (owner
+  // caught the class bug: xfade loop-seams double-expose a moving camera, and
+  // the poster handoff ghosts the same way — near-static sources loop,
+  // traveling shots play once and hold their composed last frame).
   'SB-12': {
-    kind: 'loop',
+    kind: 'play-once',
     src: vid('sb-12.mp4'),
     mobileSrc: vid('sb-12.720.mp4'),
     poster: pos('/images/experience/poster/sb-12.jpg'),
   },
 
-  // Phase 2 — SB-14: formation-tracking drone hold over the coast (Kling t1).
+  // SB-14 REAL: two cars in convoy on the high-country curve — directional,
+  // play-once and hold.
   'SB-14': {
-    kind: 'loop',
+    kind: 'play-once',
     src: vid('sb-14.mp4'),
     mobileSrc: vid('sb-14.720.mp4'),
     poster: pos('/images/experience/poster/sb-14.jpg'),
   },
 
-  // Phase 2 — SB-16: the machine's heartbeat in macro (Kling t1) + coast-down
-  // into the pivot: playbackRate 1 -> 0.5 across the band's final stretch.
+  // SB-16 REAL: the rolling wheel at baked half-speed — directional (a
+  // reversed wheel spins backward), so play-once; the motion-blurred hold
+  // frame reads as a long exposure. The old coastDown ramp retired with the
+  // loop (the 0.5× bake IS the coast-down now).
   'SB-16': {
-    kind: 'loop',
+    kind: 'play-once',
     src: vid('sb-16.mp4'),
     mobileSrc: vid('sb-16.720.mp4'),
     poster: pos('/images/experience/poster/sb-16.jpg'),
-    coastDown: [0.6, 1, 0.5],
   },
 
   // Phase 2 — SB-17: the route beat, landscape breathing at journey scale (Kling t1).
@@ -301,10 +306,10 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-18.jpg'),
   },
 
-  // Phase 1 — SB-13: "This is the drive." (Veo t2 + baked seam; provisional —
-  // Hailuo retake queued for when OpenRouter credits return, see manifest).
+  // SB-13 REAL: the S8 alone on the alpine pass — directional motion (the car
+  // approaches), so play-once; a loop reversal would drive it backward.
   'SB-13': {
-    kind: 'loop',
+    kind: 'play-once',
     src: vid('sb-13.mp4'),
     mobileSrc: vid('sb-13.720.mp4'),
     poster: pos('/images/experience/poster/sb-13.jpg'),
