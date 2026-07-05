@@ -102,10 +102,12 @@ export const FRAMES: Frame[] = [
   // chosen. Its ask now lands on SB-08b — desire → choice → possession → ask.
   { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Choose your car.', weight: 2, mobileWeight: 1 },
   {
-    // REAL plate (owner: don't re-show SB-05's portrait) — the rain-beaded
-    // 458+R8 pair at the lakeside. Choose the dream at SB-08; possess the
-    // real thing here.
-    id: 'SB-08b', media: `${M}/pair-real.jpg`, movement: 'I', align: 'left',
+    // REAL plate, third take (owner: the lakeside pan ghosted at its loop and
+    // poster handoff — traveling shots can't do either). This is the STATIC
+    // camera: R8 + 458 nose-on in the aspens (Telluride 58.2–62.2s), an
+    // imperceptible-drift palindrome. focus biases the portrait crop onto the
+    // 458 — the pair straddles a phone-width center crop.
+    id: 'SB-08b', media: `${M}/pair-real.jpg`, movement: 'I', align: 'left', focus: '62% 50%',
     // The Movement-I ask, landed at possession (no kicker — the CTA already
     // says "the list"; review: the near-duplication class SB-20 was cured of).
     // Weight 1.5: the film's only in-movement conversion earns a held beat.
