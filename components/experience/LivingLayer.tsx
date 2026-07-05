@@ -125,6 +125,36 @@ function PlayOnceLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'pl
   const mobile = useIsMobile();
   const src = mobile && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
 
+  // Tap-to-unmute contract (cfg.sound beats only): the Copy layer's button
+  // dispatches de:sound-toggle; we unmute + replay from the press, report
+  // state back on de:sound-state, and ALWAYS re-mute when the beat leaves the
+  // working set — sound must never bleed into a neighboring beat.
+  const emitSound = (on: boolean) => window.dispatchEvent(new CustomEvent('de:sound-state', { detail: on }));
+  useEffect(() => {
+    if (!cfg.sound) return;
+    const onToggle = () => {
+      const v = ref.current;
+      if (!v) return;
+      if (v.muted) {
+        v.muted = false;
+        v.currentTime = 0;
+        played.current = true;
+        v.play().catch(() => { v.muted = true; emitSound(false); });
+        emitSound(true);
+      } else {
+        v.muted = true;
+        emitSound(false);
+      }
+    };
+    window.addEventListener('de:sound-toggle', onToggle);
+    return () => window.removeEventListener('de:sound-toggle', onToggle);
+  }, [cfg.sound]);
+  useEffect(() => {
+    const v = ref.current;
+    if (!cfg.sound || !v || near) return;
+    if (!v.muted) { v.muted = true; emitSound(false); }
+  }, [near, cfg.sound]);
+
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
@@ -164,6 +194,10 @@ function PlayOnceLayer({ cfg, near, p }: { cfg: Extract<LivingMedia, { kind: 'pl
         disableRemotePlayback
         onLoadedData={() => setReady(true)}
         onError={() => setReady(false)}
+        onEnded={() => {
+          const v = ref.current;
+          if (cfg.sound && v && !v.muted) { v.muted = true; emitSound(false); }
+        }}
       />
     </Fade>
   );

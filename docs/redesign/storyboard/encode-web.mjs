@@ -89,10 +89,14 @@ if (seam) {
 // entropy-dense (foliage, gravel) and masks compression far better than clean
 // AI gradients — the 2026-07-04 real swaps ship at --crf 20 (720p = crf+2).
 const crf = parseInt(pick('--crf') ?? '18', 10);
+// --audio keeps the master's audio track (AAC 128k) instead of stripping it.
+// The film is silent by design — only user-gesture unmute beats (SB-11's real
+// ignition) carry sound; playback still starts muted for autoplay policy.
+const AUD = args.includes('--audio') ? ['-c:a', 'aac', '-b:a', '128k'] : ['-an'];
 
 if (kind === 'loop' || kind === 'play-once') {
-  ff(['-i', work, '-c:v', 'libx264', '-profile:v', 'high', '-crf', String(crf), '-preset', 'slow', '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart', path.join(VIDS, `${name}.mp4`)]);
-  ff(['-i', work, '-vf', "scale='min(1280,iw)':-2", '-c:v', 'libx264', '-profile:v', 'high', '-crf', String(crf + 2), '-preset', 'slow', '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart', path.join(VIDS, `${name}.720.mp4`)]);
+  ff(['-i', work, '-c:v', 'libx264', '-profile:v', 'high', '-crf', String(crf), '-preset', 'slow', '-pix_fmt', 'yuv420p', ...AUD, '-movflags', '+faststart', path.join(VIDS, `${name}.mp4`)]);
+  ff(['-i', work, '-vf', "scale='min(1280,iw)':-2", '-c:v', 'libx264', '-profile:v', 'high', '-crf', String(crf + 2), '-preset', 'slow', '-pix_fmt', 'yuv420p', ...AUD, '-movflags', '+faststart', path.join(VIDS, `${name}.720.mp4`)]);
   console.log(`loop   ${name}.mp4 (${(fs.statSync(path.join(VIDS, `${name}.mp4`)).size / 1e6).toFixed(1)}MB) + ${name}.720.mp4`);
 } else if (kind === 'scrub') {
   ff(['-i', work, '-c:v', 'libx264', '-profile:v', 'baseline', '-level', '3.1', '-pix_fmt', 'yuv420p', '-g', '2', '-crf', '19', '-preset', 'veryslow', '-an', '-movflags', '+faststart', path.join(VIDS, `${name}-scrub.mp4`)]);

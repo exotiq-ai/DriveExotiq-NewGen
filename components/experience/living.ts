@@ -27,6 +27,12 @@ export type LivingMedia =
       playAt?: number;
       /** Rewind when progress falls back below this (default 0.02). */
       resetBelow?: number;
+      /**
+       * The encode carries an audio track and the beat offers a tap-to-unmute
+       * (SB-11's real ignition bark). Playback always STARTS muted; sound only
+       * on the user's gesture, re-muted the moment the beat leaves the stage.
+       */
+      sound?: boolean;
     }
   | {
       kind: 'scrub';
@@ -106,6 +112,7 @@ export const GRADE: Record<string, { wash?: number; grain?: number; vignette?: n
   'SB-12': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-13': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-14': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  'SB-14b': { wash: 0.06, grain: 0.02, vignette: 0.10 },
   'SB-15': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-16': { wash: 0.06, grain: 0.02, vignette: 0.08 },
 };
@@ -201,14 +208,16 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-10.jpg'),
   },
 
-  // SB-11 REAL: the S8 start-button press macro (Roller 24.9–28.4s) — plays
-  // once as the band enters, ends on the woken cluster and holds. The gauge
-  // overlay stays: it was modeled on this exact car's instruments.
+  // SB-11 REAL: the S8 start-button press (Roller 24.9–30.4s) — plays once as
+  // the band enters, the cluster wakes, the V8 barks at ~3s and settles to
+  // idle. The encode carries the REAL audio (24-bit location sound, loudness-
+  // normalized); "Hear it start" unmutes and replays on tap.
   'SB-11': {
     kind: 'play-once',
     src: vid('sb-11.mp4'),
     mobileSrc: vid('sb-11.720.mp4'),
     poster: pos('/images/experience/poster/sb-11.jpg'),
+    sound: true,
   },
 
   // Phase 2 — SB-03: the threshold rush (Hailuo t2, baked seam).

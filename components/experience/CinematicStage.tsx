@@ -48,6 +48,17 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
   const inView = useInView(ref, { amount: 0.55 });
   const show = reduce || inView;
 
+  // Tap-to-unmute affordance (film path only — StaticStage has no video).
+  // The button talks to the beat's PlayOnceLayer over a window event pair;
+  // the layer owns the video and reports the live state back.
+  const [soundOn, setSoundOn] = useState(false);
+  useEffect(() => {
+    if (!frame.sound || index === undefined) return;
+    const onState = (e: Event) => setSoundOn(Boolean((e as CustomEvent).detail));
+    window.addEventListener('de:sound-state', onState);
+    return () => window.removeEventListener('de:sound-state', onState);
+  }, [frame.sound, index]);
+
   // Weighted beat pacing — only the film path passes an index (StaticStage
   // stays unweighted by design), and only beats whose weight differs from 1 on
   // either table get the taller block + anchor-window markup; everything else
@@ -111,6 +122,16 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
             /^\d+$/.test(frame.kicker)
               ? <span className="idx mb-5 text-lg text-ink-2">{frame.kicker}</span>
               : <span className="mb-5 text-[11px] tracking-[0.08em] text-ink-2">{frame.kicker}</span>
+          )}
+          {frame.sound && index !== undefined && (
+            <button
+              type="button"
+              aria-pressed={soundOn}
+              onClick={() => window.dispatchEvent(new CustomEvent('de:sound-toggle'))}
+              className="mb-4 w-fit rounded-sm border border-line-2 px-3 py-1.5 text-[11px] font-semibold tracking-[0.08em] text-ink-2 transition-colors duration-250 ease-de hover:border-ink-3 hover:text-ink"
+            >
+              {soundOn ? 'Mute' : frame.sound}
+            </button>
           )}
           {frame.headline && (
             <h2 className="max-w-[16ch] font-display text-4xl font-bold leading-[1.03] tracking-tight-exotiq text-ink md:text-6xl">

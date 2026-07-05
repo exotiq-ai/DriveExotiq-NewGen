@@ -44,6 +44,12 @@ export interface Frame {
    * livery reveal holds; SB-19b so it lands after the get-in resolves.
    */
   copyAt?: number;
+  /**
+   * Label for a tap-to-unmute affordance (SB-11: the REAL ignition bark rides
+   * the clip's audio track). The film stays silent by design — sound only
+   * ever plays on this explicit user gesture. Film path only.
+   */
+  sound?: string;
 }
 
 const M = '/images/experience/photo';
@@ -54,7 +60,10 @@ export const FRAMES: Frame[] = [
     id: 'SB-01', media: `${M}/cold-open-v2.png`, movement: 'I', align: 'center',
     headline: 'Drive Exotiq',
     jewel: 'Built for the people who actually drive the car.',
-    body: 'An Exotiq Inc. brand — the community front door to the exotiq.rent marketplace.',
+    // Plain English at second zero (audit: the org-chart line made three cold
+    // visitors work for the premise). The verbatim AEO anchor lives in the
+    // page spine; the Exotiq Inc. lineage lives on the end card.
+    body: 'Exotic rentals, invite-only drives, and a Denver-to-Miami tour.',
   },
   { id: 'SB-02', media: `${M}/garage-exterior.png`, movement: 'I', align: 'left', headline: 'The door is open.', weight: 2, mobileWeight: 1 },
   { id: 'SB-03', media: `${M}/threshold-rush.png`, movement: 'I', aria: 'Flying through the threshold into the garage' },
@@ -95,6 +104,8 @@ export const FRAMES: Frame[] = [
     // says "the list"; review: the near-duplication class SB-20 was cured of).
     // Weight 1.5: the film's only in-movement conversion earns a held beat.
     headline: 'First keys to the fleet.', jewel: 'This one’s yours.',
+    // The ask carries one noun of value (audit: it promised nothing).
+    body: 'First booking windows when exotiq.rent opens.',
     cta: 'Get on the list', ctaHref: '/apply',
     weight: 1.5,
   },
@@ -104,7 +115,7 @@ export const FRAMES: Frame[] = [
   // the longer band on every device — at weight 1 the whole sweep was 0.25
   // viewports and a single flick skipped the ignition moment. Real footage:
   // the S8 Roller start-button press (24.9–28.4s), thumb on the red ring.
-  { id: 'SB-11', media: `${M}/ignition-real.jpg`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start, the gauges sweep', weight: 1.5 },
+  { id: 'SB-11', media: `${M}/ignition-real.jpg`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start — the real V8 wakes', weight: 1.5, sound: 'Hear it start' },
   { id: 'SB-11b', media: `${M}/roll-out.png`, movement: 'I', aria: 'The nose eases out of the garage' },
   // The drive world goes REAL from here: Telluride aspen aerial, the S8 alone
   // on the alpine pass, the high-country curve, the FPV chase, the rolling
@@ -121,6 +132,14 @@ export const FRAMES: Frame[] = [
     kicker: 'The drives', body: 'Invite-only, the last Sunday of every month. Sunrise in Colorado’s high country, then Cars & Coffee.',
     aria: 'Aerial over a high-country road, two cars in convoy',
   },
+  // The Gather beat (audit: the film claimed community and showed one human).
+  // Real golden-hour Cars & Coffee — the rows of Ferraris and the people
+  // between them ARE the pillar. Pays off SB-14's "then Cars & Coffee."
+  {
+    id: 'SB-14b', media: `${M}/gather-real.jpg`, movement: 'I', align: 'left',
+    jewel: 'No stanchions. No judging.',
+    aria: 'Golden hour at the Cars & Coffee, rows of Ferraris and the crowd between them',
+  },
   { id: 'SB-15', media: `${M}/chase-real.jpg`, movement: 'I', align: 'right', jewel: 'This could be you.' },
   { id: 'SB-16', media: `${M}/wheel-real.jpg`, movement: 'I', aria: 'The wheel, up close, slowing' },
 
@@ -128,6 +147,9 @@ export const FRAMES: Frame[] = [
   {
     id: 'SB-18', media: `${M}/s8-pivot.jpg`, movement: 'pivot', align: 'center',
     kicker: 'One more thing', headline: 'The drive is the product.', jewel: 'The story goes further.',
+    // The reveal now names its payoff (audit: every persona hit "it's… a
+    // sedan?"): the plant from the pass becomes the founder's own car.
+    body: 'The 2017 Audi S8 you kept seeing — the founder’s own car, driven every mile.',
     // The narrative hinge holds a breath: three copy elements over the
     // statue-still S8 earn more than one viewport.
     weight: 1.5,
@@ -135,8 +157,13 @@ export const FRAMES: Frame[] = [
 
   // ---------- Movement II — The Tour (sponsors) ----------
   {
-    id: 'SB-17', media: `${M}/s8-vista.jpg`, movement: 'II', align: 'left',
-    kicker: 'The tour', headline: 'One car. Denver to Miami.', body: 'Ten markets. {n} miles.', odometerTarget: 5000,
+    // REAL dusk S-curve (Roller 70.9–75.2s) — the S8 small in a vast twilight
+    // landscape: the journey at journey scale. Timing is canonical (§1.4);
+    // the ghost link gives sponsor traffic its missing fact path (audit).
+    id: 'SB-17', media: `${M}/scurve-real.jpg`, movement: 'II', align: 'left',
+    kicker: 'The tour', headline: 'One car. Denver to Miami.',
+    body: 'Ten markets. {n} miles. Summer to fall 2026.', odometerTarget: 5000,
+    secondaryCta: 'See the tour plan', secondaryCtaHref: '/tour',
   },
   {
     id: 'SB-19', media: `${M}/wrap-photoreal.png`, movement: 'II', align: 'center',
@@ -147,6 +174,9 @@ export const FRAMES: Frame[] = [
   },
   {
     id: 'SB-19b', media: `${M}/gregory-getin.jpg`, movement: 'II', align: 'left',
+    // The film's one human gets a name (audit: anonymous founder = wasted
+    // trust moment for every persona).
+    kicker: 'Gregory — founder',
     headline: 'The garage door is open.', jewel: 'The road starts here.',
     // The real founder get-in (8.3s play-once) — at weight 1 the film cut away
     // ~25% into the one human money shot. Play-once ends settled, so the tail
