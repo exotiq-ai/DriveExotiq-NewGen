@@ -159,7 +159,7 @@ export const FRAMES: Frame[] = [
   // SB-13b REAL: the S8 drives away down the dusk mountain road (Roller
   // 64.0–68.8s, lifted dusk-noir grade to keep the receding car legible).
   // Directional motion → play-once and hold, per the traveling-shot rule.
-  { id: 'SB-13b', media: `${M}/drive-away.jpg`, movement: 'I', align: 'right', aria: 'The S8 drives away down the mountain at dusk' },
+  { id: 'SB-13b', media: `${M}/drive-away.jpg`, movement: 'I', align: 'right', aria: 'Taillights receding down the dusk mountain road' },
   // focus 25%: the rolling wheel lives in the left half of the frame — a
   // portrait center-crop would ship mostly empty flank on phones.
   { id: 'SB-16', media: `${M}/wheel-real.jpg`, movement: 'I', aria: 'The wheel, up close, slowing', focus: '25% 50%' },

@@ -74,9 +74,13 @@ export const EXITS: Record<string, { from: number; scale?: number; y?: string; o
   // trigger point (~1.15 scale = ~7% overhang) — under the opaque-underneath
   // crossfade the outgoing plate holds full opacity while transformed, so an
   // uncovered translate would expose the canvas at the viewport edge.
-  'SB-13': { from: 0.85, scale: 1.02, y: '-4%' },
+  //
+  // SB-13 (crane-away) and SB-15 (whip-into-wheel) exits retired in the
+  // 2026-07-06 reorder: SB-13 now precedes SB-13b (another away-move — two
+  // stacked recessions read as a stutter, not a crane), and SB-15's whip toward
+  // the front wheel no longer lands on SB-16 (it now dissolves into the S8
+  // ignition macro). SB-14's drone-dive still hands into SB-14b, unchanged.
   'SB-14': { from: 0.78, scale: 1.14, y: '-3%' },
-  'SB-15': { from: 0.82, scale: 1.22, origin: '30% 72%' },
 };
 
 /**
@@ -329,11 +333,14 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-13b.jpg'),
   },
 
-  // SB-14c: the re-added coastal-cliff aerial (AI Kling loop, SB-14-t1 — the
-  // McLaren's original coast take). Formation-locked, seamless loop. Reuses the
-  // coast-aerial poster (frame-0 match); AI plate so no GRADE print-seat.
+  // SB-14c: the re-added coastal-cliff aerial (AI Kling clip, SB-14-t1 — the
+  // McLaren's original coast take). It's a TRAVELING aerial (the world slides
+  // under a formation-locked car), so play-once and hold per the film-wide rule
+  // — a native loop would jump the moving world at the wrap and ghost against
+  // the static frame-0 poster (same class as SB-12). Reuses the coast-aerial
+  // poster (frame-0 match); AI plate so no GRADE print-seat.
   'SB-14c': {
-    kind: 'loop',
+    kind: 'play-once',
     src: vid('sb-14c.mp4'),
     mobileSrc: vid('sb-14c.720.mp4'),
     poster: pos('/images/experience/poster/coast-aerial.jpg'),

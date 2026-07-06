@@ -21,31 +21,65 @@ export const metadata: Metadata = {
  * reduced-motion / mobile.
  */
 export default function TourPage() {
+  const MEDIA = process.env.NEXT_PUBLIC_MEDIA_BASE ?? '/videos/experience';
   return (
     <>
       <Header />
       <main id="main" className="bg-canvas">
-        {/* Intro — the one <h1>. Always rendered, never hidden. */}
-        <section className="relative mx-auto max-w-content px-6 pb-12 pt-32 md:px-10 md:pb-16 md:pt-40">
-          <div className="flex items-center gap-3">
-            <span className="h-px w-8 bg-gulf" />
-            <span className="text-[13px] tracking-[0.04em] text-ink-2">
-              The Journey · Denver → Miami · summer–fall 2026
-            </span>
+        {/* Intro — full-bleed S8 hero carrying the one <h1>. The real founder's
+            car in the canyon plays muted behind a legibility scrim; the copy
+            sits on the dark floor of the gradient so it stays fully readable. */}
+        <section className="relative flex min-h-[92svh] items-end overflow-hidden">
+          <video
+            aria-hidden="true"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/images/experience/poster/tour-hero.jpg"
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src={`${MEDIA}/tour-hero.720.mp4`} media="(max-width: 768px)" type="video/mp4" />
+            <source src={`${MEDIA}/tour-hero.mp4`} type="video/mp4" />
+          </video>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{ background: 'linear-gradient(to top, rgba(11,11,12,0.94) 4%, rgba(11,11,12,0.55) 42%, rgba(11,11,12,0.18) 100%)' }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{ background: 'linear-gradient(to right, rgba(11,11,12,0.7) 0%, rgba(11,11,12,0.1) 55%, transparent 100%)' }}
+          />
+
+          <div className="relative mx-auto w-full max-w-content px-6 pb-14 md:px-10 md:pb-20">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-gulf" />
+              <span className="text-[13px] tracking-[0.04em] text-ink-2">
+                The Journey · Denver → Miami · summer–fall 2026
+              </span>
+            </div>
+
+            <h1
+              className="mt-6 max-w-[20ch] font-display text-[clamp(2.4rem,6vw,4.8rem)] font-semibold leading-[0.98] tracking-tightest text-ink"
+              style={{ textShadow: '0 2px 40px rgba(0,0,0,0.65)' }}
+            >
+              Before first light, in Denver, the engine is already warm.
+            </h1>
+
+            <p
+              className="mt-6 max-w-[54ch] text-[clamp(1.05rem,1.7vw,1.3rem)] leading-snug text-ink"
+              style={{ textShadow: '0 1px 24px rgba(0,0,0,0.7)' }}
+            >
+              One built Audi S8, ten markets, ~5,000 miles — the Denver-to-Miami
+              exotic tour, summer into fall 2026. The wrap is still yours to claim.
+            </p>
+
+            <p className="mt-5 font-serif text-[clamp(1.1rem,2vw,1.5rem)] italic text-gulf">
+              a long way south, the long way.
+            </p>
           </div>
-
-          <h1 className="mt-6 max-w-[20ch] font-display text-[clamp(2.4rem,6vw,4.8rem)] font-semibold leading-[0.98] tracking-tightest text-ink">
-            Before first light, in Denver, the engine is already warm.
-          </h1>
-
-          <p className="mt-7 max-w-[56ch] text-[clamp(1rem,1.6vw,1.2rem)] leading-snug text-ink-2">
-            One car, ten markets, ~5,000 miles — Drive Exotiq&rsquo;s
-            Denver-to-Miami exotic tour, summer into fall 2026.
-          </p>
-
-          <p className="mt-5 font-serif text-[clamp(1.1rem,2vw,1.5rem)] italic text-ink-3">
-            a long way south, the long way.
-          </p>
         </section>
 
         {/* The drive. RoadbookStage renders the cinematic stage on desktop and
