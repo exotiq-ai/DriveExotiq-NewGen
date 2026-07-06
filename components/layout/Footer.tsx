@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Emblem from '@/components/ui/Emblem';
+import CookieSettingsButton from '@/components/CookieSettingsButton';
 
 const EXPLORE = [
   { label: 'The Drives', href: '/drives' },
@@ -71,6 +72,10 @@ export default function Footer() {
             <span>© {new Date().getFullYear()} Exotiq Inc. All rights reserved.</span>
             <Link href="/privacy" className="transition-colors hover:text-ink-2">Privacy</Link>
             <Link href="/terms" className="transition-colors hover:text-ink-2">Terms</Link>
+            <Link href="/cookies" className="transition-colors hover:text-ink-2">Cookies</Link>
+            <Link href="/sms" className="transition-colors hover:text-ink-2">SMS</Link>
+            <Link href="/dmca" className="transition-colors hover:text-ink-2">DMCA</Link>
+            <CookieSettingsButton className="transition-colors hover:text-ink-2" />
           </div>
         </div>
       </div>

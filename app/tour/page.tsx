@@ -61,7 +61,7 @@ export default function TourPage() {
                 >
                   <div className="flex items-baseline justify-between gap-4">
                     <span className="text-[12px] tabular-nums tracking-[0.04em] text-gulf">
-                      LEG {beat.leg}/{BEATS.length}
+                      leg {beat.leg}/{BEATS.length}
                     </span>
                     <span className="text-[12px] tabular-nums tracking-[0.1em] text-ink-3">
                       {beat.legMi}
@@ -125,7 +125,7 @@ export default function TourPage() {
           </div>
 
           <p className="mt-10 text-[12px] tabular-nums tracking-[0.1em] text-ink-3">
-            {ODO_TARGET.toLocaleString()} miles · {BEATS.length} markets · one car
+            {ODO_TARGET.toLocaleString()} miles round trip · {BEATS.length} markets · one car
           </p>
         </section>
       </main>

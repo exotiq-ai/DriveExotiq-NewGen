@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import LegalLayout from '@/components/layout/LegalLayout';
 
 export const metadata: Metadata = {
-  title: 'SMS/Text Messaging Consent and Disclosure | Drive Exotiq',
+  title: 'SMS Consent & Disclosure',
   description: 'TCPA and CTIA compliant SMS consent and disclosure policy.',
 };
 

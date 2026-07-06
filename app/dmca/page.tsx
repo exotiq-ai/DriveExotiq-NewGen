@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import LegalLayout from '@/components/layout/LegalLayout';
 
 export const metadata: Metadata = {
-  title: 'DMCA and Copyright Policy | Exotiq Inc.',
+  title: 'DMCA & Copyright Policy',
   description:
     'Digital Millennium Copyright Act notice and takedown procedures.',
 };

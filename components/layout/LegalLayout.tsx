@@ -1,7 +1,6 @@
-'use client';
-
 import Link from 'next/link';
-import Logo from '@/components/ui/Logo';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 interface LegalLayoutProps {
   children: React.ReactNode;
@@ -28,84 +27,46 @@ export default function LegalLayout({
   effectiveDate = 'January 1, 2026',
   lastUpdated = 'March 2026',
 }: LegalLayoutProps) {
-  const year = new Date().getFullYear();
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-deep-black border-b border-white/10">
-        <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Logo />
-          <Link
-            href="/"
-            className="text-metallic-silver hover:text-pure-white transition-colors text-sm"
-          >
-            Back to Site
-          </Link>
-        </nav>
-      </header>
-
-      {/* Legal Content */}
-      <main className="max-w-3xl mx-auto px-6 py-12 md:py-16">
-        {/* Document Header */}
-        <div className="mb-10 pb-8 border-b border-gray-200">
-          <p className="text-xs uppercase tracking-widest text-gray-400 mb-4">
-            {entity}
-          </p>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-2">
+    <>
+      <Header />
+      <main id="main" className="bg-canvas">
+        <article className="mx-auto max-w-3xl px-6 pb-section pt-32 md:pt-40">
+          {/* Document header */}
+          <p className="text-[12px] tracking-[0.04em] text-ink-3">{entity}</p>
+          <h1 className="mt-4 font-display text-[clamp(2rem,5vw,3.4rem)] font-semibold leading-[1.02] tracking-tightest text-ink">
             {title}
           </h1>
           {subtitle && (
-            <p className="text-lg text-gray-500 mt-2">{subtitle}</p>
+            <p className="mt-4 max-w-[52ch] font-serif text-[clamp(1.1rem,2vw,1.4rem)] italic leading-snug text-ink-2">
+              {subtitle}
+            </p>
           )}
-          <div className="flex flex-wrap gap-4 mt-4 text-sm text-gray-400">
-            <span>Effective: {effectiveDate}</span>
-            <span className="text-gray-300">|</span>
-            <span>Last Updated: {lastUpdated}</span>
+          <div className="mt-5 flex flex-wrap gap-3 text-[13px] text-ink-3">
+            <span>Effective {effectiveDate}</span>
+            <span aria-hidden="true">·</span>
+            <span>Updated {lastUpdated}</span>
           </div>
-        </div>
 
-        {/* Document Body — prose styling via Tailwind classes */}
-        <article className="legal-prose text-gray-700 leading-relaxed">
-          {children}
-        </article>
-      </main>
+          <div className="hairline my-10" />
 
-      {/* Legal Footer */}
-      <footer className="bg-gray-50 border-t border-gray-200">
-        <div className="max-w-3xl mx-auto px-6 py-10">
-          {/* Legal page links */}
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 mb-6">
+          {/* Body */}
+          <div className="legal-prose">{children}</div>
+
+          {/* Cross-policy nav */}
+          <nav
+            aria-label="Legal"
+            className="mt-16 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-8 text-[14px] text-ink-2"
+          >
             {LEGAL_NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-gray-500 hover:text-gulf-blue transition-colors"
-              >
+              <Link key={link.href} href={link.href} className="transition-colors hover:text-gulf">
                 {link.label}
               </Link>
             ))}
-            <button
-              onClick={() => window.dispatchEvent(new Event('open-cookie-settings'))}
-              className="text-sm text-gray-500 hover:text-gulf-blue transition-colors"
-            >
-              Cookie Settings
-            </button>
           </nav>
-
-          <div className="pt-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <p className="text-xs text-gray-400">
-              &copy; {year} Exotiq Inc. dba Drive Exotiq. All rights reserved.
-            </p>
-            <Link
-              href="/"
-              className="text-xs text-gulf-blue hover:text-gulf-blue/80 transition-colors"
-            >
-              driveexotiq.com
-            </Link>
-          </div>
-        </div>
-      </footer>
-    </div>
+        </article>
+      </main>
+      <Footer />
+    </>
   );
 }

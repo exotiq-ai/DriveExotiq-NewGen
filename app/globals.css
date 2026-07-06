@@ -223,57 +223,51 @@
     animation: slideUp 0.6s ease-out forwards;
   }
 
-  /* Legal page prose typography */
+  /* Legal page prose typography — film-toned (shared by all five policies) */
+  .legal-prose {
+    @apply text-ink-2;
+  }
   .legal-prose h2 {
-    @apply text-xl font-semibold text-gray-900 mt-10 mb-4 pb-2 border-b border-gray-100;
+    @apply mt-10 mb-4 pb-2 border-b border-line font-display text-xl font-semibold tracking-tight-exotiq text-ink;
   }
-
   .legal-prose h3 {
-    @apply text-base font-semibold text-gray-800 mt-6 mb-3;
+    @apply mt-6 mb-3 font-display text-base font-semibold tracking-tight-exotiq text-ink;
   }
-
   .legal-prose p {
-    @apply mb-4 text-[15px] leading-relaxed;
+    @apply mb-4 text-[15px] leading-relaxed text-ink-2;
   }
-
   .legal-prose a {
-    @apply text-gulf-blue underline hover:text-gulf-blue/80;
+    @apply text-gulf underline decoration-line-2 underline-offset-2 transition-colors hover:decoration-gulf;
   }
-
   .legal-prose strong {
-    @apply font-semibold text-gray-900;
+    @apply font-semibold text-ink;
   }
-
   .legal-prose ul {
     @apply mb-4 pl-6 list-disc space-y-1;
   }
-
+  .legal-prose ol {
+    @apply mb-4 pl-6 list-decimal space-y-1;
+  }
   .legal-prose li {
-    @apply text-[15px] leading-relaxed;
+    @apply text-[15px] leading-relaxed text-ink-2;
   }
-
   .legal-prose table {
-    @apply w-full mb-6 text-sm border border-gray-200 rounded-lg overflow-hidden;
+    @apply w-full mb-6 text-sm border border-line rounded-sm overflow-hidden;
   }
-
   .legal-prose thead {
-    @apply bg-gray-50;
+    @apply bg-surface;
   }
-
   .legal-prose th {
-    @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200;
+    @apply px-4 py-3 text-left text-xs font-semibold tracking-wide text-ink-3 border-b border-line;
   }
-
   .legal-prose td {
-    @apply px-4 py-3 text-gray-700 border-b border-gray-100;
+    @apply px-4 py-3 text-ink-2 border-b border-line;
   }
-
   .legal-prose tr:last-child td {
     @apply border-b-0;
   }
-
   .legal-prose blockquote {
-    @apply my-4 pl-4 border-l-4 border-gulf-blue/30 bg-gray-50 p-4 rounded-r-lg text-sm italic text-gray-600;
+    @apply my-4 pl-4 border-l-2 border-gulf bg-surface p-4 rounded-r-sm text-sm italic text-ink-2;
   }
 
   /* Stories (blog) prose — film-toned long-form reading */

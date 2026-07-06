@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import LegalLayout from '@/components/layout/LegalLayout';
 
 export const metadata: Metadata = {
-  title: 'Cookie Policy | Drive Exotiq',
+  title: 'Cookie Policy',
   description: 'Use of cookies on driveexotiq.com.',
 };
 

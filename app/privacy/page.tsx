@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import LegalLayout from '@/components/layout/LegalLayout';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Drive Exotiq',
+  title: 'Privacy Policy',
   description:
     'How Drive Exotiq collects, uses, and protects your information.',
 };

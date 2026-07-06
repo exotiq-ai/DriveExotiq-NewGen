@@ -2,7 +2,12 @@
 
 import { useEffect, useRef } from 'react';
 import { MotionValue, useMotionValueEvent } from 'framer-motion';
-import { ODO_TARGET, BEATS } from './data';
+import { BEATS } from './data';
+
+/** One-way route distance — the odometer tracks the legs you scroll past, so it
+ *  ends at Miami's cumulative mile (≈2,500), consistent with the per-leg sum.
+ *  The ~5,000-mile round-trip figure lives in the finale, labelled as such. */
+const ROUTE_MILES = BEATS[BEATS.length - 1].mi;
 
 interface OdometerProps {
   /** Drive progress 0→1 across the pinned stage. */
@@ -22,7 +27,7 @@ export default function Odometer({ progress }: OdometerProps) {
 
   const render = (p: number) => {
     const clamped = p < 0 ? 0 : p > 1 ? 1 : p;
-    const miles = Math.round(clamped * ODO_TARGET);
+    const miles = Math.round(clamped * ROUTE_MILES);
     if (odoRef.current) {
       odoRef.current.textContent = String(miles).padStart(4, '0');
     }
@@ -31,7 +36,7 @@ export default function Odometer({ progress }: OdometerProps) {
       Math.max(0, Math.round(clamped * (BEATS.length - 1)))
     );
     const beat = BEATS[idx];
-    if (legRef.current) legRef.current.textContent = `LEG ${beat.leg}/10`;
+    if (legRef.current) legRef.current.textContent = `leg ${beat.leg}/10`;
     if (cityRef.current) cityRef.current.textContent = beat.name;
   };
 
@@ -60,7 +65,7 @@ export default function Odometer({ progress }: OdometerProps) {
       </div>
       <div className="mt-2 flex items-center gap-2 text-[12px] text-ink-2">
         <span ref={legRef} className="tabular-nums tracking-[0.04em] text-gulf">
-          LEG 1/10
+          leg 1/10
         </span>
         <span className="h-px w-4 bg-line-2" />
         <span ref={cityRef} className="font-serif italic text-ink-2">
