@@ -96,7 +96,7 @@ export const FRAMES: Frame[] = [
     // The 458 earns its clause (audit: the third model in the pattern got a
     // brand list where 01/02 got love) — and the fact is exact: after the 458,
     // every Ferrari V8 went turbo.
-    body: 'The last naturally aspirated Ferrari V8. Then the quiet end of the dial — Lamborghini, Rolls-Royce, Aston Martin, G-Wagon.',
+    body: 'The last naturally aspirated Ferrari V8.',
   },
   // SB-07b cut (owner + copy plan §4): the film asked before the viewer had
   // chosen. Its ask now lands on SB-08b — desire → choice → possession → ask.
