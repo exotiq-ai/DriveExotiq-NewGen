@@ -25,7 +25,24 @@ S8 drive-away, tour hero). Everything else already exists.
 
 ---
 
-## B. Film reorder — approved build (the flagship; do as a focused pass)
+## ✅ DONE (2026-07-06) — film reorder + tour hero shipped
+
+The film reorder (§B) and tour hero (§C) below are **built, adversarially
+reviewed, and live on staging** (commits 6fa50d1 + 746eb39). The 26-beat film
+groups the McLaren drive-out (…roll out → coastal-McLaren SB-14c) and the S8
+storyline (ignition → high country → S8 drive-away SB-13b → wheel), silent
+throughout. The review caught + fixed: SB-14c loop→play-once (traveling-shot
+rule), two stale EXIT transforms (SB-13 crane / SB-15 whip) retired for their
+new neighbours, and SB-13b's aria de-named so the S8 plant survives to SB-18.
+The /tour hero is the real S8 in the Tortilla Flats canyon, muted, behind a
+legibility scrim. The §B/§C detail below is kept for reference.
+
+Remaining film cleanup (minor, non-blocking): re-encode `sb-11.mp4` without its
+(now-unused) audio track; optionally delete the dormant tap-to-unmute code in
+CinematicStage; add a clean tap-to-"hear it start" once a clean startup
+recording exists.
+
+## B. Film reorder — approved build (SHIPPED — see above)
 
 Approved order (see frames.ts). Two new beats marked ✦. The reorder re-tunes the
 crossfade/grade between each new neighbour pair, so it must be verified on the
