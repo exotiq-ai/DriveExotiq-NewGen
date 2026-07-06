@@ -44,6 +44,14 @@ docs/redesign/storyboard/refs/shoots/r8-458/Gregory and Sam  S8 and 458 Shoot Te
 docs/redesign/storyboard/renders/**
 !docs/redesign/storyboard/renders/cost-ledger.json
 
+# Raw source/master videos dropped into public/videos/ for review — never commit
+# (4GB masters bloat the repo and break the Netlify deploy). The wired film
+# encodes live in public/videos/experience/ and stay tracked; the small
+# hero/booking encodes are already committed. New top-level drops are ignored.
+public/videos/*.mov
+public/videos/*.mp4
+public/videos/*.webm
+
 # Netlify CLI local build cache
 .netlify/
 
