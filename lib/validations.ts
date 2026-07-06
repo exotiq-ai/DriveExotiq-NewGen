@@ -1,14 +1,17 @@
 import * as z from 'zod';
+import { INTEREST_VALUES } from '@/lib/interest';
 
 export const applicationSchema = z.object({
+  interest: z.enum(INTEREST_VALUES).default('access'),
   fullName: z.string().min(2, 'Full name is required'),
   email: z.string().email('Valid email is required'),
   phone: z.string().min(10, 'Valid phone number is required'),
   currentCity: z.string().min(2, 'Current city is required'),
-  cityOfInterest: z.enum(['Denver', 'Scottsdale', 'Miami', 'Other'], {
-    errorMap: () => ({ message: 'Please select a city' }),
-  }),
-  briefIntro: z.string().min(10, 'Please tell us why you want to join (minimum 10 characters)').max(200, 'Maximum 200 characters'),
+  cityOfInterest: z.string().min(2, 'Tell us where you would drive'),
+  briefIntro: z
+    .string()
+    .min(10, 'A sentence is plenty — tell us what you drive (minimum 10 characters)')
+    .max(200, 'Maximum 200 characters'),
   inviteCode: z.string().optional(),
   agreedToTerms: z.boolean().refine(val => val === true, {
     message: 'You must agree to the terms',

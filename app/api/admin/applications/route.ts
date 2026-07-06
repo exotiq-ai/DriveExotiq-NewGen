@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { sendStatusUpdateEmails } from '@/lib/email-send';
 
 // Force dynamic rendering to prevent build-time errors
 export const dynamic = 'force-dynamic';
@@ -86,32 +87,18 @@ export async function PATCH(request: NextRequest) {
 
     // Send status update email if status changed to approved or rejected
     if (oldStatus !== status && (status === 'approved' || status === 'rejected')) {
-      try {
-        await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/send-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 'status_update',
-            application: {
-              full_name: data.full_name,
-              email: data.email,
-              phone: data.phone,
-              current_city: data.current_city,
-              city_of_interest: data.city_of_interest,
-              brief_intro: data.brief_intro,
-              invite_code: data.invite_code,
-              created_at: data.created_at,
-              status: data.status,
-            },
-            oldStatus,
-          }),
-        });
-      } catch (emailError) {
-        // Log but don't fail the update
-        console.error('Error sending status update email:', emailError);
-      }
+      // Server-only, never throws.
+      await sendStatusUpdateEmails({
+        full_name: data.full_name,
+        email: data.email,
+        phone: data.phone,
+        current_city: data.current_city,
+        city_of_interest: data.city_of_interest,
+        brief_intro: data.brief_intro,
+        invite_code: data.invite_code,
+        created_at: data.created_at,
+        status: data.status,
+      });
     }
 
     return NextResponse.json({ application: data });

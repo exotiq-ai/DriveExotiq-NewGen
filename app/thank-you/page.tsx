@@ -1,69 +1,105 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import Link from 'next/link';
-import Button from '@/components/ui/Button';
-import { Metadata } from 'next';
+import { normalizeApplyInterest, Interest } from '@/lib/interest';
 
 export const metadata: Metadata = {
-  title: 'Thank You | Drive Exotiq',
-  description: 'Thank you for applying to Drive Exotiq. We\'ll review your application within 24-48 hours.',
+  title: 'You’re on the list',
+  description: 'Thanks for getting on the Drive Exotiq list. We review every name personally.',
+  robots: { index: false, follow: false },
 };
 
-export default function ThankYouPage() {
+type Cta = { label: string; href: string };
+type Branch = { head: string; body: string; primary: Cta; secondary: Cta };
+
+function copyFor(interest: Interest): Branch {
+  switch (interest) {
+    case 'title-wrap':
+    case 'tour':
+    case 'drive':
+    case 'partnership':
+      return {
+        head: 'Got it.',
+        body: 'Thanks for the interest in the wrap. We’ll be in touch within a couple of days — this is a small operation, and a real person reads every note.',
+        primary: { label: 'See the wrap opportunity', href: '/sponsor' },
+        secondary: { label: 'Ride the tour', href: '/tour' },
+      };
+    case 'drives':
+      return {
+        head: 'You’re on the list.',
+        body: 'We review every name personally. When a drive fits your city, your invite and the meet point land in your inbox a few days ahead.',
+        primary: { label: 'Read the stories', href: '/blog' },
+        secondary: { label: 'Enter the drives', href: '/drives' },
+      };
+    case 'access':
+      return {
+        head: 'You’re on the list.',
+        body: 'You’ll hear from us before anyone else gets the keys to exotiq.rent — and when a drive rolls through your city.',
+        primary: { label: 'Read the stories', href: '/blog' },
+        secondary: { label: 'What’s coming', href: '/marketplace' },
+      };
+    default:
+      return {
+        head: 'You’re on the list.',
+        body: 'We review every name personally. When a drive fits your city — or the tour rolls through — you’ll be among the first to know.',
+        primary: { label: 'Read the stories', href: '/blog' },
+        secondary: { label: 'See the wrap opportunity', href: '/sponsor' },
+      };
+  }
+}
+
+export default function ThankYouPage({
+  searchParams,
+}: {
+  searchParams?: { interest?: string };
+}) {
+  const interest = normalizeApplyInterest(searchParams?.interest);
+  const { head, body, primary, secondary } = copyFor(interest);
+
   return (
     <>
       <Header />
-      <main className="pt-24">
-        <div className="min-h-screen bg-deep-black flex items-center justify-center px-6 py-24">
-          <div className="max-w-2xl text-center">
-            {/* Checkmark Icon */}
-            <div className="mb-8">
-              <div className="w-20 h-20 mx-auto bg-gulf-blue/10 rounded-full flex items-center justify-center">
-                <svg className="w-12 h-12 text-gulf-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-            </div>
+      <main id="main" className="bg-canvas">
+        <section className="mx-auto flex min-h-[70vh] max-w-content flex-col items-center justify-center px-6 py-section text-center md:px-10">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-gulf" />
+            <span className="text-[13px] tracking-[0.04em] text-ink-2">Confirmed</span>
+            <span className="h-px w-8 bg-gulf" />
+          </div>
 
-            {/* Headline */}
-            <h1 className="text-h1 text-pure-white mb-6">
-              You're On The List
-            </h1>
+          <h1 className="mt-7 max-w-[18ch] font-display text-[clamp(2.4rem,7vw,4.5rem)] font-semibold leading-[0.98] tracking-tightest text-ink">
+            {head}
+          </h1>
 
-            {/* Body */}
-            <p className="text-body text-metallic-silver mb-8">
-              We'll review your application and be in touch within 24-48 hours.
-            </p>
+          <p className="mt-6 max-w-[46ch] text-[clamp(1rem,1.6vw,1.2rem)] leading-snug text-ink-2">
+            {body}
+          </p>
 
-            {/* Social */}
-            <div className="mb-12">
-              <p className="text-body text-pure-white mb-4">
-                In the meantime, follow us:
-              </p>
-              <a
-                href="https://www.instagram.com/driveexotiq/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-gulf-blue hover:text-gulf-blue/80 transition-colors text-lg"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-                @driveexotiq
-              </a>
-            </div>
-
-            {/* Back to Home */}
-            <Link href="/">
-              <Button variant="outline" size="lg" className="inline-flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Back to Home
-              </Button>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href={primary.href}
+              className="inline-flex min-h-[52px] items-center justify-center rounded-sm bg-gulf px-7 py-3.5 text-[17px] font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
+            >
+              {primary.label}
+            </Link>
+            <Link
+              href={secondary.href}
+              className="inline-flex min-h-[52px] items-center justify-center rounded-sm border border-line-2 px-7 py-3.5 text-[17px] font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 hover:bg-white/[0.03]"
+            >
+              {secondary.label}
             </Link>
           </div>
-        </div>
+
+          <a
+            href="https://www.instagram.com/driveexotiq/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-10 text-[14px] text-ink-3 transition-colors hover:text-gulf"
+          >
+            Follow @driveexotiq
+          </a>
+        </section>
       </main>
       <Footer />
     </>

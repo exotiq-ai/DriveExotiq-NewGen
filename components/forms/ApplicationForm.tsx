@@ -7,12 +7,21 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
 import Textarea from '@/components/ui/Textarea';
 import SmsConsentCheckboxes from '@/components/forms/SmsConsentCheckboxes';
 import { applicationSchema, ApplicationFormData } from '@/lib/validations';
+import { APPLY_INTEREST_OPTIONS, Interest } from '@/lib/interest';
 
-export default function ApplicationForm() {
+const labelClass = 'block text-[13px] tracking-[0.04em] text-ink-2 mb-2';
+
+export default function ApplicationForm({
+  defaultInterest = 'access',
+}: {
+  defaultInterest?: Interest;
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const router = useRouter();
 
   const {
@@ -21,10 +30,12 @@ export default function ApplicationForm() {
     formState: { errors },
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
+    defaultValues: { interest: defaultInterest },
   });
 
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);
+    setSubmitError(false);
 
     try {
       const res = await fetch('/api/applications', {
@@ -36,14 +47,14 @@ export default function ApplicationForm() {
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         console.error('Application API error:', err);
-        alert('There was an error submitting your application. Please try again.');
+        setSubmitError(true);
         return;
       }
 
-      router.push('/thank-you');
+      router.push(`/thank-you?interest=${encodeURIComponent(data.interest)}`);
     } catch (error) {
       console.error('Error submitting application:', error);
-      alert('There was an error submitting your application. Please try again.');
+      setSubmitError(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -51,16 +62,35 @@ export default function ApplicationForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Full Name */}
+      {/* What brings you here — the one-contact intent tag */}
       <div>
-        <label htmlFor="fullName" className="block text-sm sm:text-base font-medium text-pure-white mb-2">
-          Full Name *
+        <label htmlFor="interest" className={labelClass}>
+          What brings you here?
+        </label>
+        <Select
+          {...register('interest')}
+          id="interest"
+          defaultValue={defaultInterest}
+          error={errors.interest?.message}
+        >
+          {APPLY_INTEREST_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </Select>
+      </div>
+
+      {/* Full name */}
+      <div>
+        <label htmlFor="fullName" className={labelClass}>
+          Full name
         </label>
         <Input
           {...register('fullName')}
           type="text"
           id="fullName"
-          placeholder="First and last name"
+          placeholder="First and last"
           autoComplete="name"
           error={errors.fullName?.message}
         />
@@ -68,8 +98,8 @@ export default function ApplicationForm() {
 
       {/* Email */}
       <div>
-        <label htmlFor="email" className="block text-sm sm:text-base font-medium text-pure-white mb-2">
-          Email Address *
+        <label htmlFor="email" className={labelClass}>
+          Email address
         </label>
         <Input
           {...register('email')}
@@ -84,8 +114,8 @@ export default function ApplicationForm() {
 
       {/* Phone */}
       <div>
-        <label htmlFor="phone" className="block text-sm sm:text-base font-medium text-pure-white mb-2">
-          Phone Number *
+        <label htmlFor="phone" className={labelClass}>
+          Phone
         </label>
         <Input
           {...register('phone')}
@@ -98,111 +128,119 @@ export default function ApplicationForm() {
         />
       </div>
 
-      {/* Current City */}
-      <div>
-        <label htmlFor="currentCity" className="block text-sm sm:text-base font-medium text-pure-white mb-2">
-          Current City *
-        </label>
-        <Input
-          {...register('currentCity')}
-          type="text"
-          id="currentCity"
-          placeholder="Where are you located?"
-          autoComplete="address-level2"
-          error={errors.currentCity?.message}
-        />
+      {/* Current city + city of interest */}
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div>
+          <label htmlFor="currentCity" className={labelClass}>
+            Current city
+          </label>
+          <Input
+            {...register('currentCity')}
+            type="text"
+            id="currentCity"
+            placeholder="Where you're based"
+            autoComplete="address-level2"
+            error={errors.currentCity?.message}
+          />
+        </div>
+        <div>
+          <label htmlFor="cityOfInterest" className={labelClass}>
+            City you&rsquo;d drive in
+          </label>
+          <Input
+            {...register('cityOfInterest')}
+            type="text"
+            id="cityOfInterest"
+            placeholder="Denver, Austin, Miami…"
+            autoComplete="address-level2"
+            error={errors.cityOfInterest?.message}
+          />
+        </div>
       </div>
 
-      {/* City of Interest */}
+      {/* What you drive */}
       <div>
-        <label htmlFor="cityOfInterest" className="block text-sm sm:text-base font-medium text-pure-white mb-2">
-          City of Interest *
-        </label>
-        <select
-          {...register('cityOfInterest')}
-          id="cityOfInterest"
-          className="w-full px-4 py-4 sm:py-3 bg-graphite text-pure-white border border-metallic-silver/30 rounded-md focus:outline-none focus:border-gulf-blue transition-colors text-base min-h-[48px] touch-manipulation"
-        >
-          <option value="">Select a city</option>
-          <option value="Denver">Denver</option>
-          <option value="Scottsdale">Scottsdale</option>
-          <option value="Miami">Miami</option>
-          <option value="Other">Other</option>
-        </select>
-        {errors.cityOfInterest && (
-          <p className="mt-2 text-sm text-performance-orange">{errors.cityOfInterest.message}</p>
-        )}
-      </div>
-
-      {/* Brief Intro */}
-      <div>
-        <label htmlFor="briefIntro" className="block text-sm sm:text-base font-medium text-pure-white mb-2">
-          Why Drive Exotiq? *
+        <label htmlFor="briefIntro" className={labelClass}>
+          Tell us what you drive
         </label>
         <Textarea
           {...register('briefIntro')}
           id="briefIntro"
-          rows={5}
+          rows={4}
           maxLength={200}
-          placeholder="Tell us briefly why you want to join the community (max 200 characters)"
+          placeholder="A 2017 Audi S8, daily. Or whatever you actually drive."
           error={errors.briefIntro?.message}
         />
+        <p className="mt-2 text-[13px] text-ink-3">
+          A sentence is plenty. We care more about the driver than the car.
+        </p>
       </div>
 
-      {/* Invite Code (Optional) */}
+      {/* Invite code */}
       <div>
-        <label htmlFor="inviteCode" className="block text-sm sm:text-base font-medium text-pure-white mb-2">
-          Invite Code (Optional)
+        <label htmlFor="inviteCode" className={labelClass}>
+          Invite code <span className="text-ink-3">(optional)</span>
         </label>
         <Input
           {...register('inviteCode')}
           type="text"
           id="inviteCode"
-          placeholder="Have a referral code?"
+          placeholder="If someone sent you"
           autoComplete="off"
         />
       </div>
 
-      {/* Terms Checkbox */}
+      {/* Terms */}
       <div className="flex items-start gap-3">
         <input
           {...register('agreedToTerms')}
           type="checkbox"
           id="agreedToTerms"
-          className="mt-1 h-5 w-5 sm:h-4 sm:w-4 bg-graphite border-metallic-silver/30 rounded focus:ring-gulf-blue touch-manipulation flex-shrink-0"
+          aria-invalid={errors.agreedToTerms ? true : undefined}
+          aria-describedby={errors.agreedToTerms ? 'agreedToTerms-error' : undefined}
+          className="mt-1 h-5 w-5 sm:h-4 sm:w-4 bg-surface border-line rounded-sm accent-gulf touch-manipulation flex-shrink-0"
         />
-        <label htmlFor="agreedToTerms" className="text-sm sm:text-base text-metallic-silver">
+        <label htmlFor="agreedToTerms" className="text-sm text-ink-2">
           I agree to the Drive Exotiq{' '}
-          <Link href="/terms" className="text-gulf-blue underline hover:text-gulf-blue/80">
+          <Link href="/terms" className="text-gulf underline hover:text-gulf-2">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href="/privacy" className="text-gulf-blue underline hover:text-gulf-blue/80">
+          <Link href="/privacy" className="text-gulf underline hover:text-gulf-2">
             Privacy Policy
-          </Link>{' '}
-          *
+          </Link>
+          .
         </label>
       </div>
       {errors.agreedToTerms && (
-        <p className="text-sm text-performance-orange mt-1">{errors.agreedToTerms.message}</p>
+        <p id="agreedToTerms-error" role="alert" className="text-sm text-papaya -mt-2">
+          {errors.agreedToTerms.message}
+        </p>
       )}
 
-      {/* SMS Consent Checkboxes */}
-      <SmsConsentCheckboxes
-        register={register}
-        variant="dark"
-      />
+      {/* SMS consent (compliance) */}
+      <SmsConsentCheckboxes register={register} variant="dark" />
 
-      {/* Submit Button */}
-      <Button
-        type="submit"
-        variant="primary"
-        size="lg"
-        className="w-full"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? 'Submitting...' : 'Submit Application'}
-      </Button>
+      {/* Submit */}
+      <div className="pt-2">
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Sending…' : 'Get on the list'}
+        </Button>
+        {submitError && (
+          <p className="mt-3 text-sm text-papaya" role="alert">
+            Something didn&rsquo;t go through. Try again?
+          </p>
+        )}
+        <p className="mt-4 text-[13px] text-ink-3">
+          We never sell your info. One list, no noise.
+        </p>
+      </div>
     </form>
   );
 }

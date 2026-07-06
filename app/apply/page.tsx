@@ -1,153 +1,106 @@
+import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ApplicationForm from '@/components/forms/ApplicationForm';
-import Card from '@/components/ui/Card';
-import { Metadata } from 'next';
+import { normalizeApplyInterest } from '@/lib/interest';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Apply | Drive Exotiq',
-  description: 'Join the Drive Exotiq community. Submit your application and gain VIP access to curated exotic rental experiences.',
+  title: 'Get on the list',
+  description:
+    'Get on the list for invite-only sunrise drives, the 2026 Denver→Miami tour, and the exotiq.rent waitlist. Drive Exotiq, an Exotiq Inc. brand.',
+  alternates: { canonical: '/apply' },
 };
 
-export default function ApplyPage() {
-  const steps = [
-    {
-      title: 'Instant Verification',
-      description: 'Our AI-powered system begins verifying your information as soon as you submit.',
-    },
-    {
-      title: 'Review (24-48 hours)',
-      description: 'Our team reviews your application and driving record. Most approvals happen within two business days.',
-    },
-    {
-      title: 'Welcome Email',
-      description: 'Once approved, you\'ll receive your member confirmation and access to the Drive Exotiq marketplace.',
-    },
-    {
-      title: 'Start Browsing',
-      description: 'Search vetted operators, browse exotic fleets, and book your first experience.',
-    },
-  ];
+const STEPS = [
+  {
+    head: 'We read every name.',
+    body: 'This stays small on purpose. A real person reviews each one.',
+  },
+  {
+    head: 'Your city, your invite.',
+    body: 'When a drive fits your city, the invite and the meet point land in your inbox a few days ahead.',
+  },
+  {
+    head: 'First to hear.',
+    body: 'You get word before anyone else when the tour rolls through — and when exotiq.rent opens.',
+  },
+];
+
+export default function ApplyPage({
+  searchParams,
+}: {
+  searchParams?: { interest?: string };
+}) {
+  const defaultInterest = normalizeApplyInterest(searchParams?.interest);
 
   return (
     <>
       <Header />
-      <main className="pt-24">
+      <main id="main" className="bg-canvas">
         {/* Hero */}
-        <section className="py-20 bg-midnight-blue">
-          <div className="max-w-4xl mx-auto px-6 text-center">
-            <h1 className="text-h1 text-pure-white mb-6">
-              Join the Drive Exotiq Community
-            </h1>
-            <p className="text-body-lg text-metallic-silver">
-              Access to the best exotic rental experiences starts here. Submit your application
-              and join an exclusive community of curated operators, private events, and the world's most
-              thrilling vehicles. VIP treatment awaits.
-            </p>
+        <section className="mx-auto max-w-content px-6 pb-10 pt-32 md:px-10 md:pb-14 md:pt-40">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-gulf" />
+            <span className="text-[13px] tracking-[0.04em] text-ink-2">
+              One list — drives, tour, and the marketplace
+            </span>
           </div>
+
+          <h1 className="mt-6 max-w-[16ch] font-display text-[clamp(2.4rem,6vw,4.5rem)] font-semibold leading-[0.98] tracking-tightest text-ink">
+            Get on the list.
+          </h1>
+
+          <p className="mt-6 max-w-[52ch] text-[clamp(1rem,1.6vw,1.2rem)] leading-snug text-ink-2">
+            One list for the drives, the tour, and the marketplace. We review
+            every name and keep it small — no noise, no spam.
+          </p>
+
+          {/* AEO anchor, server-rendered */}
+          <p className="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-ink-2">
+            Drive Exotiq is the community front door to the exotiq.rent
+            exotic-car marketplace, coming soon.
+          </p>
         </section>
 
-        {/* Application Form Section */}
-        <section className="py-24 bg-jet-grey">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid lg:grid-cols-3 gap-12">
-              {/* Form */}
-              <div className="lg:col-span-2">
-                <Card>
-                  <p className="text-caption text-gulf-blue mb-6">
-                    YOUR APPLICATION
-                  </p>
-                  <h2 className="text-h2 text-pure-white mb-4">
-                    Get Started
-                  </h2>
-                  <p className="text-body text-metallic-silver mb-8">
-                    This is a quick process. Most applications reviewed within 24-48 hours. We use
-                    AI-powered verification to check your information instantly while maintaining
-                    high standards.
-                  </p>
-                  <ApplicationForm />
-                </Card>
-              </div>
-
-              {/* Sidebar */}
-              <div className="space-y-6">
-                <Card>
-                  <h3 className="text-h3 text-pure-white mb-6">
-                    What Happens Next?
-                  </h3>
-                  <div className="space-y-6">
-                    {steps.map((step, index) => (
-                      <div key={index}>
-                        <div className="flex items-start gap-3 mb-2">
-                          <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gulf-blue/20 text-gulf-blue text-sm font-bold flex-shrink-0 mt-0.5">
-                            {index + 1}
-                          </div>
-                          <div>
-                            <h4 className="text-body font-semibold text-pure-white mb-1">
-                              {step.title}
-                            </h4>
-                            <p className="text-body-sm text-metallic-silver">
-                              {step.description}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
-
-                <Card className="bg-midnight-blue">
-                  <h3 className="text-h3 text-pure-white mb-4">
-                    Trust Signals
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-gulf-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                      <div>
-                        <h4 className="text-body font-semibold text-pure-white mb-1">
-                          Secure Application
-                        </h4>
-                        <p className="text-body-sm text-metallic-silver">
-                          Your data is encrypted and never shared with third parties.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-gulf-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                      </svg>
-                      <div>
-                        <h4 className="text-body font-semibold text-pure-white mb-1">
-                          No Credit Card Required
-                        </h4>
-                        <p className="text-body-sm text-metallic-silver">
-                          Membership is free during our launch phase. You only pay when you book.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <svg className="w-6 h-6 text-gulf-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                      </svg>
-                      <div>
-                        <h4 className="text-body font-semibold text-pure-white mb-1">
-                          Vetted Operators Only
-                        </h4>
-                        <p className="text-body-sm text-metallic-silver">
-                          Every rental operator meets Drive Exotiq's high standards for service and fleet quality.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+        {/* Form + rail */}
+        <section className="mx-auto max-w-content px-6 pb-section md:px-10">
+          <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
+            {/* Form */}
+            <div className="lg:col-span-3">
+              <ApplicationForm defaultInterest={defaultInterest} />
             </div>
+
+            {/* Quiet "what happens next" rail */}
+            <aside className="lg:col-span-2">
+              <div className="border-t border-line pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+                <p className="font-serif text-lg italic text-ink-3">
+                  What happens next
+                </p>
+                <ol className="mt-6 space-y-7">
+                  {STEPS.map((step, i) => (
+                    <li key={i} className="flex gap-4">
+                      <span className="mt-0.5 font-serif text-lg italic text-ink-3 tabular-nums">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <div>
+                        <h2 className="font-display text-base font-semibold tracking-tight-exotiq text-ink">
+                          {step.head}
+                        </h2>
+                        <p className="mt-1.5 text-[15px] leading-relaxed text-ink-2">
+                          {step.body}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+
+                <p className="mt-10 font-serif text-[15px] italic leading-relaxed text-ink-3">
+                  Built for the people who actually drive the car.
+                </p>
+              </div>
+            </aside>
           </div>
         </section>
       </main>

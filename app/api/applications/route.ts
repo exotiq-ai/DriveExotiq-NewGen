@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { applicationSchema } from '@/lib/validations';
+import { sendNewApplicationEmails } from '@/lib/email-send';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,7 @@ export async function POST(request: Request) {
           phone: data.phone,
           current_city: data.currentCity,
           city_of_interest: data.cityOfInterest,
+          interest: data.interest,
           brief_intro: data.briefIntro,
           invite_code: data.inviteCode || null,
           sms_transactional_consent: data.smsTransactionalConsent || false,
@@ -55,27 +57,18 @@ export async function POST(request: Request) {
       );
     }
 
-    try {
-      await fetch(new URL('/api/send-email', request.url).toString(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'new_application',
-          application: {
-            full_name: data.fullName,
-            email: data.email,
-            phone: data.phone,
-            current_city: data.currentCity,
-            city_of_interest: data.cityOfInterest,
-            brief_intro: data.briefIntro,
-            invite_code: data.inviteCode || null,
-            created_at: insertedData?.created_at || new Date().toISOString(),
-          },
-        }),
-      });
-    } catch (emailError) {
-      console.error('Error sending confirmation email:', emailError);
-    }
+    // Server-only, never throws — safe to await without guarding the response.
+    await sendNewApplicationEmails({
+      full_name: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      current_city: data.currentCity,
+      city_of_interest: data.cityOfInterest,
+      interest: data.interest,
+      brief_intro: data.briefIntro,
+      invite_code: data.inviteCode || null,
+      created_at: insertedData?.created_at || new Date().toISOString(),
+    });
 
     return NextResponse.json(
       { success: true, application: insertedData },

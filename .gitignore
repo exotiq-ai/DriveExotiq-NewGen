@@ -46,3 +46,7 @@ docs/redesign/storyboard/renders/**
 
 # Netlify CLI local build cache
 .netlify/
+
+# Supabase CLI local link state (keep migrations tracked)
+supabase/.temp/
+supabase/.branches/

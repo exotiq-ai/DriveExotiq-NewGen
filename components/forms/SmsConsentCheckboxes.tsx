@@ -11,10 +11,10 @@ export default function SmsConsentCheckboxes({
   register,
   variant = 'dark',
 }: SmsConsentCheckboxesProps) {
-  const textColor = variant === 'dark' ? 'text-metallic-silver/70' : 'text-gray-600';
-  const linkColor = variant === 'dark' ? 'text-gulf-blue hover:text-gulf-blue/80' : 'text-gulf-blue hover:text-gulf-blue/80';
-  const checkboxBg = variant === 'dark' ? 'bg-graphite border-metallic-silver/30' : 'bg-white border-gray-300';
-  const labelColor = variant === 'dark' ? 'text-metallic-silver/60' : 'text-gray-500';
+  const textColor = variant === 'dark' ? 'text-ink-2' : 'text-gray-600';
+  const linkColor = 'text-gulf hover:text-gulf-2';
+  const checkboxBg = variant === 'dark' ? 'bg-surface border-line' : 'bg-white border-gray-300';
+  const labelColor = variant === 'dark' ? 'text-ink-3' : 'text-gray-500';
 
   return (
     <div className="space-y-3">
@@ -23,7 +23,7 @@ export default function SmsConsentCheckboxes({
         <input
           {...register('smsTransactionalConsent')}
           type="checkbox"
-          className={`mt-0.5 h-4 w-4 ${checkboxBg} rounded focus:ring-gulf-blue flex-shrink-0 cursor-pointer accent-gulf-blue`}
+          className={`mt-0.5 h-4 w-4 ${checkboxBg} rounded-sm flex-shrink-0 cursor-pointer accent-gulf`}
         />
         <span className={`text-xs leading-relaxed ${textColor}`}>
           I consent to receive transactional text messages from{' '}
@@ -39,7 +39,7 @@ export default function SmsConsentCheckboxes({
         <input
           {...register('smsMarketingConsent')}
           type="checkbox"
-          className={`mt-0.5 h-4 w-4 ${checkboxBg} rounded focus:ring-gulf-blue flex-shrink-0 cursor-pointer accent-gulf-blue`}
+          className={`mt-0.5 h-4 w-4 ${checkboxBg} rounded-sm flex-shrink-0 cursor-pointer accent-gulf`}
         />
         <span className={`text-xs leading-relaxed ${textColor}`}>
           I consent to receive marketing and promotional text messages from{' '}
