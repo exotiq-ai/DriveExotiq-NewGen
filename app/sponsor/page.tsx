@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import SponsorInquiryForm from '@/components/forms/SponsorInquiryForm';
+import RouteMap from '@/components/sponsor/RouteMap';
 import { normalizeSponsorTier } from '@/lib/sponsor';
 
 export const dynamic = 'force-dynamic';
@@ -12,19 +13,6 @@ export const metadata: Metadata = {
     'Wrap one exotic car driven across ten markets and 5,000 miles in 2026. Title, Tour, and Drive sponsorships open now at Drive Exotiq.',
   alternates: { canonical: '/sponsor' },
 };
-
-const MARKETS = [
-  'Denver',
-  'Dallas / Ft Worth',
-  'Austin',
-  'Houston',
-  'New Orleans',
-  'Tampa / St Pete',
-  'Orlando',
-  'Palm Beach',
-  'Ft Lauderdale',
-  'Miami',
-];
 
 const TIERS = [
   {
@@ -137,24 +125,12 @@ export default function SponsorPage({
               Coffee. Reach figures per market come with the media kit.
             </p>
 
-            <div className="mt-10 overflow-hidden rounded-sm border border-line">
-              {MARKETS.map((m, i) => (
-                <div
-                  key={m}
-                  className="grid grid-cols-[auto_1fr_auto] items-center gap-4 border-b border-line px-5 py-4 last:border-b-0 md:px-6"
-                >
-                  <span className="w-6 font-serif text-base italic text-ink-2 tabular-nums">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="font-display text-[clamp(1.05rem,2vw,1.3rem)] font-semibold tracking-tight-exotiq text-ink">
-                    {m}
-                  </span>
-                  <span className="text-[13px] tracking-[0.04em] text-ink-2">
-                    Reach: Inquire
-                  </span>
-                </div>
-              ))}
+            <div className="mt-10 overflow-hidden rounded-sm border border-line bg-canvas-2 p-6 md:p-10">
+              <RouteMap />
             </div>
+            <p className="mt-4 text-[13px] tracking-[0.04em] text-ink-3">
+              Denver → Miami · summer–fall 2026 · ten markets, one car
+            </p>
           </div>
         </section>
 

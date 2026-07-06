@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 import CookieConsent from "@/components/CookieConsent";
 import SmoothScroll from "@/components/providers/SmoothScroll";
@@ -112,7 +113,11 @@ const ORG_JSON_LD = {
   logo: `${SITE_URL}/android-chrome-512x512.png`,
   description: 'Drive Exotiq is the community front door to the exotiq.rent exotic-car marketplace.',
   parentOrganization: { '@type': 'Organization', name: 'Exotiq Inc.' },
-  sameAs: ['https://x.com/driveexotiq'],
+  sameAs: [
+    'https://x.com/driveexotiq',
+    'https://www.instagram.com/driveexotiq',
+    'https://www.youtube.com/@driveexotiq',
+  ],
 };
 
 export default function RootLayout({
@@ -127,6 +132,17 @@ export default function RootLayout({
     >
       <body className="font-sans bg-canvas text-ink antialiased">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
+        {/* Plausible — privacy-first, cookieless (no consent gate). Prod only so
+            local/preview traffic never pollutes stats. Add both domains in the
+            Plausible dashboard. */}
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            defer
+            data-domain="driveexotiq.com"
+            src="https://plausible.io/js/script.js"
+            strategy="afterInteractive"
+          />
+        )}
         <SmoothScroll>{children}</SmoothScroll>
         <CookieConsent />
       </body>
