@@ -111,6 +111,9 @@ export const GRADE: Record<string, { wash?: number; grain?: number; vignette?: n
   'SB-11': { grain: 0.02 },
   'SB-12': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-13': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  // SB-13b drive-away: same print-seat as SB-13 (its dusk-noir grade is baked
+  // at encode; the light wash/grain/vignette welds it into the film print).
+  'SB-13b': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-14': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-14b': { wash: 0.06, grain: 0.02, vignette: 0.10 },
   'SB-15': { wash: 0.06, grain: 0.02, vignette: 0.08 },
@@ -212,15 +215,16 @@ export const LIVING: Record<string, LivingMedia> = {
   // the band enters, the cluster wakes, the V8 barks at ~3s and settles to
   // idle. The encode carries the REAL audio (24-bit location sound, loudness-
   // normalized); "Hear it start" unmutes and replays on tap.
-  // AUDIO REPLACEMENT PENDING (owner 2026-07-04): the master's track has the
-  // videographer's music overlay — a clean startup recording is coming.
-  // Swap = remux new audio over this clip + encode --audio + versions + R2.
+  // Silent (owner 2026-07-06): the unmute is stripped because the master's
+  // audio carries the videographer's music, not clean engine sound. Plays
+  // muted like any other beat. TODO: re-encode sb-11 without the audio track,
+  // and re-add an opt-in tap-to-"hear it start" once a clean startup recording
+  // exists (the encode still carries the old audio track, just never unmuted).
   'SB-11': {
     kind: 'play-once',
     src: vid('sb-11.mp4'),
     mobileSrc: vid('sb-11.720.mp4'),
     poster: pos('/images/experience/poster/sb-11.jpg'),
-    sound: true,
   },
 
   // Phase 2 — SB-03: the threshold rush (Hailuo t2, baked seam).
@@ -313,6 +317,26 @@ export const LIVING: Record<string, LivingMedia> = {
     src: vid('sb-13.mp4'),
     mobileSrc: vid('sb-13.720.mp4'),
     poster: pos('/images/experience/poster/sb-13.jpg'),
+  },
+
+  // SB-13b REAL: the S8 drives away down the dusk mountain road (Roller
+  // 64.0–68.8s, lifted dusk-noir grade). Directional → play-once, holds the
+  // receding car on its last frame.
+  'SB-13b': {
+    kind: 'play-once',
+    src: vid('sb-13b.mp4'),
+    mobileSrc: vid('sb-13b.720.mp4'),
+    poster: pos('/images/experience/poster/sb-13b.jpg'),
+  },
+
+  // SB-14c: the re-added coastal-cliff aerial (AI Kling loop, SB-14-t1 — the
+  // McLaren's original coast take). Formation-locked, seamless loop. Reuses the
+  // coast-aerial poster (frame-0 match); AI plate so no GRADE print-seat.
+  'SB-14c': {
+    kind: 'loop',
+    src: vid('sb-14c.mp4'),
+    mobileSrc: vid('sb-14c.720.mp4'),
+    poster: pos('/images/experience/poster/coast-aerial.jpg'),
   },
 
   // Phase 1 — SB-15: "This could be you." — road-level chase at golden hour

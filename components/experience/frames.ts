@@ -117,22 +117,18 @@ export const FRAMES: Frame[] = [
     cta: 'Get on the list', ctaHref: '/apply',
     weight: 1.5,
   },
+
+  // ---------- McLaren drive-out (grouped: get in, wake it, roll out, run the coast) ----------
   { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.', weight: 2, mobileWeight: 1 },
   { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
-  // Weight 1.5: the gauge sweep is plate-local-progress-driven, so it inherits
-  // the longer band on every device — at weight 1 the whole sweep was 0.25
-  // viewports and a single flick skipped the ignition moment. Real footage:
-  // the S8 Roller start-button press (24.9–28.4s), thumb on the red ring.
-  { id: 'SB-11', media: `${M}/ignition-real.jpg`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start — the real V8 wakes', weight: 1.5, sound: 'Hear it start' },
   { id: 'SB-11b', media: `${M}/roll-out.png`, movement: 'I', aria: 'The nose eases out of the garage' },
-  // The drive world goes REAL from here: Telluride aspen aerial, the S8 alone
-  // on the alpine pass, the high-country curve, the FPV chase, the rolling
-  // wheel — the owners' actual cars on actual Colorado roads.
+  // SB-14c REAL-added AI clip: the coastal-cliff aerial the reorder brings back
+  // (SB-14-t1, the original coast take). A wordless exhale — the McLaren finally
+  // out on open road at golden hour — before the drive world goes real.
+  { id: 'SB-14c', media: `${M}/coast-aerial.png`, movement: 'I', align: 'center', aria: 'The McLaren runs the coast road at golden hour' },
+
+  // ---------- Real footage → the drives ----------
   { id: 'SB-12', media: `${M}/road-real.jpg`, movement: 'I', align: 'center', headline: 'The road opens.' },
-  // The lone dark sedan stays UNEXPLAINED — a plant, not a spoiler; SB-18's
-  // "One more thing" pays it off. The drives-pillar copy lives on SB-14,
-  // the plate that actually shows two cars running together.
-  { id: 'SB-13', media: `${M}/drive-real.jpg`, movement: 'I', align: 'left', kicker: 'The high country', jewel: 'This is the drive.' },
   {
     id: 'SB-14', media: `${M}/highcountry-real.jpg`, movement: 'I', align: 'center',
     // "Colorado's high country" is the film's one geography anchor (audit:
@@ -148,7 +144,22 @@ export const FRAMES: Frame[] = [
     jewel: 'No stanchions. No judging.',
     aria: 'Golden hour at the Cars & Coffee, rows of Ferraris and the crowd between them',
   },
+
+  // ---------- The turn ----------
   { id: 'SB-15', media: `${M}/chase-real.jpg`, movement: 'I', align: 'right', jewel: 'This could be you.' },
+
+  // ---------- S8 storyline (grouped, silent): the founder's car, before it is named ----------
+  // The lone dark S8 stays UNEXPLAINED here — a plant, not a spoiler; SB-18's
+  // "One more thing" pays it off. Its own block (ignition → drive → away →
+  // wheel) tightens the plant→payoff. Ignition is the REAL S8 start-button
+  // (Roller 24.9–28.4s); the unmute is stripped (the master's audio carries the
+  // videographer's music — silent until a clean startup recording exists).
+  { id: 'SB-11', media: `${M}/ignition-real.jpg`, movement: 'I', align: 'left', kicker: 'Push to start', aria: 'Push to start — the real V8 wakes', weight: 1.5 },
+  { id: 'SB-13', media: `${M}/drive-real.jpg`, movement: 'I', align: 'left', kicker: 'The high country', jewel: 'This is the drive.' },
+  // SB-13b REAL: the S8 drives away down the dusk mountain road (Roller
+  // 64.0–68.8s, lifted dusk-noir grade to keep the receding car legible).
+  // Directional motion → play-once and hold, per the traveling-shot rule.
+  { id: 'SB-13b', media: `${M}/drive-away.jpg`, movement: 'I', align: 'right', aria: 'The S8 drives away down the mountain at dusk' },
   // focus 25%: the rolling wheel lives in the left half of the frame — a
   // portrait center-crop would ship mostly empty flank on phones.
   { id: 'SB-16', media: `${M}/wheel-real.jpg`, movement: 'I', aria: 'The wheel, up close, slowing', focus: '25% 50%' },
