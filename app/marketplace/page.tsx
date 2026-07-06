@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import WaitlistForm from '@/components/forms/WaitlistForm';
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 // When the product screenshot arrives, set this to its path (e.g.
 // '/images/app/exotiq-rent-preview.png'). Until then the frame shows the
 // dusk placeholder. Nothing else changes.
-const PREVIEW_SRC: string | null = null;
+const PREVIEW_SRC: string | null = '/images/app/exotiq-rent-preview.png';
 
 const PROMISES = [
   'A curated marketplace, not a parking lot.',
@@ -71,13 +72,15 @@ export default function MarketplacePage() {
                 </span>
               </div>
               {/* Screenshot slot */}
-              <div className="aspect-[16/10] w-full bg-canvas">
+              <div className="relative aspect-[16/10] w-full bg-canvas">
                 {PREVIEW_SRC ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={PREVIEW_SRC}
-                    alt="A preview of the exotiq.rent marketplace"
-                    className="h-full w-full object-cover object-top"
+                    alt="A preview of the exotiq.rent marketplace — the exotic-car rental grid"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 768px"
+                    className="object-cover object-top"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center">
