@@ -276,6 +276,44 @@
     @apply my-4 pl-4 border-l-4 border-gulf-blue/30 bg-gray-50 p-4 rounded-r-lg text-sm italic text-gray-600;
   }
 
+  /* Stories (blog) prose — film-toned long-form reading */
+  .story-prose {
+    @apply text-ink-2;
+  }
+  .story-prose p {
+    @apply mb-6 text-[17px] leading-[1.7];
+  }
+  .story-prose h2 {
+    @apply mt-12 mb-4 font-display text-[clamp(1.5rem,3vw,2rem)] font-semibold tracking-tight-exotiq text-ink;
+  }
+  .story-prose h3 {
+    @apply mt-9 mb-3 font-display text-xl font-semibold tracking-tight-exotiq text-ink;
+  }
+  .story-prose a {
+    @apply text-gulf underline decoration-line-2 underline-offset-2 transition-colors hover:decoration-gulf;
+  }
+  .story-prose strong {
+    @apply font-semibold text-ink;
+  }
+  .story-prose em {
+    @apply font-serif italic;
+  }
+  .story-prose ul {
+    @apply mb-6 list-disc space-y-2 pl-6;
+  }
+  .story-prose ol {
+    @apply mb-6 list-decimal space-y-2 pl-6;
+  }
+  .story-prose li {
+    @apply text-[17px] leading-[1.7];
+  }
+  .story-prose blockquote {
+    @apply my-8 border-l-2 border-gulf pl-5 font-serif text-[clamp(1.15rem,2vw,1.4rem)] italic leading-snug text-ink;
+  }
+  .story-prose hr {
+    @apply my-10 border-line;
+  }
+
   /* Smooth gradient shine for skeleton loading */
   @keyframes shimmer {
     0% { background-position: -200% 0; }

@@ -4,7 +4,6 @@ import Emblem from '@/components/ui/Emblem';
 const EXPLORE = [
   { label: 'The Drives', href: '/drives' },
   { label: 'The Tour', href: '/tour' },
-  { label: 'Community', href: '/community' },
   { label: 'Marketplace', href: '/marketplace' },
   { label: 'Stories', href: '/blog' },
   { label: 'Sponsor', href: '/sponsor' },

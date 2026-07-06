@@ -21,6 +21,8 @@ const nextConfig = {
     return [
       // The film is the home now.
       { source: '/experience', destination: '/', permanent: true },
+      // Community folded into the drives.
+      { source: '/community', destination: '/drives', permanent: true },
       // Legacy orphans retired to their surviving pillar.
       { source: '/cities', destination: '/tour', permanent: true },
       { source: '/events', destination: '/drives', permanent: true },

@@ -12,7 +12,6 @@ const ROUTES: Array<{ path: string; priority: number; changeFrequency: MetadataR
   { path: '/tour', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/drives', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/sponsor', priority: 0.9, changeFrequency: 'monthly' },
-  { path: '/community', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/marketplace', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/blog', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/apply', priority: 0.8, changeFrequency: 'monthly' },

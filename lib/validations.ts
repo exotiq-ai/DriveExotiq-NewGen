@@ -33,3 +33,12 @@ export const bookingLeadSchema = z.object({
 });
 
 export type BookingLeadFormData = z.infer<typeof bookingLeadSchema>;
+
+// Marketplace waitlist — exotiq.rent (copy brief §10.3 / CMP-FORM-WAITLIST)
+export const waitlistSchema = z.object({
+  email: z.string().email('Valid email is required'),
+  city: z.string().max(120).optional().or(z.literal('')),
+  desiredCar: z.string().max(200).optional().or(z.literal('')),
+});
+
+export type WaitlistFormData = z.infer<typeof waitlistSchema>;
