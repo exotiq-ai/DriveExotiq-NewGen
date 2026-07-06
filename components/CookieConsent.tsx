@@ -23,7 +23,8 @@ export default function CookieConsent() {
   const [functional, setFunctional] = useState(false);
   const [analytics, setAnalytics] = useState(false);
   const pathname = usePathname();
-  const onFilm = pathname?.startsWith('/experience');
+  // The film is the home page — hold the consent bar until scroll intent there.
+  const onFilm = pathname === '/';
 
   useEffect(() => {
     if (hasConsented()) return;

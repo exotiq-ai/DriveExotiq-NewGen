@@ -9,7 +9,6 @@ const BASE = 'https://driveexotiq.com';
  */
 const ROUTES: Array<{ path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }> = [
   { path: '', priority: 1.0, changeFrequency: 'weekly' },
-  { path: '/experience', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/tour', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/drives', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/sponsor', priority: 0.9, changeFrequency: 'monthly' },

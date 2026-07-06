@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Emblem from '@/components/ui/Emblem';
 
 const EXPLORE = [
-  { label: 'The Drive — the film', href: '/experience' },
   { label: 'The Drives', href: '/drives' },
   { label: 'The Tour', href: '/tour' },
   { label: 'Community', href: '/community' },
@@ -14,7 +13,6 @@ const EXPLORE = [
 const ECOSYSTEM = [
   { label: 'exotiq.rent — Marketplace (soon)', href: '/marketplace' },
   { label: 'exotiq.ai — For operators', href: 'https://exotiq.ai' },
-  { label: 'Join the waitlist', href: '/marketplace' },
 ];
 
 export default function Footer() {

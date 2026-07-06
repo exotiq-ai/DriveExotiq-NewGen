@@ -10,7 +10,7 @@ Ecosystem: Drive Exotiq (community) → exotiq.rent (marketplace) → exotiq.ai 
 
 ## Pages
 
-- [The Drive](https://driveexotiq.com/experience): the cinematic scroll film — the fleet, the drives, and the tour
+- [Drive Exotiq](https://driveexotiq.com/): the cinematic scroll film home — the fleet, the drives, and the tour
 - [Get on the list](https://driveexotiq.com/apply): waitlist for the marketplace, drives, and Cars & Coffee
 - [Sponsor the wrap](https://driveexotiq.com/sponsor): tour wrap sponsorship and event partnerships
 - [The tour](https://driveexotiq.com/tour): the 2026 Denver→Miami tour

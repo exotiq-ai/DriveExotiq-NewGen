@@ -7,9 +7,9 @@ import Emblem from '@/components/ui/Emblem';
 const NAV = [
   { label: 'The Drives', href: '/drives' },
   { label: 'The Tour', href: '/tour' },
-  { label: 'Community', href: '/community' },
-  { label: 'Marketplace', href: '/marketplace' },
   { label: 'Stories', href: '/blog' },
+  { label: 'Marketplace', href: '/marketplace' },
+  { label: 'Sponsor', href: '/sponsor' },
 ];
 
 export default function Header() {

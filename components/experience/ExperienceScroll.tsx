@@ -321,7 +321,7 @@ export default function ExperienceScroll() {
               {
                 name: 'Rent',
                 copy: 'The exotiq.rent marketplace — McLaren, Porsche, Lamborghini, Rolls-Royce, and the rest of the dream garage. Coming soon.',
-                cta: 'Get on the list', href: '/apply',
+                cta: 'Join the waitlist', href: '/marketplace',
               },
               {
                 name: 'Drive',
@@ -331,7 +331,7 @@ export default function ExperienceScroll() {
               {
                 name: 'Gather',
                 copy: 'A monthly Cars & Coffee worth parking at — the cars and the people who actually drive them.',
-                cta: 'Get on the list', href: '/apply',
+                cta: 'Enter the drives', href: '/drives',
               },
               {
                 name: 'Partner',
@@ -354,10 +354,10 @@ export default function ExperienceScroll() {
               <p className="mt-1 text-xs text-ink-3">An Exotiq Inc. brand — the community front door to the exotiq.rent marketplace.</p>
             </div>
             <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ink-2">
-              <Link href="/" className="transition-colors hover:text-ink">Home</Link>
+              <Link href="/drives" className="transition-colors hover:text-ink">The drives</Link>
               <Link href="/tour" className="transition-colors hover:text-ink">The tour</Link>
               <Link href="/sponsor" className="transition-colors hover:text-ink">Sponsor</Link>
-              <Link href="/apply" className="transition-colors hover:text-ink">Apply</Link>
+              <Link href="/blog" className="transition-colors hover:text-ink">Stories</Link>
               <span className="text-ink-3">© {new Date().getFullYear()} Exotiq Inc.</span>
             </nav>
           </div>
