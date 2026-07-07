@@ -97,14 +97,14 @@ export function applicationConfirmationEmail(application: ApplicationData): stri
     ${h2('You&rsquo;re on the list.')}
     ${p(`Hi ${esc(application.full_name)},`)}
     ${p(
-      'We&rsquo;ve got your application. We review every name personally and keep this list small on purpose — one list for the drives, the Denver-to-Miami tour, and what&rsquo;s coming with exotiq.rent.'
+      'We&rsquo;ve got your application. We review every name personally and keep this list small on purpose. One list for the drives, the Denver-to-Miami tour, and what&rsquo;s coming with exotiq.rent.'
     )}
     <div style="background-color:${CANVAS};border-left:2px solid ${GULF};padding:18px 20px;margin:24px 0;border-radius:2px;">
       <p style="margin:0 0 10px 0;color:${INK};font-size:15px;font-weight:600;">What happens next</p>
       <ul style="margin:0;padding-left:18px;color:${INK2};font-size:15px;line-height:1.8;">
         <li>We read every name. This stays small on purpose.</li>
         <li>When a drive fits your city, your invite and the meet point land in your inbox.</li>
-        <li>You&rsquo;ll be first to hear when the tour rolls through — and when exotiq.rent opens.</li>
+        <li>You&rsquo;ll be first to hear when the tour rolls through, and when exotiq.rent opens.</li>
       </ul>
     </div>
     ${p(
@@ -181,7 +181,7 @@ export function approvalEmail(application: ApplicationData): string {
     <div style="background-color:${CANVAS};border-left:2px solid ${GULF};padding:18px 20px;margin:24px 0;border-radius:2px;">
       <p style="margin:0 0 10px 0;color:${INK};font-size:15px;font-weight:600;">What&rsquo;s next</p>
       <ul style="margin:0;padding-left:18px;color:${INK2};font-size:15px;line-height:1.8;">
-        <li>Watch for the next drive in ${esc(application.city_of_interest)} — invites go out a few days ahead.</li>
+        <li>Watch for the next drive in ${esc(application.city_of_interest)}. Invites go out a few days ahead.</li>
         <li>We&rsquo;ll let you know the moment exotiq.rent opens.</li>
       </ul>
     </div>
@@ -198,10 +198,10 @@ export function rejectionEmail(application: ApplicationData): string {
     ${h2('Update on your application')}
     ${p(`Hi ${esc(application.full_name)},`)}
     ${p(
-      'Thank you for your interest in Drive Exotiq. We&rsquo;re not able to add you to the list right now — we keep it small on purpose, and space is limited.'
+      'Thank you for your interest in Drive Exotiq. We&rsquo;re not able to add you to the list right now. We keep it small on purpose, and space is limited.'
     )}
     ${p(
-      `If you&rsquo;d like, we&rsquo;ll keep you posted as things open up in ${esc(application.city_of_interest)} — and when the exotiq.rent marketplace launches.`
+      `If you&rsquo;d like, we&rsquo;ll keep you posted as things open up in ${esc(application.city_of_interest)}, and when the exotiq.rent marketplace launches.`
     )}
     <div style="margin:28px 0;">
       <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://driveexotiq.com'}/marketplace"

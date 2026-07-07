@@ -209,21 +209,21 @@
     {
       "id": "SB-07",
       "act": 2,
-      "treatment": "loop",
+      "treatment": "still",
       "priority": "high",
-      "still": "lambo-ferrari.png",
-      "videoModel": "kwaivgi/kling-v3.0-pro",
-      "duration": 8,
-      "resolution": "720p",
-      "frameImages": {
-        "first": "lambo-ferrari.png",
-        "last": "lambo-ferrari.png"
-      },
-      "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights. A Lamborghini Aventador with its scissor door raised, front three-quarter, a second supercar in deep shadow behind. Both cars and the raised door are completely stationary, camera locked. Motion: a slow blade of warm light travels down the inner face of the raised scissor door and fades back, fine dust motes drift through the open door aperture within the light, the daytime running lights flicker awake briefly then settle into a steady low glow. Slow, reverent, an invitation. Must loop seamlessly, last frame identical to first frame.",
-      "negativePrompt": "the door must not move or close, no wheel rotation, no grille or intake warping, no badge or text artifacts, no body deformation, no reflections swimming, no camera movement, no blue light, hold the film-noir grade",
-      "realAssetOverride": "§1.5c: real 458 shots (refs/shoots/r8-458/Sam and Gregory (Mobile)-11/-13/-1) are candidate replacement stills — regrade autumn→noir, or keep generated Lambo + real Ferrari mix. Phase 3 still-upgrade decision.",
+      "still": "icons-458-v2.png",
       "status": "live",
-      "selectedTake": "SB-07-t2-kling-v3.0-pro.mp4"
+      "supersedeNote": "2026-07-06: entry was stale (pre-real-swap Lamborghini loop). The beat has been still-only since the real-458 swap (icons-458.jpg, Telluride nose macro) with the AI loop retired. NOW: owner flagged the daylight-gravel photo popping out of the all-AI Movement-I stretch (post AI-first reorder) — re-rendered into the film's studio world via prepImage below, real photo as composition reference. The real icons-458.jpg stays on disk; frames.ts points at the v2 plate. SHIPPED PLATE = badge-corrected second pass: the first prepImage take mangled the Cavallino (running-dog silhouette) — a targeted two-reference continuity edit (v2 plate + real photo, 'replace the badge only') fixed it; take 1 of 2 shipped, alternates + graded-photo A/B candidate archived in renders/sb-07-restage/. QA RULE: always zoom-check AI-rendered marque heraldry at 100% before shipping.",
+      "prepImage": {
+        "output": "icons-458-v2.png",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "icons-458.jpg"
+        ],
+        "prompt": "Restage this photograph inside a film-noir studio, keeping the composition exactly: the same extreme close-up of the white Ferrari 458 nose filling the frame at the same angle and crop, the same hood panel line sweeping across the frame, the Cavallino badge in exactly the same position and EXACTLY as it appears in the reference, unaltered, sharp, authentic. Change ONLY the world around the car: the gravel parking lot becomes a pitch-black studio void over polished dark concrete, the flat overcast daylight becomes a single warm tungsten key from the upper right. Deep matte-black shadows swallow the frame edges, a warm rim highlight traces the fender curve, the white paint reads as warm-lit ivory against the black, and a soft warm reflection pools beneath the nose. Flawless large-format photorealism: real paint micro-texture, crisp panel gap, true deep blacks with detail held at the edge of visibility, subtle 35mm film grain, shallow depth of field, desaturated graphite palette with warm highlights only. No text or logos beyond the factory Ferrari badges already present in the reference. No people, no other cars, no gravel, no daylight. Museum-grade restraint, matching the film's McLaren and Porsche hero portraits."
+      }
     },
     {
       "id": "SB-07b",
@@ -431,6 +431,18 @@
       "codeSpec": "exit dive: scale 1→1.14 + y 0→-3% over plate progress [0.78,1], accelerating bezier",
       "status": "live",
       "selectedTake": "SB-14-t1-kling-v3.0-pro.mp4"
+    },
+    {
+      "id": "SB-14c",
+      "act": 1,
+      "treatment": "play-once",
+      "priority": "high",
+      "still": "open-road.png",
+      "duration": 6,
+      "resolution": "1080p",
+      "status": "live",
+      "selectedTake": "SB-12-t1-hailuo-2.3.mp4 (reused render — no new generation)",
+      "replateNote": "2026-07-06 (owner): the coast aerial (SB-14-t1) is REJECTED for this beat — the film reorder had revived it by mistake; SB-14 t2/t3 are same-look coast siblings, also out. Re-plated with the original dawn-canyon windscreen POV (SB-12's pre-real-swap selected take): closes the cockpit thread (SB-10 settle in → SB-11b roll out → drive) and ends the AI storyline from the driver's seat before SB-08b lands the ask on the first real-footage frame. Traveling POV → play-once, fresh encode with NO loop seam (the 0.5s xfade lived only in the retired sb-12 loop encode). Poster/still = open-road.png (frame 0 of the take)."
     },
     {
       "id": "SB-15",

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import SponsorInquiryForm from '@/components/forms/SponsorInquiryForm';
@@ -8,7 +9,7 @@ import { normalizeSponsorTier } from '@/lib/sponsor';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Sponsor the wrap — Denver→Miami tour',
+  title: 'Sponsor the wrap · Denver→Miami tour',
   description:
     'Wrap one exotic car driven across ten markets and 5,000 miles in 2026. Title, Tour, and Drive sponsorships open now at Drive Exotiq.',
   alternates: { canonical: '/sponsor' },
@@ -65,13 +66,13 @@ export default function SponsorPage({
 
           <p className="mt-7 max-w-[56ch] text-[clamp(1.05rem,1.8vw,1.35rem)] leading-snug text-ink-2">
             A single exotic tour from Denver to Miami in 2026, through ten of the
-            country&rsquo;s best car markets — and the wrap on the car is still available.
+            country&rsquo;s best car markets, and the wrap on the car is still available.
           </p>
 
           <p className="mt-6 max-w-[62ch] text-[15px] leading-relaxed text-ink-2">
             Drive Exotiq is the community front door to the exotiq.rent exotic-car
             marketplace. The 2026 tour puts one unmistakable car in front of the exact
-            people who care about it — at drives, Cars &amp; Coffee meets, and across
+            people who care about it: at drives, Cars &amp; Coffee meets, and across
             5,000 miles of public road. Your brand rides shotgun the whole way.
           </p>
 
@@ -92,23 +93,27 @@ export default function SponsorPage({
                 The car is a billboard that drives.
               </h2>
               <p className="mt-6 max-w-[48ch] text-[15px] leading-relaxed text-ink-2">
-                A 2017 Audi S8 in heritage racing livery — a sleeper with real presence.
+                A 2017 Audi S8 in heritage racing livery, a sleeper with real presence.
                 It spends the summer and fall of 2026 being seen: at sunrise drives, parked
                 at curated meets, and moving between ten major markets. The wrap is the
                 blank canvas.
               </p>
             </div>
 
-            {/* Blank-canvas panel — decorative; SP-ASSET-BODY already carries the meaning */}
-            <div
-              aria-hidden="true"
-              className="relative aspect-[16/10] w-full overflow-hidden rounded-sm border border-dashed border-line-2 bg-canvas-2"
-            >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-serif text-[clamp(1rem,2.2vw,1.4rem)] italic text-ink-3">
-                  Your livery goes here.
-                </span>
+            {/* Livery render — the asset, seen */}
+            <div>
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-sm border border-line bg-canvas-2">
+                <Image
+                  src="/images/experience/photo/wrap-photoreal.png"
+                  alt="The 2017 Audi S8 in heritage racing livery, rendered street-side"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 570px"
+                  className="object-cover"
+                />
               </div>
+              <p className="mt-3 text-[13px] tracking-[0.04em] text-ink-3">
+                The livery: yours, Denver to Miami.
+              </p>
             </div>
           </div>
         </section>
@@ -121,7 +126,7 @@ export default function SponsorPage({
               The route is the media plan.
             </h2>
             <p className="mt-5 max-w-[52ch] text-[15px] leading-relaxed text-ink-2">
-              Every stop is an audience — a sunrise rollout into a curated Cars &amp;
+              Every stop is an audience. A sunrise rollout into a curated Cars &amp;
               Coffee. Reach figures per market come with the media kit.
             </p>
 
@@ -202,7 +207,7 @@ export default function SponsorPage({
               </h2>
               <p className="mt-5 max-w-[48ch] text-[15px] leading-relaxed text-ink-2">
                 Tell us a little about your brand and which tier fits. We&rsquo;ll come
-                back fast — this is a small operation.
+                back fast. This is a small operation.
               </p>
             </div>
 

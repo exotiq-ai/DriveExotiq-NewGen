@@ -11,8 +11,8 @@ const EXPLORE = [
 ];
 
 const ECOSYSTEM = [
-  { label: 'exotiq.rent — Marketplace (soon)', href: '/marketplace' },
-  { label: 'exotiq.ai — For operators', href: 'https://exotiq.ai' },
+  { label: 'exotiq.rent · Marketplace (soon)', href: '/marketplace' },
+  { label: 'exotiq.ai · For operators', href: 'https://exotiq.ai' },
 ];
 
 export default function Footer() {

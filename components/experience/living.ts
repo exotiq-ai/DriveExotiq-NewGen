@@ -76,10 +76,12 @@ export const EXITS: Record<string, { from: number; scale?: number; y?: string; o
   // uncovered translate would expose the canvas at the viewport edge.
   //
   // SB-13 (crane-away) and SB-15 (whip-into-wheel) exits retired in the
-  // 2026-07-06 reorder: SB-13 now precedes SB-13b (another away-move — two
+  // 2026-07-06 reorder: SB-13 then preceded SB-13b (another away-move — two
   // stacked recessions read as a stutter, not a crane), and SB-15's whip toward
   // the front wheel no longer lands on SB-16 (it now dissolves into the S8
   // ignition macro). SB-14's drone-dive still hands into SB-14b, unchanged.
+  // (SB-13b itself CUT 2026-07-06, deck §2 fork — SB-13 now hands straight to
+  // SB-16; both exits stay retired.)
   'SB-14': { from: 0.78, scale: 1.14, y: '-3%' },
 };
 
@@ -114,14 +116,15 @@ export const GRADE: Record<string, { wash?: number; grain?: number; vignette?: n
   // (SSIM-matched to the sb-19b recipe) but still lack the AI plates' baked
   // grain — a light print seat welds them in. SB-11's interior is already
   // near-black: grain only, no extra vignette.
-  'SB-07': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  // ('SB-07' print-seat removed 2026-07-06: the plate is now an AI restage of
+  // the real 458 photo — noir grade and grain are baked in; the real-footage
+  // wash/vignette on top would double-grade it.)
   'SB-08b': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-11': { grain: 0.02 },
   'SB-12': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-13': { wash: 0.06, grain: 0.02, vignette: 0.08 },
-  // SB-13b drive-away: same print-seat as SB-13 (its dusk-noir grade is baked
-  // at encode; the light wash/grain/vignette welds it into the film print).
-  'SB-13b': { wash: 0.06, grain: 0.02, vignette: 0.08 },
+  // (SB-13b drive-away CUT 2026-07-06 with the beat, deck §2 fork — its
+  // print-seat entry retired with it; re-add alongside the beat on revert.)
   'SB-14': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-14b': { wash: 0.06, grain: 0.02, vignette: 0.10 },
   'SB-15': { wash: 0.06, grain: 0.02, vignette: 0.08 },
@@ -203,8 +206,8 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-08b.jpg'),
   },
 
-  // Phase 1 — SB-08: "Choose your car." — the Huracán creeps toward you under
-  // your own scroll (Veo t1, trim 1.0–4.5s, all-intra).
+  // Phase 1 — SB-08: "Which one's yours?" — the Huracán creeps toward you
+  // under your own scroll (Veo t1, trim 1.0–4.5s, all-intra).
   'SB-08': {
     kind: 'scrub',
     src: vid('sb-08-scrub.mp4'),
@@ -338,27 +341,21 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-13.jpg'),
   },
 
-  // SB-13b REAL: the S8 drives away down the dusk mountain road (Roller
-  // 64.0–68.8s, lifted dusk-noir grade). Directional → play-once, holds the
-  // receding car on its last frame.
-  'SB-13b': {
-    kind: 'play-once',
-    src: vid('sb-13b.mp4'),
-    mobileSrc: vid('sb-13b.720.mp4'),
-    poster: pos('/images/experience/poster/sb-13b.jpg'),
-  },
+  // (SB-13b taillights-receding CUT 2026-07-06, deck §2 fork — four silent S8
+  // beats was a long trough; ignition → drive → wheel keeps the decel leading
+  // straight into the pivot. Encodes retained in public/videos/experience for
+  // revert, same as SB-03.)
 
-  // SB-14c: the re-added coastal-cliff aerial (AI Kling clip, SB-14-t1 — the
-  // McLaren's original coast take). It's a TRAVELING aerial (the world slides
-  // under a formation-locked car), so play-once and hold per the film-wide rule
-  // — a native loop would jump the moving world at the wrap and ghost against
-  // the static frame-0 poster (same class as SB-12). Reuses the coast-aerial
-  // poster (frame-0 match); AI plate so no GRADE print-seat.
+  // SB-14c re-plated (owner 2026-07-06): coast aerial OUT, the original
+  // dawn-canyon windscreen POV back in (SB-12-t1 Hailuo, the pre-swap "road
+  // opens" run). Closes the cockpit thread from the driver's seat before the
+  // film goes real at SB-08b. Traveling POV → play-once and hold; fresh
+  // encode, no loop seam; poster = frame 0 (open-road plate).
   'SB-14c': {
     kind: 'play-once',
     src: vid('sb-14c.mp4'),
     mobileSrc: vid('sb-14c.720.mp4'),
-    poster: pos('/images/experience/poster/coast-aerial.jpg'),
+    poster: pos('/images/experience/poster/sb-14c.jpg'),
   },
 
   // Phase 1 — SB-15: "This could be you." — road-level chase at golden hour

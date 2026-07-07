@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ApplicationForm from '@/components/forms/ApplicationForm';
@@ -24,7 +25,7 @@ const STEPS = [
   },
   {
     head: 'First to hear.',
-    body: 'You get word before anyone else when the tour rolls through — and when exotiq.rent opens.',
+    body: 'You get word before anyone else when the tour rolls through, and when exotiq.rent opens.',
   },
 ];
 
@@ -35,6 +36,16 @@ export default function ApplyPage({
 }) {
   const defaultInterest = normalizeApplyInterest(searchParams?.interest);
 
+  // Sponsor intent doesn't belong on this form anymore (deck §5.3): any
+  // inbound sponsor tier (title-wrap/tour/drive, plus sponsor/wrap aliases)
+  // normalizes to 'title-wrap' — send it to the real sponsor form, forwarding
+  // the raw param so /sponsor preselects the exact tier (review fix: a bare
+  // redirect dropped ?interest=tour|drive down to the default tier).
+  if (defaultInterest === 'title-wrap') {
+    const raw = searchParams?.interest;
+    redirect(raw ? `/sponsor?interest=${encodeURIComponent(raw)}` : '/sponsor');
+  }
+
   return (
     <>
       <Header />
@@ -44,7 +55,7 @@ export default function ApplyPage({
           <div className="flex items-center gap-3">
             <span className="h-px w-8 bg-gulf" />
             <span className="text-[13px] tracking-[0.04em] text-ink-2">
-              One list — drives, tour, and the marketplace
+              One list for drives, tour, and the marketplace
             </span>
           </div>
 
@@ -53,8 +64,9 @@ export default function ApplyPage({
           </h1>
 
           <p className="mt-6 max-w-[52ch] text-[clamp(1rem,1.6vw,1.2rem)] leading-snug text-ink-2">
-            One list for the drives, the tour, and the marketplace. We review
-            every name and keep it small — no noise, no spam.
+            One list for the drives, the tour, and the exotiq.rent marketplace
+            (opening soon). We review every name and keep it small. No noise,
+            no spam.
           </p>
 
           {/* AEO anchor, server-rendered */}

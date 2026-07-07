@@ -57,7 +57,7 @@ export async function sendNewApplicationEmails(application: ApplicationData): Pr
     await resend.emails.send({
       from: FROM_EMAIL,
       to: ADMIN_EMAIL,
-      subject: `New — ${interestLabel}: ${subjectSafe(application.full_name, 48)} · ${subjectSafe(application.city_of_interest, 32)}`,
+      subject: `New · ${interestLabel}: ${subjectSafe(application.full_name, 48)} · ${subjectSafe(application.city_of_interest, 32)}`,
       html: adminNotificationEmail(application),
     });
   } catch (error) {
@@ -78,7 +78,7 @@ export async function sendStatusUpdateEmails(application: ApplicationData): Prom
       await resend.emails.send({
         from: FROM_EMAIL,
         to: application.email,
-        subject: 'You’re in — Drive Exotiq.',
+        subject: 'You’re in. Drive Exotiq.',
         html: approvalEmail(application),
       });
     } else if (application.status === 'rejected') {

@@ -92,7 +92,12 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
     : frame.align === 'right' ? 'justify-end'
     : 'justify-start';
 
-  const has = frame.kicker || frame.headline || frame.jewel || frame.body || frame.cta || frame.secondaryCta;
+  // frames.ts is owned by a parallel agent adding two optional fields (the
+  // SB-04 `chip` eyebrow and the `brightPlate` flags) — read them defensively
+  // through a type intersection so either merge order type-checks.
+  const { chip, brightPlate } = frame as Frame & { chip?: string; brightPlate?: boolean };
+
+  const has = chip || frame.kicker || frame.headline || frame.jewel || frame.body || frame.cta || frame.secondaryCta;
   if (!has)
     return heavy
       ? <div className="beat-h" style={beatVars} aria-hidden="true" />
@@ -113,6 +118,17 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
         className="copy-scrim pointer-events-none absolute inset-0"
         style={{ '--sx': scrimX } as React.CSSProperties}
       />
+      {/* Bright-plate assist (type pass 2026-07-06): plates flagged brightPlate
+          keep no dark third behind the copy on desktop — a second, quieter pass
+          of the scrim treatment layers behind the copy zone only, ≥1024px
+          (globals.css .copy-scrim-bright; mobile already ships the strong scrim). */}
+      {brightPlate && (
+        <div
+          aria-hidden="true"
+          className="copy-scrim copy-scrim-bright pointer-events-none absolute inset-0"
+          style={{ '--sx': scrimX } as React.CSSProperties}
+        />
+      )}
       <div className="copy-block relative mx-auto w-full max-w-content px-6 md:px-8">
         <motion.div
           ref={ref}
@@ -129,12 +145,23 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
           }
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
         >
+          {chip && (
+            // The status chip (deck §7.1, SB-04 `Opening soon`): a quiet
+            // eyebrow above the kicker line. Hairline border, no Gulf, no
+            // glow — it is a status, not an action. Inherits the beat's copy
+            // reveal; static under reduced motion like the rest of the block.
+            <span className="mb-4 inline-flex items-center rounded-sm border border-line px-2.5 py-1 text-[11px] tracking-[0.08em] text-ink-2">
+              {chip}
+            </span>
+          )}
           {frame.kicker && (
             // Brand law: kickers are sentence-case (never uppercase); purely
-            // numeric kickers render as the Spectral-italic .idx numeral.
+            // numeric kickers render as the Spectral-italic .idx numeral
+            // (color lifted to metal by .copy-block .idx — the type pass; the
+            // ink-3 default measured as the dimmest text on screen).
             /^\d+$/.test(frame.kicker)
-              ? <span className="idx mb-5 text-lg text-ink-2">{frame.kicker}</span>
-              : <span className="mb-5 text-[11px] tracking-[0.08em] text-ink-2">{frame.kicker}</span>
+              ? <span className="idx mb-5 text-lg">{frame.kicker}</span>
+              : <span className="mb-5 text-[11px] tracking-[0.08em] text-metal">{frame.kicker}</span>
           )}
           {frame.sound && index !== undefined && (
             <button
@@ -154,7 +181,12 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
           )}
           {frame.jewel && <p className="mt-4 font-serif text-2xl italic text-ink-2 md:text-3xl">{frame.jewel}</p>}
           {frame.body && (
-            <p className="mt-4 max-w-prose text-base text-ink-2 md:text-lg">
+            // Type pass (owner-approved 2026-07-06): the support tier measured
+            // under-legible on desktop — body rises one token step (ink-2 →
+            // metal) and one size step (18 → 19px with matched leading).
+            // Brighter floor, not louder voice. .copy-body left-aligns
+            // multi-line body text on mobile (globals.css).
+            <p className="copy-body mt-4 max-w-prose text-base text-metal md:text-[19px] md:leading-[30px]">
               {frame.odometerTarget && frame.body.includes('{n}')
                 ? frame.body.split('{n}').flatMap((part, i, arr) =>
                     i < arr.length - 1 ? [part, <Odometer key={i} to={frame.odometerTarget!} />] : [part])

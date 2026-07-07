@@ -3,14 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Emblem from '@/components/ui/Emblem';
-
-const NAV = [
-  { label: 'The Drives', href: '/drives' },
-  { label: 'The Tour', href: '/tour' },
-  { label: 'Stories', href: '/blog' },
-  { label: 'Marketplace', href: '/marketplace' },
-  { label: 'Sponsor', href: '/sponsor' },
-];
+import { NAV } from '@/lib/nav';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -30,7 +23,7 @@ export default function Header() {
           <Link
             href="/"
             className="flex items-center gap-3 text-ink transition-opacity duration-250 hover:opacity-80"
-            aria-label="Drive Exotiq — Home"
+            aria-label="Drive Exotiq, Home"
           >
             <Emblem className="h-[22px] w-auto" />
             <span className="font-display text-[20px] font-bold tracking-tight-exotiq">

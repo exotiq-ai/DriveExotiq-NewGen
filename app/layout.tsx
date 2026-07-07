@@ -35,7 +35,7 @@ const SITE_URL = "https://driveexotiq.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Drive Exotiq — Built for People Who Drive the Car",
+    default: "Drive Exotiq: Built for People Who Drive the Car",
     template: "%s · Drive Exotiq",
   },
   description:
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Drive Exotiq — Built for People Who Drive the Car",
+    title: "Drive Exotiq: Built for People Who Drive the Car",
     description:
       "The community front door to the exotiq.rent exotic-car marketplace. Monthly sunrise drives, the Denver→Miami tour, and what's coming next.",
     url: SITE_URL,
@@ -86,13 +86,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Drive Exotiq — Exotic Cars That Actually Get Driven",
+        alt: "Drive Exotiq: Exotic Cars That Actually Get Driven",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Drive Exotiq — Built for People Who Drive the Car",
+    title: "Drive Exotiq: Built for People Who Drive the Car",
     description:
       "The community front door to the exotiq.rent exotic-car marketplace. Invite-only sunrise drives and the Denver→Miami tour.",
     images: ["/og-image.png"],

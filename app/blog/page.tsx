@@ -5,9 +5,9 @@ import Footer from '@/components/layout/Footer';
 import { getAllPosts } from '@/lib/blog';
 
 export const metadata: Metadata = {
-  title: 'Stories — the drives, the tour & the cars',
+  title: 'Stories · the drives, the tour, and the cars',
   description:
-    'Stories from Drive Exotiq — the sunrise drives, the Denver→Miami tour, the cars, and the community front door to exotiq.rent.',
+    'Stories from Drive Exotiq: the sunrise drives, the Denver→Miami tour, the cars, and the community front door to exotiq.rent.',
   alternates: { canonical: '/blog' },
 };
 

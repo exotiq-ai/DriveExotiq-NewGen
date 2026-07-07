@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function DmcaPage() {
   return (
     <LegalLayout
-      entity="Exotiq Inc. — a Delaware C-Corporation"
+      entity="Exotiq Inc., a Delaware C-Corporation"
       title="DMCA and Copyright Policy"
       subtitle="Digital Millennium Copyright Act Notice and Takedown Procedures"
     >

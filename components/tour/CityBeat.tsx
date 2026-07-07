@@ -17,7 +17,12 @@ interface CityBeatProps {
  * the readable copy is server-rendered in the page's <section> list.
  */
 export default function CityBeat({ beat, index, total, progress }: CityBeatProps) {
-  const center = total > 1 ? index / (total - 1) : 0;
+  // Beat centers compress into drive [0.10, 0.88] (owner bug 2026-07-06: the
+  // raw [0,1] spread put Denver at FULL opacity while the intro headline was
+  // still fading out — drive holds at 0 through the whole intro window — and
+  // Miami was still on stage when the finale rose. The margins clear both.)
+  const raw = total > 1 ? index / (total - 1) : 0;
+  const center = 0.1 + raw * 0.78;
   // Half-width of this beat's window; slight overlap reads as continuous travel.
   const half = total > 1 ? (1 / (total - 1)) * 0.62 : 0.5;
 

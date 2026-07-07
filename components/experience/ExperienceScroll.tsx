@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'framer-motion';
 import CinematicStage from './CinematicStage';
+import FilmMenu from './FilmMenu';
 import { FRAMES } from './frames';
 import { OVERLAYS } from './living';
+import { NAV } from '@/lib/nav';
 import { FINE_BANDS, useBands, bandAtVh, type Bands } from './bands';
 
 const N = FRAMES.length;
@@ -101,9 +103,22 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
           style={{ background: 'linear-gradient(180deg, rgba(7,7,8,.85), transparent)' }}
         />
         <div className="pointer-events-auto relative mx-auto flex max-w-content items-center justify-between px-6 py-4 md:px-8">
-          <Link href="/" className="font-display text-sm font-bold tracking-tight-exotiq text-ink">
-            Drive Exotiq
-          </Link>
+          {/* Persistent left cluster: wordmark + the Menu affordance (§4.1).
+              The Menu sits outside the renter↔sponsor cross-fade (that fade is
+              the CTA cluster's), renders on every viewport (mobile had zero nav
+              before it), and carries no Gulf: navigation is not an action. */}
+          <div className="flex items-center gap-5">
+            <Link href="/" className="font-display text-sm font-bold tracking-tight-exotiq text-ink">
+              Drive Exotiq
+            </Link>
+            <FilmMenu
+              jumps={TICKS.map((t) => ({
+                // The act ticks' chapter jumps, with a discoverable labeled home.
+                label: t.label.replace('Skip', 'Jump'),
+                onSelect: () => jumpTo(t.i),
+              }))}
+            />
+          </div>
           <div className="relative">
             {/* Movement-I nav: the renter ask holds the Gulf. */}
             <motion.nav
@@ -200,9 +215,15 @@ function StaticChrome() {
         style={{ background: 'linear-gradient(180deg, rgba(7,7,8,.85), transparent)' }}
       />
       <div className="relative mx-auto flex max-w-content items-center justify-between px-6 py-4 md:px-8">
-        <Link href="/" className="font-display text-sm font-bold tracking-tight-exotiq text-ink">
-          Drive Exotiq
-        </Link>
+        {/* Same persistent left cluster as the film chrome — the Menu renders
+            in every chrome state (§4.1). No jumps here: reduced motion leaves
+            scrolling to the browser, so there's no film geometry to jump on. */}
+        <div className="flex items-center gap-5">
+          <Link href="/" className="font-display text-sm font-bold tracking-tight-exotiq text-ink">
+            Drive Exotiq
+          </Link>
+          <FilmMenu />
+        </div>
         <nav className="flex items-center gap-2">
           <Link
             href="/apply"
@@ -267,6 +288,13 @@ export default function ExperienceScroll() {
     if (reduce) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // Review must-fix: never hijack keys aimed at interactive elements
+      // (Space on the Menu trigger/Close/sound toggle must activate them, not
+      // jump a beat), and stand down entirely while the Menu modal is open —
+      // beat-stepping behind an opaque sheet relocates the film invisibly.
+      if (document.body.dataset.filmMenuOpen) return;
+      const t = e.target as HTMLElement | null;
+      if (t && t.closest('button, a, input, select, textarea, [role="dialog"]')) return;
       const stage = stageRef.current;
       if (!stage) return;
       const keys = [' ', 'PageDown', 'ArrowDown', 'PageUp', 'ArrowUp', 'Home', 'End'];
@@ -320,22 +348,24 @@ export default function ExperienceScroll() {
             {[
               {
                 name: 'Rent',
-                copy: 'The exotiq.rent marketplace — McLaren, Porsche, Lamborghini, Rolls-Royce, and the rest of the dream garage. Coming soon.',
+                copy: 'The exotiq.rent marketplace: McLaren, Porsche, Ferrari, Lamborghini, Rolls-Royce, and the rest of the dream garage. Coming soon.',
                 cta: 'Join the waitlist', href: '/marketplace',
               },
               {
                 name: 'Drive',
                 copy: 'Curated, invite-only drives. The last Sunday of every month, at sunrise.',
-                cta: 'Request your invite', href: '/apply',
+                // CTA library (deck §1.5): this label binds to the drives intent.
+                cta: 'Request your invite', href: '/apply?interest=drives',
               },
               {
                 name: 'Gather',
-                copy: 'A monthly Cars & Coffee worth parking at — the cars and the people who actually drive them.',
+                copy: 'A monthly Cars & Coffee worth parking at. The cars and the people who actually drive them.',
                 cta: 'Enter the drives', href: '/drives',
               },
               {
                 name: 'Partner',
-                copy: 'We partner with events and brands that get it. Bring us yours.',
+                // The `Partner with us →` CTA carries the ask (deck §4.2).
+                copy: 'We partner with events and brands that get it.',
                 cta: 'Partner with us', href: '/sponsor?interest=partnership',
               },
             ].map((p) => (
@@ -351,13 +381,16 @@ export default function ExperienceScroll() {
           <div className="mt-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="font-display text-sm font-bold tracking-tight-exotiq text-ink">Drive Exotiq</p>
-              <p className="mt-1 text-xs text-ink-3">An Exotiq Inc. brand — the community front door to the exotiq.rent marketplace.</p>
+              <p className="mt-1 text-xs text-ink-3">An Exotiq Inc. brand. The community front door to the exotiq.rent marketplace.</p>
             </div>
+            {/* Canonical destination set, shared with the Header and the film
+                Menu sheet (lib/nav.ts) — the three surfaces can't desync. */}
             <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ink-2">
-              <Link href="/drives" className="transition-colors hover:text-ink">The drives</Link>
-              <Link href="/tour" className="transition-colors hover:text-ink">The tour</Link>
-              <Link href="/sponsor" className="transition-colors hover:text-ink">Sponsor</Link>
-              <Link href="/blog" className="transition-colors hover:text-ink">Stories</Link>
+              {NAV.map((item) => (
+                <Link key={item.href} href={item.href} className="transition-colors hover:text-ink">
+                  {item.label}
+                </Link>
+              ))}
               <span className="text-ink-3">© {new Date().getFullYear()} Exotiq Inc.</span>
             </nav>
           </div>

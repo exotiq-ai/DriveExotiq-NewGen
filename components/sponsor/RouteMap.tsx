@@ -38,7 +38,7 @@ export default function RouteMap() {
       viewBox="0 0 1160 560"
       className="h-auto w-full"
       role="img"
-      aria-label="The 2026 tour route: ten markets from Denver to Miami — Denver, Dallas/Ft Worth, Austin, Houston, New Orleans, Tampa/St Pete, Orlando, Palm Beach, Ft Lauderdale, and Miami."
+      aria-label="The 2026 tour route: ten markets from Denver to Miami: Denver, Dallas/Ft Worth, Austin, Houston, New Orleans, Tampa/St Pete, Orlando, Palm Beach, Ft Lauderdale, and Miami."
     >
       <path
         d={routeD}

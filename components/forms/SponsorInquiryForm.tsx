@@ -69,7 +69,7 @@ export default function SponsorInquiryForm({
           Got it.
         </h3>
         <p className="mt-3 max-w-[42ch] text-[15px] leading-relaxed text-ink-2">
-          We&rsquo;ll be in touch within a couple of days — keep an eye on your inbox.
+          We&rsquo;ll be in touch within a couple of days. Keep an eye on your inbox.
         </p>
       </div>
     );

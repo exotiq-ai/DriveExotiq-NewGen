@@ -24,13 +24,22 @@ export default function ApplicationForm({
   const [submitError, setSubmitError] = useState(false);
   const router = useRouter();
 
+  // Belt-and-suspenders (deck §5.3): the controlled select must never hold a
+  // value with no matching <option> (e.g. a sponsor tier that slipped past the
+  // ApplyPage redirect guard). Fall back to 'access'.
+  const safeInterest: Interest = APPLY_INTEREST_OPTIONS.some(
+    (o) => o.value === defaultInterest
+  )
+    ? defaultInterest
+    : 'access';
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
-    defaultValues: { interest: defaultInterest },
+    defaultValues: { interest: safeInterest },
   });
 
   const onSubmit = async (data: ApplicationFormData) => {
@@ -70,7 +79,7 @@ export default function ApplicationForm({
         <Select
           {...register('interest')}
           id="interest"
-          defaultValue={defaultInterest}
+          defaultValue={safeInterest}
           error={errors.interest?.message}
         >
           {APPLY_INTEREST_OPTIONS.map((o) => (
@@ -79,6 +88,18 @@ export default function ApplicationForm({
             </option>
           ))}
         </Select>
+        {/* Sponsor off-ramp (deck §7.3) — the select no longer carries a
+            sponsor lane, so intent gets a visible door to the real form. */}
+        <p className="mt-3 text-[13px] leading-relaxed text-ink-3">
+          Sponsoring the wrap?{' '}
+          <Link
+            href="/sponsor"
+            className="text-ink underline underline-offset-2 transition-colors duration-250 hover:text-gulf"
+          >
+            Start here
+          </Link>
+          .
+        </p>
       </div>
 
       {/* Full name */}

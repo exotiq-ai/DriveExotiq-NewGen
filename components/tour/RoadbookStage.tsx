@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef } from 'react';
-import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 import {
   motion,
+  useMotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -30,6 +31,8 @@ interface RoadbookStageProps {
  * On reduced-motion or small screens we skip the stage entirely and render the
  * server children as a quiet vertical timeline — no scroll-jacking, full copy.
  */
+const MEDIA = process.env.NEXT_PUBLIC_MEDIA_BASE ?? '/videos/experience';
+
 export default function RoadbookStage({ children }: RoadbookStageProps) {
   const reduce = useReducedMotion();
   const trackRef = useRef<HTMLDivElement>(null);
@@ -39,24 +42,39 @@ export default function RoadbookStage({ children }: RoadbookStageProps) {
     offset: ['start start', 'end end'],
   });
 
+  // WAAPI escape hatch (owner bug 2026-07-06, browser-measured): framer
+  // compiles linear scroll→style chains to native ScrollTimeline animations,
+  // and on this STICKY stage the compiled timeline's computed opacity was
+  // non-monotonic garbage (intro fade read 0.03 → 0.10 → 0.39 going DOWN the
+  // track — a one-way fade can't rise), which is exactly the ghost-text
+  // overlay in the owner's screenshot. Mirroring progress through an
+  // imperatively-set MotionValue breaks the scroll attachment, so every
+  // downstream transform (drive, intro, finale, beats, roadbook, odometer)
+  // stays JS-driven and deterministic.
+  const p = useMotionValue(0);
+  useMotionValueEvent(scrollYProgress, 'change', (v) => p.set(v));
+  useEffect(() => {
+    p.set(scrollYProgress.get()); // restored-scroll sync before first change event
+  }, [p, scrollYProgress]);
+
   // Active drive window sits inside the track so intro/finale get breathing room.
-  const drive = useTransform(scrollYProgress, [0.08, 0.92], [0, 1], {
+  const drive = useTransform(p, [0.08, 0.92], [0, 1], {
     clamp: true,
   });
 
-  // Windshield push-forward (subtle dolly) + vertical settle.
-  const pushScale = useTransform(drive, [0, 1], [1.06, 1.22]);
+  // Vertical settle only — the windshield is REAL rolling footage now (owner
+  // 2026-07-06: the R8 still didn't belong on the S8's tour page, and a
+  // scroll-dollied photo can't compete with the car actually moving). The
+  // push-forward scale and the R8→S8 photo dissolve retired with the stills.
   const pan = useTransform(drive, [0, 1], ['0%', '-5%']);
 
-  // Cross-dissolve R8(dawn) → S8(dusk) at ~two-thirds of the drive.
-  const r8Opacity = useTransform(drive, [0.55, 0.78], [1, 0]);
-  const s8Opacity = useTransform(drive, [0.55, 0.78], [0, 1]);
-
   // Intro headline clears as the drive starts; finale settles at the end.
-  const introOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
-  const introY = useTransform(scrollYProgress, [0, 0.08], ['0%', '-6%']);
-  const finaleOpacity = useTransform(scrollYProgress, [0.9, 0.98], [0, 1]);
-  const finaleY = useTransform(scrollYProgress, [0.9, 0.98], ['4%', '0%']);
+  // All four derive from the JS-mirrored `p`, never raw scrollYProgress
+  // (see the WAAPI note above).
+  const introOpacity = useTransform(p, [0, 0.08], [1, 0]);
+  const introY = useTransform(p, [0, 0.08], ['0%', '-6%']);
+  const finaleOpacity = useTransform(p, [0.9, 0.98], [0, 1]);
+  const finaleY = useTransform(p, [0.9, 0.98], ['4%', '0%']);
 
   // ---- Reduced-motion / no-JS-fallback path: just the server content. ----
   if (reduce) {
@@ -73,36 +91,27 @@ export default function RoadbookStage({ children }: RoadbookStageProps) {
         className="relative hidden h-[1100vh] md:block"
       >
         <div className="sticky top-0 h-screen overflow-hidden bg-canvas">
-          {/* Windshield — the road ahead */}
+          {/* Windshield — the S8 running the canyon (the mountain roller,
+              26–62s of the 4K master, dusk-noir graded at encode). A long
+              take, muted loop; the seam is a hard cut 36s apart, which a
+              page background wears fine. Poster-first for LCP; the stage is
+              md+ only, so phones never fetch it. */}
           <motion.div
             style={{ y: pan }}
             className="absolute inset-x-[-6%] bottom-[-4%] top-0 will-change-transform"
           >
-            <motion.div
-              style={{ scale: pushScale, opacity: r8Opacity }}
-              className="absolute inset-0 will-change-transform"
+            <video
+              className="absolute inset-0 h-full w-full scale-[1.06] object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster="/images/experience/poster/tour-road.jpg"
             >
-              <Image
-                src="/images/cars/R8-telluride.jpg"
-                alt=""
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover object-[center_38%]"
-              />
-            </motion.div>
-            <motion.div
-              style={{ scale: pushScale, opacity: s8Opacity }}
-              className="absolute inset-0 will-change-transform"
-            >
-              <Image
-                src="/images/cars/Audi_S8_tortillaflats_adamkiss.jpg"
-                alt=""
-                fill
-                sizes="100vw"
-                className="object-cover object-[center_42%]"
-              />
-            </motion.div>
+              <source src={`${MEDIA}/tour-road.720.mp4`} media="(max-width: 1279px)" type="video/mp4" />
+              <source src={`${MEDIA}/tour-road.mp4`} type="video/mp4" />
+            </video>
           </motion.div>
 
           {/* Cinematic scrims — top + bottom legibility, never glow. */}
@@ -126,7 +135,7 @@ export default function RoadbookStage({ children }: RoadbookStageProps) {
             className="absolute inset-x-0 top-1/2 z-20 mx-auto max-w-content -translate-y-1/2 px-6 md:px-10"
           >
             <p className="font-serif text-[clamp(1rem,1.6vw,1.2rem)] italic text-gulf">
-              a long way south, the long way.
+              The long way south, on purpose.
             </p>
             <p className="mt-5 max-w-[32ch] font-display text-[clamp(2.4rem,5.5vw,4.6rem)] font-semibold leading-[0.96] tracking-tightest text-ink">
               Before first light, in Denver, the engine is already warm.
@@ -157,7 +166,7 @@ export default function RoadbookStage({ children }: RoadbookStageProps) {
               the end of the line, under a falling sun.
             </p>
             <p className="mx-auto mt-5 max-w-[18ch] font-display text-[clamp(2.6rem,7vw,5.5rem)] font-semibold leading-[0.94] tracking-tightest text-ink">
-              Ten cities. Thousands of miles. One blank canvas.
+              5,000 miles. Ten cities. One blank canvas.
             </p>
           </motion.div>
         </div>

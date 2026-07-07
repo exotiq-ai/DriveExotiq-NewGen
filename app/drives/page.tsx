@@ -4,16 +4,16 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  title: 'The Drives — invite-only sunrise drives',
+  title: 'The Drives · invite-only sunrise drives',
   description:
     'Invite-only sunrise drives on the last Sunday of every month, followed by a curated Cars & Coffee. Request your invite to Drive Exotiq.',
   alternates: { canonical: '/drives' },
 };
 
 const STEPS = [
-  { head: 'Get on the list.', body: 'One name at a time. We review every one — this stays small on purpose.' },
+  { head: 'Get on the list.', body: 'One name at a time. We review every one. This stays small on purpose.' },
   { head: 'We review and invite.', body: 'When a drive fits your city, your invite and the meet point land in your inbox a few days ahead.' },
-  { head: 'You roll out at sunrise.', body: 'The last Sunday of the month, before the city wakes — ending somewhere worth parking.' },
+  { head: 'You roll out at sunrise.', body: 'The last Sunday of the month, before the city wakes, ending somewhere worth parking.' },
 ];
 
 const FAQ = [
@@ -71,7 +71,7 @@ export default function DrivesPage() {
           </h1>
 
           <p className="mt-7 max-w-[54ch] text-[clamp(1.05rem,1.8vw,1.3rem)] leading-snug text-ink-2">
-            Invite-only sunrise drives on the last Sunday of every month — a rollout before
+            Invite-only sunrise drives on the last Sunday of every month. A rollout before
             the city wakes, ending in a curated Cars &amp; Coffee.
           </p>
 
@@ -97,7 +97,7 @@ export default function DrivesPage() {
                 The next drive is being routed.
               </p>
               <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-ink-2">
-                Get on the list to hear first — invites go out a few days ahead of each
+                Get on the list to hear first. Invites go out a few days ahead of each
                 sunrise.
               </p>
             </div>

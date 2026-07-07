@@ -21,7 +21,7 @@ const LEGAL_NAV_LINKS = [
 
 export default function LegalLayout({
   children,
-  entity = 'Exotiq Inc. dba Drive Exotiq — a Delaware C-Corporation',
+  entity = 'Exotiq Inc. dba Drive Exotiq, a Delaware C-Corporation',
   title,
   subtitle,
   effectiveDate = 'January 1, 2026',

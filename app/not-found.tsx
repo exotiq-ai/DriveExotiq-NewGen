@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Emblem from '@/components/ui/Emblem';
 
 export const metadata: Metadata = {
-  title: 'Wrong turn — Page not found',
+  title: 'Wrong turn · Page not found',
   robots: { index: false, follow: true },
 };
 

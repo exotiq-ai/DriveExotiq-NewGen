@@ -10,7 +10,7 @@ export const applicationSchema = z.object({
   cityOfInterest: z.string().min(2, 'Tell us where you would drive'),
   briefIntro: z
     .string()
-    .min(10, 'A sentence is plenty — tell us what you drive (minimum 10 characters)')
+    .min(10, 'A sentence is plenty. Tell us what you drive (minimum 10 characters)')
     .max(200, 'Maximum 200 characters'),
   inviteCode: z.string().optional(),
   agreedToTerms: z.boolean().refine(val => val === true, {

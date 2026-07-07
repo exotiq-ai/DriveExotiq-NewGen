@@ -424,12 +424,46 @@
 .copy-scrim {
   background: radial-gradient(58% 52% at var(--sx, 50%) 50%, rgba(11, 11, 12, 0.42), transparent 72%);
 }
+/* Type + contrast pass (2026-07-06, owner-approved): the film's copy support
+   tier measured under-legible on desktop, so the legibility floor rises
+   everywhere — the soft text-shadow now rides every viewport (it was
+   mobile-only), and the Spectral index numerals lift off ink-3 (they measured
+   as the dimmest text on screen). Brighter floor, not louder voice. */
+.copy-block {
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.5);
+}
+/* Buttons and links set their own solid grounds (Gulf CTA, ghost buttons) —
+   a glow behind dark-on-gulf label text reads as a smudge (review fix). */
+.copy-block a,
+.copy-block button {
+  text-shadow: none;
+}
+.copy-block .idx {
+  color: var(--de-metal);
+}
+/* Bright-plate assist: beats flagged `brightPlate` (frames.ts) keep no dark
+   third behind the copy on desktop — CinematicStage layers a second scrim div
+   carrying this class, so the existing .copy-scrim treatment repeats at ~1/3
+   opacity behind the copy zone only. Desktop-only: the mobile media query
+   below already ships the stronger scrim (query matches .beat-h's). */
+.copy-scrim-bright {
+  display: none;
+}
+@media (min-width: 1024px) and (pointer: fine) {
+  .copy-scrim-bright {
+    display: block;
+    opacity: 0.33;
+  }
+}
 @media (max-width: 1023px), (pointer: coarse) {
   .copy-scrim {
     background: radial-gradient(75% 62% at var(--sx, 50%) 50%, rgba(11, 11, 12, 0.6), transparent 80%);
   }
-  .copy-block {
-    text-shadow: 0 1px 16px rgba(0, 0, 0, 0.5);
+  /* Centered multi-line body copy is hard to track on narrow portrait crops —
+     body text always reads left on mobile. Headlines, jewels, and kickers
+     keep the beat's alignment (the flex column still centers the block). */
+  .copy-block .copy-body {
+    text-align: left;
   }
 }
 

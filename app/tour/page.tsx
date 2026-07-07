@@ -6,14 +6,14 @@ import RoadbookStage from '@/components/tour/RoadbookStage';
 import { BEATS, ODO_TARGET } from '@/components/tour/data';
 
 export const metadata: Metadata = {
-  title: 'The Journey — Denver to Miami',
+  title: 'The Exotic Tour: Denver to Miami',
   description:
-    'Scroll the drive. One built Audi S8, ten markets, ~5,000 miles — Drive Exotiq’s Denver-to-Miami exotic tour, summer into fall 2026. The wrap is still yours to claim.',
+    'Scroll the drive. One 2017 Audi S8, ten markets, ~5,000 miles. Drive Exotiq’s Denver-to-Miami exotic tour, summer into fall 2026. The wrap is still yours to claim.',
   alternates: { canonical: '/tour' },
 };
 
 /**
- * THE JOURNEY — /tour. SERVER component: the page IS the Denver→Miami drive.
+ * THE TOUR — /tour. SERVER component: the page IS the Denver→Miami drive.
  * Real copy, one <h1>, ordered headings, and ten semantic <section>s render
  * server-side for crawlers. RoadbookStage (a 'use client' island) wraps the
  * static timeline and, on capable desktop browsers, paints the pinned
@@ -57,7 +57,7 @@ export default function TourPage() {
             <div className="flex items-center gap-3">
               <span className="h-px w-8 bg-gulf" />
               <span className="text-[13px] tracking-[0.04em] text-ink-2">
-                The Journey · Denver → Miami · summer–fall 2026
+                The tour · Denver → Miami · summer–fall 2026
               </span>
             </div>
 
@@ -72,12 +72,12 @@ export default function TourPage() {
               className="mt-6 max-w-[54ch] text-[clamp(1.05rem,1.7vw,1.3rem)] leading-snug text-ink"
               style={{ textShadow: '0 1px 24px rgba(0,0,0,0.7)' }}
             >
-              One built Audi S8, ten markets, ~5,000 miles — the Denver-to-Miami
+              One 2017 Audi S8, ten markets, ~5,000 miles. The Denver-to-Miami
               exotic tour, summer into fall 2026. The wrap is still yours to claim.
             </p>
 
             <p className="mt-5 font-serif text-[clamp(1.1rem,2vw,1.5rem)] italic text-gulf">
-              a long way south, the long way.
+              The long way south, on purpose.
             </p>
           </div>
         </section>
@@ -136,11 +136,17 @@ export default function TourPage() {
             id="tour-finale"
             className="mx-auto mt-5 max-w-[18ch] font-display text-[clamp(2.6rem,8vw,5rem)] font-semibold leading-[0.94] tracking-tightest text-ink"
           >
-            Ten cities. Thousands of miles. One blank canvas.
+            5,000 miles. Ten cities. One blank canvas.
           </h2>
 
           <p className="mx-auto mt-6 max-w-[44ch] text-[clamp(1rem,1.6vw,1.15rem)] leading-snug text-ink-2">
             This is the car. This is the route. The wrap is still yours to claim.
+          </p>
+
+          {/* AEO anchor, server-rendered (§1.3 law) — copy, not a CTA. */}
+          <p className="mx-auto mt-5 max-w-[54ch] text-[15px] leading-relaxed text-ink-3">
+            Drive Exotiq is the community front door to the exotiq.rent
+            exotic-car marketplace, coming soon.
           </p>
 
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">

@@ -21,30 +21,30 @@ function copyFor(interest: Interest): Branch {
     case 'partnership':
       return {
         head: 'Got it.',
-        body: 'Thanks for the interest in the wrap. We’ll be in touch within a couple of days — this is a small operation, and a real person reads every note.',
-        primary: { label: 'See the wrap opportunity', href: '/sponsor' },
-        secondary: { label: 'Ride the tour', href: '/tour' },
+        body: 'We’ve got your note. A real person reads every one, and we’ll be in touch within a couple of days. This is a small operation.',
+        primary: { label: 'Ride the tour', href: '/tour' },
+        secondary: { label: 'See the wrap opportunity', href: '/sponsor' },
       };
     case 'drives':
       return {
         head: 'You’re on the list.',
         body: 'We review every name personally. When a drive fits your city, your invite and the meet point land in your inbox a few days ahead.',
-        primary: { label: 'Read the stories', href: '/blog' },
-        secondary: { label: 'Enter the drives', href: '/drives' },
+        primary: { label: 'Enter the drives', href: '/drives' },
+        secondary: { label: 'Read the stories', href: '/blog' },
       };
     case 'access':
       return {
         head: 'You’re on the list.',
-        body: 'You’ll hear from us before anyone else gets the keys to exotiq.rent — and when a drive rolls through your city.',
-        primary: { label: 'Read the stories', href: '/blog' },
-        secondary: { label: 'What’s coming', href: '/marketplace' },
+        body: 'You’ll hear from us before anyone else gets the keys to exotiq.rent, and when a drive rolls through your city.',
+        primary: { label: 'What’s coming', href: '/marketplace' },
+        secondary: { label: 'Read the stories', href: '/blog' },
       };
     default:
       return {
         head: 'You’re on the list.',
-        body: 'We review every name personally. When a drive fits your city — or the tour rolls through — you’ll be among the first to know.',
-        primary: { label: 'Read the stories', href: '/blog' },
-        secondary: { label: 'See the wrap opportunity', href: '/sponsor' },
+        body: 'We review every name personally. When a drive fits your city, or the tour rolls through, you’ll be among the first to know.',
+        primary: { label: 'Enter the drives', href: '/drives' },
+        secondary: { label: 'Read the stories', href: '/blog' },
       };
   }
 }
