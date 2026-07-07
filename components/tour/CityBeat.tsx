@@ -17,18 +17,22 @@ interface CityBeatProps {
  * the readable copy is server-rendered in the page's <section> list.
  */
 export default function CityBeat({ beat, index, total, progress }: CityBeatProps) {
-  // Beat centers compress into drive [0.10, 0.88] (owner bug 2026-07-06: the
-  // raw [0,1] spread put Denver at FULL opacity while the intro headline was
-  // still fading out — drive holds at 0 through the whole intro window — and
-  // Miami was still on stage when the finale rose. The margins clear both.)
+  // Beat centers compress into drive [0.09, 0.88] (2026-07-06 fix: the raw
+  // [0,1] spread put Denver at full opacity under the old intro overlay and
+  // kept Miami on stage into the finale; the margins clear both ends. The
+  // stage intro was cut 2026-07-07, so Denver now enters a touch earlier.)
   const raw = total > 1 ? index / (total - 1) : 0;
-  const center = 0.1 + raw * 0.78;
+  const center = 0.09 + raw * 0.79;
   // Half-width of this beat's window; slight overlap reads as continuous travel.
-  const half = total > 1 ? (1 / (total - 1)) * 0.62 : 0.5;
+  const half = total > 1 ? (1 / (total - 1)) * 0.68 : 0.5;
 
+  // Owner pacing note 2026-07-07: cities and mileage should HOLD, not flash.
+  // The plateau widened from 18% to 45% of the window (with the taller 1300vh
+  // track, each city now rests on screen ~2.4x longer than it did), and the
+  // vertical travel eased so the hold reads as a stop, not a drive-by.
   const start = center - half;
-  const inEnd = center - half * 0.18;
-  const outStart = center + half * 0.18;
+  const inEnd = center - half * 0.45;
+  const outStart = center + half * 0.45;
   const end = center + half;
 
   const opacity = useTransform(
@@ -37,7 +41,7 @@ export default function CityBeat({ beat, index, total, progress }: CityBeatProps
     [0, 1, 1, 0]
   );
   // Words rise as they pass the car: come up from below, drift up and out.
-  const y = useTransform(progress, [start, end], [54, -54]);
+  const y = useTransform(progress, [start, end], [48, -48]);
 
   return (
     <motion.div

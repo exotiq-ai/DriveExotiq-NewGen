@@ -68,11 +68,11 @@ export default function RoadbookStage({ children }: RoadbookStageProps) {
   // push-forward scale and the R8→S8 photo dissolve retired with the stills.
   const pan = useTransform(drive, [0, 1], ['0%', '-5%']);
 
-  // Intro headline clears as the drive starts; finale settles at the end.
-  // All four derive from the JS-mirrored `p`, never raw scrollYProgress
-  // (see the WAAPI note above).
-  const introOpacity = useTransform(p, [0, 0.08], [1, 0]);
-  const introY = useTransform(p, [0, 0.08], ['0%', '-6%']);
+  // Finale settles at the end. Derived from the JS-mirrored `p`, never raw
+  // scrollYProgress (see the WAAPI note above). The stage's duplicate intro
+  // overlay was CUT 2026-07-07 (owner): the server hero directly above already
+  // carries the identical headline, so the stage opens straight onto the
+  // drive — odometer, roadbook, and Denver's beat.
   const finaleOpacity = useTransform(p, [0.9, 0.98], [0, 1]);
   const finaleY = useTransform(p, [0.9, 0.98], ['4%', '0%']);
 
@@ -88,7 +88,7 @@ export default function RoadbookStage({ children }: RoadbookStageProps) {
       <div
         ref={trackRef}
         aria-hidden="true"
-        className="relative hidden h-[1100vh] md:block"
+        className="relative hidden h-[1300vh] md:block"
       >
         <div className="sticky top-0 h-screen overflow-hidden bg-canvas">
           {/* Windshield — the S8 running the canyon (the mountain roller,
@@ -124,23 +124,11 @@ export default function RoadbookStage({ children }: RoadbookStageProps) {
             <Roadbook progress={drive} />
           </div>
 
-          {/* Odometer HUD */}
-          <div className="absolute left-6 top-6 z-30 md:left-10 lg:left-[150px]">
+          {/* Odometer HUD — top offset clears the fixed site header (owner
+              bug 2026-07-07: top-6 tucked the mileage under the nav bar). */}
+          <div className="absolute left-6 top-20 z-30 md:left-10 md:top-24 lg:left-[150px]">
             <Odometer progress={drive} />
           </div>
-
-          {/* Intro headline — clears as the drive begins. */}
-          <motion.div
-            style={{ opacity: introOpacity, y: introY }}
-            className="absolute inset-x-0 top-1/2 z-20 mx-auto max-w-content -translate-y-1/2 px-6 md:px-10"
-          >
-            <p className="font-serif text-[clamp(1rem,1.6vw,1.2rem)] italic text-gulf">
-              The long way south, on purpose.
-            </p>
-            <p className="mt-5 max-w-[32ch] font-display text-[clamp(2.4rem,5.5vw,4.6rem)] font-semibold leading-[0.96] tracking-tightest text-ink">
-              Before first light, in Denver, the engine is already warm.
-            </p>
-          </motion.div>
 
           {/* City beats travelling past the car. */}
           <div className="absolute inset-x-0 top-0 z-20 mx-auto h-full max-w-content px-6 md:px-10 lg:pl-[200px]">

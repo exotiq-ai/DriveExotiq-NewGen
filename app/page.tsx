@@ -8,21 +8,24 @@ const DESCRIPTION =
   'Exotic car rentals coming soon at exotiq.rent: McLaren, Porsche, Ferrari. Invite-only drives, monthly Cars & Coffee, and the Denver→Miami tour.';
 
 export const metadata: Metadata = {
-  // ≤60 with the "· Drive Exotiq" template suffix (brief law).
-  title: 'Exotic Car Rentals & Curated Drives',
+  // ≤60 with the "· Drive Exotiq" template suffix (brief law). Share summary
+  // revised 2026-07-07 (owner): title carries the offer, the card title
+  // carries the brand line, and the card image is the film's signature frame
+  // (the industrial door open onto the lit corridor).
+  title: 'Exotic Rentals, Drives & the Denver-to-Miami Tour',
   description: DESCRIPTION,
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Drive Exotiq: built for the people who actually drive the car',
+    title: 'Drive Exotiq: Built for the People Who Actually Drive the Car',
     description: DESCRIPTION,
     url: '/',
     siteName: 'Drive Exotiq',
     type: 'website',
-    images: [{ url: '/og-experience.jpg', width: 1200, height: 630, alt: 'The wrapped S8 at dusk, the Drive Exotiq tour' }],
+    images: [{ url: '/og-experience.jpg', width: 1200, height: 630, alt: 'The garage door open onto a lit corridor, the opening frame of the Drive Exotiq film' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Drive Exotiq: built for the people who actually drive the car',
+    title: 'Drive Exotiq: Built for the People Who Actually Drive the Car',
     description: DESCRIPTION,
     images: ['/og-experience.jpg'],
   },

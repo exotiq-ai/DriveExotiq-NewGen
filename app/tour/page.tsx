@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -21,27 +22,23 @@ export const metadata: Metadata = {
  * reduced-motion / mobile.
  */
 export default function TourPage() {
-  const MEDIA = process.env.NEXT_PUBLIC_MEDIA_BASE ?? '/videos/experience';
   return (
     <>
       <Header />
       <main id="main" className="bg-canvas">
-        {/* Intro — full-bleed S8 hero carrying the one <h1>. The real founder's
-            car in the canyon plays muted behind a legibility scrim; the copy
-            sits on the dark floor of the gradient so it stays fully readable. */}
+        {/* Intro — full-bleed S8 hero carrying the one <h1>. A STILL from the
+            hero footage (owner 2026-07-07): two videos on one page competed —
+            the roadbook's rolling windshield below is the page's single moving
+            picture, and the still buys a faster LCP. The copy is unchanged. */}
         <section className="relative flex min-h-[92svh] items-end overflow-hidden">
-          <video
-            aria-hidden="true"
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster="/images/experience/poster/tour-hero.jpg"
-            className="absolute inset-0 h-full w-full object-cover"
-          >
-            <source src={`${MEDIA}/tour-hero.720.mp4`} media="(max-width: 768px)" type="video/mp4" />
-            <source src={`${MEDIA}/tour-hero.mp4`} type="video/mp4" />
-          </video>
+          <Image
+            src="/images/experience/poster/tour-hero.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
           <div
             aria-hidden="true"
             className="absolute inset-0"

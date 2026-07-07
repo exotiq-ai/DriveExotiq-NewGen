@@ -103,8 +103,11 @@ export default function SponsorPage({
             {/* Livery render — the asset, seen */}
             <div>
               <div className="relative aspect-[16/10] w-full overflow-hidden rounded-sm border border-line bg-canvas-2">
+                {/* Lifted derivative (owner 2026-07-07): the film's SB-19
+                    render is deliberately noir-dark; the sales page wants the
+                    livery legible at a glance. Same shot, brighter grade. */}
                 <Image
-                  src="/images/experience/photo/wrap-photoreal.png"
+                  src="/images/experience/photo/wrap-livery-lift.jpg"
                   alt="The 2017 Audi S8 in heritage racing livery, rendered street-side"
                   fill
                   sizes="(max-width: 768px) 100vw, 570px"

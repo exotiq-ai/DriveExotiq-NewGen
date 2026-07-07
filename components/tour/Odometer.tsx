@@ -31,9 +31,14 @@ export default function Odometer({ progress }: OdometerProps) {
     if (odoRef.current) {
       odoRef.current.textContent = String(miles).padStart(4, '0');
     }
+    // Leg/city track the SAME compressed centers as the CityBeat windows
+    // (drive [0.09, 0.88] — keep in lockstep with CityBeat.tsx), so the HUD
+    // never announces the next leg while the previous city still holds the
+    // stage (owner-caught desync 2026-07-07).
+    const beatSpace = (clamped - 0.09) / 0.79;
     const idx = Math.min(
       BEATS.length - 1,
-      Math.max(0, Math.round(clamped * (BEATS.length - 1)))
+      Math.max(0, Math.round(beatSpace * (BEATS.length - 1)))
     );
     const beat = BEATS[idx];
     if (legRef.current) legRef.current.textContent = `leg ${beat.leg}/10`;
