@@ -137,19 +137,21 @@ export default function RootLayout({
       <body className="font-sans bg-canvas text-ink antialiased">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
         {/* Plausible — privacy-first, cookieless (no consent gate). Prod only so
-            local/preview traffic never pollutes stats. Register driveexotiq.com
-            in the Plausible dashboard; goals to add there: CTA, Film Depth,
-            Signup (custom events fired via lib/analytics.ts). The inline shim
-            queues events fired before the script loads. */}
+            local/preview traffic never pollutes stats. This is the account's
+            site-keyed tracker from the dashboard (2026-07-07 signup) — the
+            pa-*.js URL is generated for driveexotiq.com, so no data-domain
+            attribute. The inline shim is Plausible's own: it queues pageviews
+            AND custom events (CTA / Film Depth / Signup via lib/analytics.ts)
+            fired before the script loads; outboundLinks kept from the old
+            script.outbound-links.js setup. Goals live in the dashboard. */}
         {process.env.NODE_ENV === 'production' && (
           <>
             <Script id="plausible-shim" strategy="beforeInteractive">
-              {`window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}`}
+              {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init({outboundLinks:true})`}
             </Script>
             <Script
-              defer
-              data-domain="driveexotiq.com"
-              src="https://plausible.io/js/script.outbound-links.js"
+              async
+              src="https://plausible.io/js/pa-T2DyFOm6ZJ33t6XEg4dFa.js"
               strategy="afterInteractive"
             />
           </>
