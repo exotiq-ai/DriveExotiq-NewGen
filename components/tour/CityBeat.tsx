@@ -2,6 +2,7 @@
 
 import { MotionValue, motion, useTransform } from 'framer-motion';
 import type { CityBeat as CityBeatData } from './data';
+import { cityWindow } from './pacing';
 
 interface CityBeatProps {
   beat: CityBeatData;
@@ -17,31 +18,21 @@ interface CityBeatProps {
  * the readable copy is server-rendered in the page's <section> list.
  */
 export default function CityBeat({ beat, index, total, progress }: CityBeatProps) {
-  // Beat centers compress into drive [0.09, 0.88] (2026-07-06 fix: the raw
-  // [0,1] spread put Denver at full opacity under the old intro overlay and
-  // kept Miami on stage into the finale; the margins clear both ends. The
-  // stage intro was cut 2026-07-07, so Denver now enters a touch earlier.)
-  const raw = total > 1 ? index / (total - 1) : 0;
-  const center = 0.09 + raw * 0.79;
-  // Half-width of this beat's window; slight overlap reads as continuous travel.
-  const half = total > 1 ? (1 / (total - 1)) * 0.68 : 0.5;
-
-  // Owner pacing note 2026-07-07: cities and mileage should HOLD, not flash.
-  // The plateau widened from 18% to 45% of the window (with the taller 1300vh
-  // track, each city now rests on screen ~2.4x longer than it did), and the
-  // vertical travel eased so the hold reads as a stop, not a drive-by.
-  const start = center - half;
-  const inEnd = center - half * 0.45;
-  const outStart = center + half * 0.45;
-  const end = center + half;
+  // EXCLUSIVE slot windows from components/tour/pacing.ts — the single source
+  // of truth shared with the Odometer (owner bug 2026-07-07: overlapping
+  // windows stacked Denver and Dallas at full opacity; per-component pacing
+  // constants had drifted). One city on stage at a time, by construction:
+  // fade in 15% of the slot, hold to 77%, gone by 92%, then a breath of empty
+  // road before the next city enters.
+  const w = cityWindow(index);
 
   const opacity = useTransform(
     progress,
-    [start, inEnd, outStart, end],
+    [w.start, w.fullAt, w.holdUntil, w.gone],
     [0, 1, 1, 0]
   );
   // Words rise as they pass the car: come up from below, drift up and out.
-  const y = useTransform(progress, [start, end], [48, -48]);
+  const y = useTransform(progress, [w.slotStart, w.slotEnd], [40, -40]);
 
   return (
     <motion.div

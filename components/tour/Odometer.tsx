@@ -3,11 +3,11 @@
 import { useEffect, useRef } from 'react';
 import { MotionValue, useMotionValueEvent } from 'framer-motion';
 import { BEATS } from './data';
+import { cityIndexAt, milesAt } from './pacing';
 
-/** One-way route distance — the odometer tracks the legs you scroll past, so it
- *  ends at Miami's cumulative mile (≈2,500), consistent with the per-leg sum.
- *  The ~5,000-mile round-trip figure lives in the finale, labelled as such. */
-const ROUTE_MILES = BEATS[BEATS.length - 1].mi;
+// One-way route distance semantics live in pacing.ts: the odometer ends at
+// Miami's cumulative mile (≈2,500), consistent with the per-leg sum. The
+// ~5,000-mile round-trip figure lives in the finale, labelled as such.
 
 interface OdometerProps {
   /** Drive progress 0→1 across the pinned stage. */
@@ -27,20 +27,15 @@ export default function Odometer({ progress }: OdometerProps) {
 
   const render = (p: number) => {
     const clamped = p < 0 ? 0 : p > 1 ? 1 : p;
-    const miles = Math.round(clamped * ROUTE_MILES);
+    // Miles + leg + city all derive from components/tour/pacing.ts — the same
+    // exclusive slots that drive the CityBeat windows. The counter interpolates
+    // cumulative route miles piecewise per slot, so it rolls up to each city's
+    // real cumulative mileage exactly as that city holds the stage, and the
+    // HUD can never announce a city that isn't on screen.
     if (odoRef.current) {
-      odoRef.current.textContent = String(miles).padStart(4, '0');
+      odoRef.current.textContent = String(milesAt(clamped)).padStart(4, '0');
     }
-    // Leg/city track the SAME compressed centers as the CityBeat windows
-    // (drive [0.09, 0.88] — keep in lockstep with CityBeat.tsx), so the HUD
-    // never announces the next leg while the previous city still holds the
-    // stage (owner-caught desync 2026-07-07).
-    const beatSpace = (clamped - 0.09) / 0.79;
-    const idx = Math.min(
-      BEATS.length - 1,
-      Math.max(0, Math.round(beatSpace * (BEATS.length - 1)))
-    );
-    const beat = BEATS[idx];
+    const beat = BEATS[cityIndexAt(clamped)];
     if (legRef.current) legRef.current.textContent = `leg ${beat.leg}/10`;
     if (cityRef.current) cityRef.current.textContent = beat.name;
   };
