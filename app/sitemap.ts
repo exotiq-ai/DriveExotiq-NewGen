@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { getPostSlugs } from '@/lib/blog';
 
 const BASE = 'https://driveexotiq.com';
 
@@ -19,14 +20,24 @@ const ROUTES: Array<{ path: string; priority: number; changeFrequency: MetadataR
   { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/cookies', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/sms', priority: 0.3, changeFrequency: 'yearly' },
+  { path: '/dmca', priority: 0.3, changeFrequency: 'yearly' },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  return ROUTES.map(({ path, priority, changeFrequency }) => ({
+  const routes = ROUTES.map(({ path, priority, changeFrequency }) => ({
     url: `${BASE}${path}`,
     lastModified: now,
     changeFrequency,
     priority,
   }));
+  // Blog posts come from the content directory, so new stories land in the
+  // sitemap without touching this file.
+  const posts: MetadataRoute.Sitemap = getPostSlugs().map((slug) => ({
+    url: `${BASE}/blog/${slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+  return [...routes, ...posts];
 }

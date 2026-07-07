@@ -24,6 +24,20 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       description: post.dek || undefined,
       url: `/blog/${post.slug}`,
       type: 'article',
+      images: [
+        {
+          url: '/og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: 'Drive Exotiq: Exotic Cars That Actually Get Driven',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.dek || undefined,
+      images: ['/og-image.jpg'],
     },
   };
 }

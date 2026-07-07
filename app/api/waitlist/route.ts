@@ -54,6 +54,17 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
+      // Unique violation (23505): the email is already on the list. Treat the
+      // re-signup as idempotent success — same response as a fresh insert —
+      // and return before the admin email so repeats never notify twice.
+      if (error.code === '23505') {
+        const { data: existing } = await supabase
+          .from('de_waitlist')
+          .select('id, email, created_at')
+          .eq('email', data.email.toLowerCase().trim())
+          .maybeSingle();
+        return NextResponse.json({ success: true, waitlist: existing }, { status: 201 });
+      }
       console.error('Supabase waitlist insert error:', error);
       return NextResponse.json({ error: 'Failed to join the waitlist' }, { status: 500 });
     }

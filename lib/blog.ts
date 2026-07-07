@@ -40,6 +40,20 @@ function parseFrontMatter(raw: string): { meta: Record<string, string>; body: st
   return { meta, body };
 }
 
+/**
+ * Drop a leading `# Title` line from the body. The frontmatter title renders
+ * as the page's single h1, so a markdown h1 at the top would duplicate it.
+ */
+function stripLeadingH1(body: string): string {
+  const lines = body.split('\n');
+  let i = 0;
+  while (i < lines.length && lines[i].trim() === '') i++;
+  if (i < lines.length && /^#\s/.test(lines[i].trim())) {
+    return lines.slice(i + 1).join('\n');
+  }
+  return body;
+}
+
 function readTimeFor(body: string): string {
   const words = body.trim().split(/\s+/).filter(Boolean).length;
   return `${Math.max(1, Math.round(words / 220))} min read`;
@@ -48,7 +62,8 @@ function readTimeFor(body: string): string {
 function fileToPost(file: string): BlogPost | null {
   const full = path.join(BLOG_DIR, file);
   const raw = fs.readFileSync(full, 'utf8');
-  const { meta, body } = parseFrontMatter(raw);
+  const { meta, body: rawBody } = parseFrontMatter(raw);
+  const body = stripLeadingH1(rawBody);
   const title = meta.title;
   if (!title) return null;
   const slug = meta.slug || file.replace(/\.md$/, '');

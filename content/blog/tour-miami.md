@@ -3,7 +3,7 @@ title: The tour stops in Miami
 slug: tour-miami
 pillar: The Tour
 primary keyword: Miami exotic car scene / Miami cars and coffee
-meta description: Miami is the last leg and the loudest room in the world for a car. The scene, the anchor weekends, the Audi history hiding in plain sight, and what a wrap sponsor gets in the hardest market to stand out in.
+meta description: Miami is the last leg and the loudest room in the world for a car. The scene, the anchor weekends, and what a wrap sponsor gets in the hardest market.
 cta: /sponsor + /apply
 -->
 

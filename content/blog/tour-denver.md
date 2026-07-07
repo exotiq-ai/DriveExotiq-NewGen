@@ -3,7 +3,7 @@ title: The tour stops in Denver
 slug: tour-denver
 pillar: The Tour
 primary keyword: Denver exotic car scene / Denver cars and coffee
-meta description: Denver is where the tour begins and where it lives the rest of the year. The Mile High car scene, the canyon roads worth waking up for, and what a wrap sponsor gets in the home market.
+meta description: Denver is where the tour begins and lives the rest of the year. The Mile High car scene, the canyon roads, and what a wrap sponsor gets in the home market.
 cta: /sponsor + /apply
 -->
 

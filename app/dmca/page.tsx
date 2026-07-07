@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import LegalLayout from '@/components/layout/LegalLayout';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/dmca' },
   title: 'DMCA & Copyright Policy',
   description:
     'Digital Millennium Copyright Act notice and takedown procedures.',

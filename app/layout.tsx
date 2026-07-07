@@ -55,7 +55,10 @@ export const metadata: Metadata = {
     "exotiq.rent",
   ],
   authors: [{ name: "Drive Exotiq" }],
-  alternates: { canonical: "/" },
+  // No global canonical: it told search engines every page without its own
+  // override (all five legal pages) was a duplicate of the homepage (QA P1
+  // 2026-07-06). The homepage sets canonical "/" in app/page.tsx; every other
+  // indexable page declares its own.
   robots: {
     index: true,
     follow: true,
@@ -83,7 +86,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Drive Exotiq: Exotic Cars That Actually Get Driven",
@@ -95,7 +98,7 @@ export const metadata: Metadata = {
     title: "Drive Exotiq: Built for People Who Drive the Car",
     description:
       "The community front door to the exotiq.rent exotic-car marketplace. Invite-only sunrise drives and the Denver→Miami tour.",
-    images: ["/og-image.png"],
+    images: ["/og-image.jpg"],
     creator: "@driveexotiq",
     site: "@driveexotiq",
   },

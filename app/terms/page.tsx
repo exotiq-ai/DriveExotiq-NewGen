@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import LegalLayout from '@/components/layout/LegalLayout';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/terms' },
   title: 'Marketplace Terms of Service',
   description: 'Terms governing the Drive Exotiq rental marketplace.',
 };

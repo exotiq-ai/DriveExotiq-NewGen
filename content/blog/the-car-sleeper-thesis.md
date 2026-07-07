@@ -39,7 +39,7 @@ The S8 makes that argument better than any exotic could, precisely because nobod
 
 That is why the sleeper leads. The McLarens are the fantasy. The S8 is the thesis.
 
-[Come see what we mean.](/experience)
+[Come see what we mean.](/)
 
 ---
 

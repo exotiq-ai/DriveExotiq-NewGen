@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import LegalLayout from '@/components/layout/LegalLayout';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/cookies' },
   title: 'Cookie Policy',
-  description: 'Use of cookies on driveexotiq.com.',
+  description:
+    'How Drive Exotiq uses cookies on driveexotiq.com: the categories we set, what each one does, and the choices you have.',
 };
 
 export default function CookiesPage() {

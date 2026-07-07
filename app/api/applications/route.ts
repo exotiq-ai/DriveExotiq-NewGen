@@ -9,6 +9,12 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
+    // Honeypot: a real user never fills the hidden `website` field. Silently
+    // accept (so bots don't learn) but do nothing — no insert, no email.
+    if (typeof body?.website === 'string' && body.website.trim() !== '') {
+      return NextResponse.json({ success: true }, { status: 201 });
+    }
+
     const parsed = applicationSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(

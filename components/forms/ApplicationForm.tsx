@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
@@ -22,6 +22,7 @@ export default function ApplicationForm({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const honeypotRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   // Belt-and-suspenders (deck §5.3): the controlled select must never hold a
@@ -50,7 +51,7 @@ export default function ApplicationForm({
       const res = await fetch('/api/applications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, website: honeypotRef.current?.value || '' }),
       });
 
       if (!res.ok) {
@@ -71,6 +72,17 @@ export default function ApplicationForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Honeypot */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
+
       {/* What brings you here — the one-contact intent tag */}
       <div>
         <label htmlFor="interest" className={labelClass}>

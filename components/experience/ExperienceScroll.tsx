@@ -293,8 +293,10 @@ export default function ExperienceScroll() {
       // jump a beat), and stand down entirely while the Menu modal is open —
       // beat-stepping behind an opaque sheet relocates the film invisibly.
       if (document.body.dataset.filmMenuOpen) return;
-      const t = e.target as HTMLElement | null;
-      if (t && t.closest('button, a, input, select, textarea, [role="dialog"]')) return;
+      // instanceof guard: synthetic dispatches can target window/document,
+      // which have no .closest — a throw here would kill beat-stepping.
+      const t = e.target;
+      if (t instanceof Element && t.closest('button, a, input, select, textarea, [role="dialog"]')) return;
       const stage = stageRef.current;
       if (!stage) return;
       const keys = [' ', 'PageDown', 'ArrowDown', 'PageUp', 'ArrowUp', 'Home', 'End'];
