@@ -365,12 +365,14 @@ function FinaleVignette({ p }: { p: MotionValue<number> }) {
 }
 
 /**
- * The threshold bloom (SB-02→SB-03): warm light swelling over the cut as the
- * camera flies through the open door. Screen-blend above both plates; peaks at
- * the exact band boundary; ±0.35 viewports of scroll on either side.
+ * The threshold bloom (SB-02b→SB-04): warm light swelling over the cut as the
+ * walk-in's final acceleration lands in the fleet aisle. Screen-blend above
+ * both plates; peaks at the exact band boundary; ±0.35 viewports either side.
+ * (Act I redesign 2026-07-06 — was SB-02→SB-03; the walk-in absorbed the rush,
+ * so the bloom moved to the corridor's arrival.)
  */
 function Bloom({ progress, bands }: { progress: MotionValue<number>; bands: Bands }) {
-  const k = FRAMES.findIndex((f) => f.id === 'SB-02');
+  const k = FRAMES.findIndex((f) => f.id === 'SB-02b');
   const cut = bands.end[k];
   const opacity = useTransform(
     progress,
@@ -421,10 +423,11 @@ function StageMedia({ progress, bands }: { progress: MotionValue<number>; bands:
       {FRAMES.map((f, i) => (
         <Plate key={`${f.id}-${mode}`} frame={f} index={i} progress={progress} priority={i === 0} active={active} bands={bands} />
       ))}
-      {/* SB-02→SB-03 bloom assist (treatment: the light past the door swallows
-          the frame). Under opaque-underneath layering the outgoing plate can't
-          brighten itself out, so a screen-blend swell ABOVE both plates peaks
-          exactly on the cut, constant scroll width like every dissolve. */}
+      {/* SB-02b→SB-04 bloom assist (treatment: the corridor's light swallows
+          the frame as the walk-in lands in the aisle). Under opaque-underneath
+          layering the outgoing plate can't brighten itself out, so a
+          screen-blend swell ABOVE both plates peaks exactly on the cut,
+          constant scroll width like every dissolve. */}
       <Bloom progress={progress} bands={bands} />
       {/* One film, one print: 5% grain over every plate (spec §2.5) welds the
           generative and real footage; static tile, zero per-frame cost. */}

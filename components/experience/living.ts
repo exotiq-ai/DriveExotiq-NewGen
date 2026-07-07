@@ -93,6 +93,10 @@ export const FADES: Record<string, number> = {
   // "cut — not dissolve" into the founder frame, and the money frame must
   // HOLD past p=0.85 while its copy resolves (handoff SB-19 transition).
   'SB-19': 0.5,
+  // SB-02 scrub-end hold frame and SB-02b frame 0 are the same Plate B render
+  // — compress the dissolve toward a film cut; wider would only invite drift
+  // between two identical images (Act I redesign 2026-07-06).
+  'SB-02': 0.5,
 };
 
 /**
@@ -155,15 +159,30 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-01.jpg'),
   },
 
-  // Phase 1 — SB-02: the sectional door rises under the visitor's scroll
-  // (Veo v2-t2, full lift at 2× — the scroll owns pacing; mobile plays once).
+  // Act I redesign (2026-07-06) — SB-02: the industrial door rises under the
+  // visitor's scroll, opening ONTO the corridor (Kling direct, Plate A→Plate B
+  // frame-pinned). Scrub-end holds Plate B, which is also SB-02b's frame 0 —
+  // the boundary is a true same-frame cut.
   'SB-02': {
     kind: 'scrub',
     src: vid('sb-02-scrub.mp4'),
     webmSrc: vid('sb-02-scrub.webm'),
     mobileSrc: vid('sb-02.mp4'),
-    poster: pos('/images/experience/poster/sb-02.jpg'), // frame 0 = door-closed slit
-    deadZone: [0.12, 0.88],
+    poster: pos('/images/experience/poster/sb-02.jpg'), // frame 0 = closed door + light blade
+    deadZone: [0.1, 0.9],
+  },
+
+  // Act I redesign (2026-07-06) — SB-02b: the walk-in. Scroll carries the
+  // visitor through the doorway and down the corridor; the encode's final
+  // second accelerates but ends COMPOSED (hold-frame doctrine — both device
+  // paths freeze the last frame). Mobile plays a calmer trim once and holds.
+  'SB-02b': {
+    kind: 'scrub',
+    src: vid('sb-02b-scrub.mp4'),
+    webmSrc: vid('sb-02b-scrub.webm'),
+    mobileSrc: vid('sb-02b.mp4'),
+    poster: pos('/images/experience/poster/sb-02b.jpg'), // frame 0 = Plate B (door open)
+    deadZone: [0.1, 0.92],
   },
 
   // Phase 1 — SB-05: the 720S portrait breathes (Kling t2).
@@ -231,13 +250,9 @@ export const LIVING: Record<string, LivingMedia> = {
     poster: pos('/images/experience/poster/sb-11.jpg'),
   },
 
-  // Phase 2 — SB-03: the threshold rush (Hailuo t2, baked seam).
-  'SB-03': {
-    kind: 'loop',
-    src: vid('sb-03.mp4'),
-    mobileSrc: vid('sb-03.720.mp4'),
-    poster: pos('/images/experience/poster/sb-03.jpg'),
-  },
+  // (SB-03 threshold rush CUT 2026-07-06 with the Act I redesign — the walk-in
+  // SB-02b carries the corridor now; a rush after an earned walk-in read as a
+  // speed glitch. Encodes retained in public/videos/experience for revert.)
 
   // Phase 2 — SB-04: the fleet aisle inhales (Kling t1).
   'SB-04': {

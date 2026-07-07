@@ -48,21 +48,64 @@
       "act": 1,
       "treatment": "scrub",
       "priority": "hero",
-      "still": "garage-exterior.png",
-      "videoModel": "google/veo-3.1",
-      "draftModel": "google/veo-3.1-lite",
-      "backupModel": "kwaivgi/kling-v3.0-pro",
-      "duration": 8,
+      "still": "door-industrial-closed.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "backupModel": "google/veo-3.1",
+      "duration": 5,
       "resolution": "1080p",
       "frameImages": {
-        "first": "garage-exterior.png"
+        "first": "door-industrial-closed.png",
+        "last": "door-industrial-open.png"
       },
-      "prompt": "Locked-off exterior night shot, camera on a tripod at hood height, absolutely no camera movement. The sectional garage door rises slowly and steadily through the entire clip — one continuous mechanical motion at constant velocity, no pauses, no bounce. The horizontal blade of warm tungsten light beneath it widens from a thin slit into a tall glowing doorway, its reflection stretching and blooming across the wet asphalt toward the lens. The air is clear — no fog, no smoke, no haze; only the light itself widens. The interior beyond the door remains underexposed: dim warm shapes only. Film-noir grade: crushed matte-black night, desaturated graphite walls, warm tungsten light only, subtle 35mm grain.",
-      "negativePrompt": "no fog, smoke, haze or mist of any kind, no billowing atmosphere, no tripod, light stand or equipment anywhere in frame, interior must stay too dark to read — no recognizable vehicle inside, no exposure bloom or blown highlights, no camera push, pan or shake; no people; no readable car detail, wheels or grille inside; no text or signage; no door panel warping or wobble; no flicker or strobing; no blue/teal shift; no lens flare streaks",
-      "post": "trim best 3-4s of the lift, all-intra encode for scrubbing; mobile plays trimmed clip once and holds final frame",
-      "qa": "door leading edge must stay straight across all frames; asphalt reflection must track the blade, not swim",
+      "prompt": "Locked-off tripod camera, zero camera movement, straight-on to the industrial door. The steel sectional door rises slowly and steadily through the entire clip — one continuous mechanical motion at constant velocity, slats curling away at the header, no pauses, no bounce. The horizontal blade of warm tungsten light beneath the leading edge widens from a thin slit into a tall glowing doorway, its reflection stretching and blooming down the wet asphalt toward the lens. As the door clears, the corridor beyond is revealed: a one-point-perspective hallway, one warm ceiling fixture glowing in the near run and a second barely visible at the vanishing point, dim, warm, sharp and still. The air stays clear — no fog, no haze; only the light widens. Film-noir grade: crushed matte-black night, desaturated graphite palette, warm tungsten highlights only, subtle 35mm grain.",
+      "negativePrompt": "camera movement, camera push, pan, shake or zoom; fog, smoke, haze or mist; people; vehicles; hands; door panel warping, wobbling or bending; slats changing count or thickness; readable text, signage or logos; flicker or strobing; blue or teal color shift; lens flares; brightening of the night sky; interior over-exposing or blowing out",
+      "post": "all-intra encode for scrubbing; mobile plays clip once and holds final frame; frame identity QA: last frame must equal door-industrial-open.png (SB-02b frame 0)",
+      "qa": "door leading edge straight across all frames; slat count constant; corridor reveal must match Plate B geometry; asphalt reflection tracks the blade, not swims",
       "status": "live",
-      "selectedTake": "SB-02-t2-veo-3.1-v2.mp4 (full lift, 2x setpts)"
+      "selectedTake": "SB-02-t1-kling-v3.0-pro-kdirect.mp4 (Plate A→B pinned, even lift; t2/t3 start later)",
+      "supersedeNote": "2026-07-06 Act I redesign: replaces the hood-height sectional-door plate (garage-exterior.png / SB-02-t2-veo-3.1-v2.mp4) — old take leaked a readable car inside and shared no geometry with the corridor. New door opens ONTO the corridor (one centered vanishing point through SB-04).",
+      "prepImage": {
+        "output": "door-industrial-closed.png",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "door-industrial-draft.png"
+        ],
+        "prompt": "Recreate this photograph exactly — identical composition, camera position, framing and light: a dead-straight-on symmetric night view of a private garage entrance, camera at standing eye height on the centerline, a wide industrial sectional door in matte graphite steel filling most of the frame, precision-machined horizontal slats with flush seams, slim brushed-steel guide rails and drive hardware in the side reveals catching warm rim light, a thin horizontal blade of warm tungsten light escaping beneath the bottom edge with its reflection stretching down wet asphalt toward the lens, dark board-formed concrete around the opening, a single small warm downlight above the lintel. Upgrade the execution to flawless large-format photorealism: real brushed-metal and powder-coat micro-texture on the slats, crisp board-formed concrete grain, physically accurate wet-asphalt reflection of the light blade, true deep blacks with detail held at the edge of visibility, deep focus with everything sharp, subtle 35mm film grain, desaturated graphite palette with warm tungsten highlights only. STRICTLY AVOID: text, logos, signage, people, vehicles, keypads or lit buttons, LED strip lighting, cool or blue accent light, glowing seams, greebled machinery. Museum-grade restraint — an industrial machine photographed like sculpture."
+      }
+    },
+    {
+      "id": "SB-02b",
+      "act": 1,
+      "treatment": "scrub",
+      "priority": "hero",
+      "still": "door-industrial-open.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "backupModel": "google/veo-3.1",
+      "duration": 5,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "door-industrial-open.png"
+      },
+      "prompt": "Smooth, stabilized first-person point of view gliding forward at a calm walking pace — camera at standing eye height, starting exactly at the first frame's position on the centerline, several strides from the open industrial doorway, moving straight toward and through it. Steadicam-smooth: no bob, no sway, no shake; the gaze locked on the vanishing point ahead. As the camera crosses the threshold, the steel doorframe slides past the edges of frame and the cold night falls away behind; warm light wraps the frame; the corridor's ceiling fixtures pass overhead, their reflections sliding down the polished concrete underfoot. Over the final two seconds the glide accelerates toward the vanishing point — the space itself pulling you in — yet the image stays composed and sharp to the last frame, ending mid-glide on a clean, readable corridor frame. Film-noir grade: crushed matte-black shadows, desaturated graphite palette, warm tungsten highlights only, subtle 35mm grain.",
+      "negativePrompt": "head bob, footstep bounce, handheld shake, camera sway; hands, arms, feet, body parts or a walking shadow; vehicles or car parts; people; the door closing or moving; camera turning, looking around, tilting or reversing; stopping; heavy motion blur or smeared frames at the end; text or signage; strobe flicker; blue or teal shift; wall, slat or floor geometry warping; lens flare streaks; fog or smoke",
+      "post": "all-intra encode for scrubbing; SEPARATE mobile trim ending on the calm pre-acceleration glide (coarse pointers play once and hold); reject takes ending on smear — last frame must be composed and sharp",
+      "qa": "frame 0 must be pixel-identical to door-industrial-open.png (= SB-02 scrub-end hold frame, invisible cut); no bob/judder under slow scrub; wall and slat geometry must not churn at frame edges; final second accelerates but stays composed",
+      "status": "live",
+      "selectedTake": "SB-02b-t3-kling-v3.0-pro-kdirect.mp4 (deepest arrival, real late acceleration; t1 lingers outside, t2 tail drifts). Mobile sb-02b.mp4 = hand-cut 4.0s calm trim",
+      "designNote": "2026-07-06 Act I redesign: the walk-in. Scroll carries the visitor through the doorway and down the corridor; replaces SB-03's teleport-to-speed. Exit blooms into SB-04 (perspective match, handoff line 448 semantics move here). frames.ts: weight 1.5, mobileWeight 1 REQUIRED, silent beat (aria only).",
+      "prepImage": {
+        "output": "door-industrial-open.png",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "door-industrial-closed.png",
+          "threshold-rush.png"
+        ],
+        "prompt": "Continuity edit. Take the first reference photograph and make one single change: the industrial door is now fully OPEN — every slat retracted up and out of sight, leaving a clean rectangular aperture framed by the guide rails. Through the aperture, seen in correct linear perspective from this exterior camera position, a garage corridor recedes to a vanishing point centered in the doorway: the corridor walls continue the door reveals inward, one warm ceiling fixture lit in the near run, a second barely visible far ahead, long darkness between them, warm reflections pooling down the polished concrete centerline. Match the second reference photograph's lighting logic and palette — warm tungsten in deep blackness — not its framing. Keep the corridor slightly underexposed: a warm glowing volume that pulls the eye inward, swallowed by darkness before it fully resolves. Everything outside the aperture stays pixel-identical to the first reference: camera, framing, night exterior, wet asphalt with its light pool now widened into a tall doorway reflection, grade, grain. This is a continuity frame for a film: any change in framing, geometry, lighting logic or grade is a failure. STRICTLY AVOID: vehicles, people, text, logos, cool or blue light, motion blur inside the corridor."
+      }
     },
     {
       "id": "SB-03",
@@ -80,7 +123,8 @@
       "loopSeam": "code-crossfade-or-baked-xfade",
       "prompt": "First-person POV camera already moving fast down a dark garage corridor toward the vanishing point — continuous forward rush for the entire clip at constant high speed, never slowing, never stopping. Walls and concrete columns streak past with heavy horizontal motion blur; the single warm ceiling light fixture sweeps overhead and exits frame top while another dim fixture appears far ahead; warm reflections smear along the polished concrete floor. Slight hood-mounted camera micro-shake. The corridor is endless — no door, no wall, no destination visible. Film-noir grade: crushed matte-black shadows, desaturated graphite palette, warm tungsten highlights only, subtle 35mm grain, anamorphic motion-blur character.",
       "negativePrompt": "no visible vehicle parts, hands, steering wheel, wheels or grille; no text or signage on walls; no people; no camera reversal, stop or speed change; no strobe flicker; no blue/teal shift; no wall or floor geometry warping",
-      "status": "live",
+      "status": "cut",
+      "cutNote": "2026-07-06 Act I redesign (3-lens review consensus): a rush beat after SB-02b's earned walk-in reads as an unmotivated speed glitch, and cutting it — not demoting it — is the fix for the owner's 'hallway runs long' (pre-fleet runway 4→4.5 weights vs 5.25 demoted). Velocity now lives in SB-02b's final-second acceleration. Assets retained in renders/SB-03 and public/videos/experience for a one-commit revert.",
       "durationNote": "Hailuo 2.3 upstream: 10s and 1080p mutually exclusive (MiniMax 2013, 2026-07-03) — 1080p kept, 6s accepted",
       "selectedTake": "SB-03-t2-hailuo-2.3.mp4 (0.5s seam)"
     },

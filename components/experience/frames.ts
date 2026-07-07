@@ -71,8 +71,15 @@ export const FRAMES: Frame[] = [
     // page spine; the Exotiq Inc. lineage lives on the end card.
     body: 'Exotic rentals, invite-only drives, and a Denver-to-Miami tour.',
   },
-  { id: 'SB-02', media: `${M}/garage-exterior.png`, movement: 'I', align: 'left', headline: 'The door is open.', weight: 2, mobileWeight: 1 },
-  { id: 'SB-03', media: `${M}/threshold-rush.png`, movement: 'I', aria: 'Flying through the threshold into the garage' },
+  // Act I redesign (2026-07-06): the industrial door opens ONTO the corridor —
+  // one centered vanishing point from the door aperture through SB-04's aisle,
+  // and the first legible car in the film is the fleet itself. Centered copy
+  // for the symmetric plate.
+  { id: 'SB-02', media: `${M}/door-industrial-closed.png`, movement: 'I', align: 'center', headline: 'The door is open.', weight: 2, mobileWeight: 1 },
+  // The walk-in: scroll carries the visitor through the doorway and down the
+  // corridor (silent beat). Replaces SB-03's teleport-to-speed — velocity now
+  // lives in this clip's final-second acceleration, blooming into SB-04.
+  { id: 'SB-02b', media: `${M}/door-industrial-open.png`, movement: 'I', aria: 'Walking through the open door and down the corridor into the garage', weight: 1.5, mobileWeight: 1 },
   {
     id: 'SB-04', media: `${M}/garage-interior-v2.png`, movement: 'I', align: 'center',
     kicker: 'The fleet', headline: 'Every one of them, driven.',

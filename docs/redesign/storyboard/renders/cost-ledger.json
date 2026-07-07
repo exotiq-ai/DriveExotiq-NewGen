@@ -1021,5 +1021,71 @@
     "file": "docs/redesign/storyboard/renders/SB-05/SB-05-t1-kling-v3.0-pro-kdirect-4k.mp4",
     "seconds": 8,
     "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-07T02:26:46.520Z",
+    "beat": "SB-02b",
+    "take": 3,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-02b/SB-02b-t3-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-07T02:27:12.071Z",
+    "beat": "SB-02",
+    "take": 2,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-02/SB-02-t2-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-07T02:27:27.182Z",
+    "beat": "SB-02",
+    "take": 1,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-02/SB-02-t1-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-07T02:27:43.470Z",
+    "beat": "SB-02b",
+    "take": 1,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-02b/SB-02b-t1-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-07T02:28:00.728Z",
+    "beat": "SB-02",
+    "take": 3,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-02/SB-02-t3-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-07T02:31:20.483Z",
+    "beat": "SB-02b",
+    "take": 2,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-02b/SB-02b-t2-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
   }
 ]
