@@ -12,6 +12,7 @@ import Textarea from '@/components/ui/Textarea';
 import SmsConsentCheckboxes from '@/components/forms/SmsConsentCheckboxes';
 import { applicationSchema, ApplicationFormData } from '@/lib/validations';
 import { APPLY_INTEREST_OPTIONS, Interest } from '@/lib/interest';
+import { track } from '@/lib/analytics';
 
 const labelClass = 'block text-[13px] tracking-[0.04em] text-ink-2 mb-2';
 
@@ -61,6 +62,7 @@ export default function ApplicationForm({
         return;
       }
 
+      track('Signup', { form: 'apply', interest: data.interest });
       router.push(`/thank-you?interest=${encodeURIComponent(data.interest)}`);
     } catch (error) {
       console.error('Error submitting application:', error);

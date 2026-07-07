@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
+import AnalyticsListener from "@/components/AnalyticsListener";
 import CookieConsent from "@/components/CookieConsent";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 
@@ -136,16 +137,24 @@ export default function RootLayout({
       <body className="font-sans bg-canvas text-ink antialiased">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
         {/* Plausible — privacy-first, cookieless (no consent gate). Prod only so
-            local/preview traffic never pollutes stats. Add both domains in the
-            Plausible dashboard. */}
+            local/preview traffic never pollutes stats. Register driveexotiq.com
+            in the Plausible dashboard; goals to add there: CTA, Film Depth,
+            Signup (custom events fired via lib/analytics.ts). The inline shim
+            queues events fired before the script loads. */}
         {process.env.NODE_ENV === 'production' && (
-          <Script
-            defer
-            data-domain="driveexotiq.com"
-            src="https://plausible.io/js/script.js"
-            strategy="afterInteractive"
-          />
+          <>
+            <Script id="plausible-shim" strategy="beforeInteractive">
+              {`window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}`}
+            </Script>
+            <Script
+              defer
+              data-domain="driveexotiq.com"
+              src="https://plausible.io/js/script.outbound-links.js"
+              strategy="afterInteractive"
+            />
+          </>
         )}
+        <AnalyticsListener />
         <SmoothScroll>{children}</SmoothScroll>
         <CookieConsent />
       </body>

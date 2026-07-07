@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { waitlistSchema, WaitlistFormData } from '@/lib/validations';
+import { track } from '@/lib/analytics';
 
 const labelClass = 'block text-[13px] tracking-[0.04em] text-ink-2 mb-2';
 
@@ -34,6 +35,7 @@ export default function WaitlistForm() {
         setSubmitError(true);
         return;
       }
+      track('Signup', { form: 'waitlist' });
       setSubmitted(true);
     } catch (err) {
       console.error('Error joining waitlist:', err);

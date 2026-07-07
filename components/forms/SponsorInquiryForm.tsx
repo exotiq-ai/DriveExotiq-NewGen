@@ -1,5 +1,7 @@
 'use client';
 
+import { track } from '@/lib/analytics';
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef, useState } from 'react';
@@ -49,6 +51,7 @@ export default function SponsorInquiryForm({
         setSubmitError(true);
         return;
       }
+      track('Signup', { form: 'sponsor', tier: data.interest });
       setSubmitted(true);
     } catch (err) {
       console.error('Error submitting sponsor inquiry:', err);
