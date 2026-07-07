@@ -1,21 +1,9 @@
 import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
-import { sponsorInquirySchema, SPONSOR_TIER_LABEL, SponsorTier } from '@/lib/sponsor';
+import { sponsorInquirySchema } from '@/lib/sponsor';
+import { sendSponsorEmails } from '@/lib/email-send';
 
 export const dynamic = 'force-dynamic';
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'hello@exotiq.ai';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'Drive Exotiq <hello@exotiq.ai>';
-
-let _resend: Resend | null = null;
-function getResend() {
-  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY);
-  return _resend;
-}
-
-const esc = (s: string) =>
-  String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
 
 export async function POST(request: Request) {
   try {
@@ -62,29 +50,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to save inquiry' }, { status: 500 });
     }
 
-    // Admin notification (awaited; failures are isolated, never break the insert).
-    if (process.env.RESEND_API_KEY) {
-      try {
-        const tier = SPONSOR_TIER_LABEL[data.interest as SponsorTier] || 'Not sure yet';
-        await getResend().emails.send({
-          from: FROM_EMAIL,
-          to: ADMIN_EMAIL,
-          subject: `Sponsor — ${tier}: ${data.name}${data.company ? ` · ${data.company}` : ''}`,
-          html: `
-            <h2>New sponsor inquiry</h2>
-            <p><strong>Tier:</strong> ${esc(tier)}</p>
-            <p><strong>Name:</strong> ${esc(data.name)}</p>
-            <p><strong>Company:</strong> ${esc(data.company || '—')}</p>
-            <p><strong>Email:</strong> ${esc(data.email)}</p>
-            <p><strong>Phone:</strong> ${esc(data.phone || '—')}</p>
-            <p><strong>Budget:</strong> ${esc(data.budget || '—')}</p>
-            <p><strong>Message:</strong><br>${esc(data.message || '—')}</p>
-          `,
-        });
-      } catch (emailError) {
-        console.error('Error sending sponsor notification:', emailError);
-      }
-    }
+    // Inquirer confirmation + admin notice (lib/email-send: failures are
+    // logged and swallowed, never break the inquiry).
+    await sendSponsorEmails({
+      name: data.name,
+      company: data.company || null,
+      email: data.email.toLowerCase().trim(),
+      phone: data.phone || null,
+      interest: data.interest,
+      budget: data.budget || null,
+      message: data.message || null,
+    });
 
     return NextResponse.json({ success: true, inquiry: inserted }, { status: 201 });
   } catch (error) {

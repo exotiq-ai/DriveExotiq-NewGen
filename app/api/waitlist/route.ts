@@ -1,21 +1,9 @@
 import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { waitlistSchema } from '@/lib/validations';
+import { sendWaitlistEmails } from '@/lib/email-send';
 
 export const dynamic = 'force-dynamic';
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'hello@exotiq.ai';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'Drive Exotiq <hello@exotiq.ai>';
-
-let _resend: Resend | null = null;
-function getResend() {
-  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY);
-  return _resend;
-}
-
-const esc = (s: string) =>
-  String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
 
 export async function POST(request: Request) {
   try {
@@ -56,7 +44,7 @@ export async function POST(request: Request) {
     if (error) {
       // Unique violation (23505): the email is already on the list. Treat the
       // re-signup as idempotent success — same response as a fresh insert —
-      // and return before the admin email so repeats never notify twice.
+      // and return before any email so repeats never notify or confirm twice.
       if (error.code === '23505') {
         const { data: existing } = await supabase
           .from('de_waitlist')
@@ -69,23 +57,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to join the waitlist' }, { status: 500 });
     }
 
-    if (process.env.RESEND_API_KEY) {
-      try {
-        await getResend().emails.send({
-          from: FROM_EMAIL,
-          to: ADMIN_EMAIL,
-          subject: `Waitlist: ${esc(data.email)}${data.city ? ` · ${esc(data.city)}` : ''}`,
-          html: `
-            <h2>New exotiq.rent waitlist signup</h2>
-            <p><strong>Email:</strong> ${esc(data.email)}</p>
-            <p><strong>City:</strong> ${esc(data.city || '—')}</p>
-            <p><strong>Would drive:</strong> ${esc(data.desiredCar || '—')}</p>
-          `,
-        });
-      } catch (emailError) {
-        console.error('Error sending waitlist notification:', emailError);
-      }
-    }
+    // Subscriber confirmation + admin notice (lib/email-send: failures are
+    // logged and swallowed, never break the signup).
+    await sendWaitlistEmails({
+      email: data.email.toLowerCase().trim(),
+      city: data.city || null,
+      desired_car: data.desiredCar || null,
+    });
 
     return NextResponse.json({ success: true, waitlist: inserted }, { status: 201 });
   } catch (error) {
