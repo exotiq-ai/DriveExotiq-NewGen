@@ -42,6 +42,17 @@ export type LivingMedia =
       webmSrc?: string;
       /** Normal-GOP encode for the mobile play-once fallback. */
       mobileSrc?: string;
+      /**
+       * PORTRAIT-NATIVE all-intra encode (9:16, ~720x1280) — when present,
+       * phones (<768px) get the full finger-synced scrub instead of the
+       * play-once fallback: the scroll owns the motion on touch exactly as the
+       * wheel does on desktop (owner: mobile lost the film's signature).
+       * Generated from portrait-recomposed plates (beats-manifest *-M entries),
+       * not cropped landscape.
+       */
+      portraitSrc?: string;
+      /** Frame-0 poster of the portrait encode. */
+      portraitPoster?: string;
       poster?: string;
       /** Scrub maps plate progress [a,b] -> [0,duration]; rests outside. */
       deadZone?: [number, number];
@@ -171,6 +182,8 @@ export const LIVING: Record<string, LivingMedia> = {
     src: vid('sb-02-scrub.mp4'),
     webmSrc: vid('sb-02-scrub.webm'),
     mobileSrc: vid('sb-02.mp4'),
+    portraitSrc: vid('sb-02-scrub.portrait.mp4'),
+    portraitPoster: pos('/images/experience/poster/sb-02.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-02.jpg'), // frame 0 = closed door + light blade
     deadZone: [0.1, 0.9],
   },
@@ -184,6 +197,8 @@ export const LIVING: Record<string, LivingMedia> = {
     src: vid('sb-02b-scrub.mp4'),
     webmSrc: vid('sb-02b-scrub.webm'),
     mobileSrc: vid('sb-02b.mp4'),
+    portraitSrc: vid('sb-02b-scrub.portrait.mp4'),
+    portraitPoster: pos('/images/experience/poster/sb-02b.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-02b.jpg'), // frame 0 = Plate B (door open)
     deadZone: [0.1, 0.92],
   },

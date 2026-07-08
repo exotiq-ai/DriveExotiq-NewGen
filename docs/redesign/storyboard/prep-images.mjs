@@ -53,7 +53,9 @@ async function viaGemini(beat) {
         ...beat.prepImage.inputReferences.map((r) => ({ inline_data: { mime_type: 'image/jpeg', data: b64Of(r) } })),
       ],
     }],
-    generationConfig: { responseModalities: ['TEXT', 'IMAGE'], imageConfig: { aspectRatio: '16:9', imageSize: beat.prepImage.size || '2K' } },
+    // prepImage.aspect '9:16' = portrait-native mobile plates (2026-07-07);
+    // references stay 16:9-cropped context either way.
+    generationConfig: { responseModalities: ['TEXT', 'IMAGE'], imageConfig: { aspectRatio: beat.prepImage.aspect || '16:9', imageSize: beat.prepImage.size || '2K' } },
   };
   const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',

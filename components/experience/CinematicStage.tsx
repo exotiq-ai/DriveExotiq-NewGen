@@ -53,7 +53,27 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
   const reduce = useReducedMotion();
   const noBlur = useNoTextBlur();
   const inView = useInView(ref, { amount: 0.55 });
-  const show = reduce || inView;
+
+  // Chrome guard (owner bug 2026-07-08, 375×812): the fixed chrome (wordmark +
+  // Menu + CTA row, ~64px + hairline) rides over the film, and a SHORT copy
+  // block — SB-02's lone centered headline is ~40px tall — stays ≥55% in view,
+  // and therefore fully lit, until it is physically inside that chrome zone.
+  // The anchor math is correct (the block centers exactly at band middle); it
+  // is the exit reveal that fires too late for short blocks, because the
+  // useInView threshold above is a fraction of BLOCK height, not a viewport
+  // line. Guard: a second observer whose root is the top 13% of the viewport
+  // (~106px at 812 — a beat above the ~72px chrome zone) hides the copy the
+  // moment its top edge crosses in, so the 0.3s fade + y-dip completes before
+  // the wordmark. It watches the un-transformed .copy-block box, NOT `ref`:
+  // the animated child dips y+30 on hide, and observing the moving box would
+  // oscillate across the trigger line. Mobile/coarse only (`noBlur` is the
+  // same media query); CTA beats are exempt — the chrome bows out over them
+  // (ACCENT_BEATS in ExperienceScroll), and an invisible-but-still-clickable
+  // Gulf button under the top edge would be worse than any overlap.
+  const chromeGuardRef = useRef<HTMLDivElement>(null);
+  const nearChrome = useInView(chromeGuardRef, { margin: '0px 0px -87% 0px' });
+  const chromeGuarded = noBlur && !frame.cta && !frame.secondaryCta && nearChrome;
+  const show = reduce || (inView && !chromeGuarded);
 
   // Tap-to-unmute affordance (film path only — StaticStage has no video).
   // The button talks to the beat's PlayOnceLayer over a window event pair;
@@ -129,7 +149,7 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
           style={{ '--sx': scrimX } as React.CSSProperties}
         />
       )}
-      <div className="copy-block relative mx-auto w-full max-w-content px-6 md:px-8">
+      <div ref={chromeGuardRef} className="copy-block relative mx-auto w-full max-w-content px-6 md:px-8">
         <motion.div
           ref={ref}
           className={cn('flex w-full flex-col', alignItems)}
@@ -143,7 +163,10 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
                 ? { opacity: show ? 1 : 0, y: show ? 0 : 30, filter: 'blur(0px)' }
                 : { opacity: show ? 1 : 0, y: show ? 0 : 30, filter: show ? 'blur(0px)' : 'blur(6px)' }
           }
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          // Chrome-guard hides are quick (clear the zone in ~0.3s); every other
+          // reveal/hide keeps the film's 0.85s resolve. Desktop is untouched —
+          // chromeGuarded is always false on fine pointers ≥768px.
+          transition={{ duration: chromeGuarded ? 0.3 : 0.85, ease: [0.22, 1, 0.36, 1] }}
         >
           {chip && (
             // The status chip (deck §7.1, SB-04 `Opening soon`): a quiet

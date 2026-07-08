@@ -207,20 +207,38 @@ function PlayOnceLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { ki
 
 function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 'scrub' }>; near: boolean; p: MotionValue<number>; focus?: string }) {
   const canScrub = useCanScrub();
+  const mobile = useIsMobile();
+  // TOUCH SCRUB (2026-07-07 mobile pass): when a portrait-native all-intra
+  // encode exists, phones get the real finger-synced scrub — the film's
+  // signature "scroll owns the mechanism" — instead of the play-once fallback.
+  // Portrait-only (<768px): tablets/coarse-wide keep the fallback, and beats
+  // without portraitSrc are untouched.
+  const touchScrub = !canScrub && mobile && !!cfg.portraitSrc;
+  const active = canScrub || touchScrub;
   const ref = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
   const target = useRef(0);
   const seekGate = useRef(false);
+  const primed = useRef(false);
 
   const [d0, d1] = cfg.deadZone ?? [0.12, 0.88];
 
   useEffect(() => {
     const v = ref.current;
-    if (!v || !canScrub) return;
+    if (!v || !active) return;
     if (v.readyState >= 2) { setReady(true); return; }
     const id = setInterval(() => { if (v.readyState >= 2) { setReady(true); clearInterval(id); } }, 250);
     return () => clearInterval(id);
-  }, [canScrub]);
+  }, [active]);
+
+  // iOS decoder primer: Safari may not paint currentTime seeks on a video that
+  // has never played — one muted play()/pause() on ready wakes the decoder.
+  useEffect(() => {
+    const v = ref.current;
+    if (!touchScrub || !ready || !v || primed.current) return;
+    primed.current = true;
+    v.play().then(() => v.pause()).catch(() => { /* still-first: poster stays */ });
+  }, [touchScrub, ready]);
 
   const syncTarget = (v: number) => {
     const vid = ref.current;
@@ -231,15 +249,18 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
   useEffect(() => { if (ready) syncTarget(p.get()); }, [ready]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Per-frame lerp toward target; issue the next seek only after 'seeked' fires
-  // (seeking is not frame-accurate — never queue seeks).
+  // (seeking is not frame-accurate — never queue seeks). Touch gets a slightly
+  // stiffer chase: momentum scroll moves progress faster than a wheel, and the
+  // softer desktop lerp reads as lag under a flick.
   useEffect(() => {
-    if (!canScrub) return;
+    if (!active) return;
+    const chase = touchScrub ? 0.24 : 0.18;
     let raf = 0;
     const tick = () => {
       const vid = ref.current;
       if (vid && vid.duration && !seekGate.current) {
         const cur = vid.currentTime;
-        const next = cur + (target.current - cur) * 0.18;
+        const next = cur + (target.current - cur) * chase;
         if (Math.abs(next - cur) > 0.012) {
           seekGate.current = true;
           vid.currentTime = next;
@@ -249,11 +270,11 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [canScrub, ready]);
+  }, [active, touchScrub, ready]);
 
-  if (!canScrub) {
-    // Mobile / coarse pointer: the code wipe when defined (SB-19 — zero video
-    // bytes by design), otherwise a play-once of the normal encode.
+  if (!active) {
+    // Coarse pointer without a portrait encode: the code wipe when defined
+    // (SB-19 — zero video bytes by design), otherwise a play-once fallback.
     if (cfg.wipe) return <WipeLayer cfg={{ kind: 'wipe', ...cfg.wipe }} p={p} focus={focus} />;
     return (
       <PlayOnceLayer
@@ -271,10 +292,11 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
       {cfg.wipe && !ready && <WipeLayer cfg={{ kind: 'wipe', ...cfg.wipe }} p={p} focus={focus} />}
       <Fade ready={ready}>
         <video
+          key={touchScrub ? 'portrait' : 'landscape'}
           ref={ref}
           className="absolute inset-0 h-full w-full object-cover"
           style={focus ? { objectPosition: focus } : undefined}
-          poster={cfg.poster}
+          poster={touchScrub ? (cfg.portraitPoster ?? cfg.poster) : cfg.poster}
           muted
           playsInline
           preload="auto"
@@ -283,8 +305,14 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
           onSeeked={() => { seekGate.current = false; }}
           onError={() => setReady(false)}
         >
-          <source src={cfg.src} type="video/mp4" />
-          {cfg.webmSrc && <source src={cfg.webmSrc} type="video/webm" />}
+          {touchScrub ? (
+            <source src={cfg.portraitSrc} type="video/mp4" />
+          ) : (
+            <>
+              <source src={cfg.src} type="video/mp4" />
+              {cfg.webmSrc && <source src={cfg.webmSrc} type="video/webm" />}
+            </>
+          )}
         </video>
       </Fade>
     </>

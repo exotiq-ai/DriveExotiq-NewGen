@@ -108,6 +108,72 @@
       }
     },
     {
+      "id": "SB-02-M",
+      "act": 1,
+      "treatment": "scrub",
+      "priority": "hero",
+      "pipelineOnly": "PORTRAIT-NATIVE mobile variant (2026-07-07 mobile pass) — not a frames.ts beat; wires into LIVING['SB-02'].portraitSrc. Kling derives output aspect from the input frame, so aspect 9:16 governs both the payload crop and the render.",
+      "aspect": "9:16",
+      "still": "door-industrial-closed-m.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 5,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "door-industrial-closed-m.png",
+        "last": "door-industrial-open-m.png"
+      },
+      "prompt": "Locked-off tripod camera, zero camera movement, straight-on to the industrial door, vertical portrait framing. The steel sectional door rises slowly and steadily through the entire clip — one continuous mechanical motion at constant velocity, slats curling away at the header, no pauses, no bounce. The horizontal blade of warm tungsten light beneath the leading edge widens from a thin slit into a tall glowing doorway, its reflection stretching and blooming down the wet asphalt toward the lens. As the door clears, the corridor beyond is revealed: a one-point-perspective hallway, one warm ceiling fixture glowing in the near run and a second barely visible at the vanishing point, dim, warm, sharp and still. The air stays clear — no fog, no haze; only the light widens. Film-noir grade: crushed matte-black night, desaturated graphite palette, warm tungsten highlights only, subtle 35mm grain.",
+      "negativePrompt": "camera movement, camera push, pan, shake or zoom; fog, smoke, haze or mist; people; vehicles; hands; door panel warping, wobbling or bending; slats changing count or thickness; readable text, signage or logos; flicker or strobing; blue or teal color shift; lens flares; brightening of the night sky; interior over-exposing or blowing out",
+      "post": "portrait all-intra scrub encode (720x1280) -> sb-02-scrub.portrait.mp4 + portrait poster; mobile finger-scrub pilot",
+      "qa": "frame identity: last frame must equal door-industrial-open-m.png (= SB-02b-M frame 0); door edge straight; slat count constant",
+      "status": "live",
+      "prepImage": {
+        "output": "door-industrial-closed-m.png",
+        "aspect": "9:16",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "door-industrial-closed.png"
+        ],
+        "prompt": "Recompose this photograph as a vertical 9:16 portrait frame taken from the same position on the centerline at standing eye height: the SAME industrial sectional door in matte graphite steel — identical slats, seams, guide rails, side drive hardware and warm rim light — now with the ENTIRE door visible in frame, more of the dark board-formed concrete wall rising above the lintel with its single warm downlight, and more of the wet asphalt in the foreground carrying the thin blade of warm tungsten light escaping beneath the door's bottom edge, its reflection stretching down toward the lens. Same night, same materials, same light logic: this is the same location and moment as the reference, reframed vertically for a phone screen. Deep focus, everything sharp. Film-noir grade: crushed matte-black night, desaturated graphite palette, warm tungsten highlights only, subtle 35mm film grain. STRICTLY AVOID: text, logos, signage, people, vehicles, keypads or lit buttons, LED strip lighting, cool or blue accent light, glowing seams, greebled machinery. Museum-grade restraint — an industrial machine photographed like sculpture."
+      },
+      "selectedTake": "SB-02-M-t2-kling-v3.0-pro-kdirect.mp4 (even monotonic light growth maps best to finger progress; t1 brightens the lintel early)"
+    },
+    {
+      "id": "SB-02b-M",
+      "act": 1,
+      "treatment": "scrub",
+      "priority": "hero",
+      "pipelineOnly": "PORTRAIT-NATIVE mobile variant of the walk-in — wires into LIVING['SB-02b'].portraitSrc.",
+      "aspect": "9:16",
+      "still": "door-industrial-open-m.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 5,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "door-industrial-open-m.png"
+      },
+      "prompt": "Smooth, stabilized first-person point of view gliding forward at a calm walking pace, vertical portrait framing — camera at standing eye height, starting exactly at the first frame's position on the centerline, several strides from the open industrial doorway, moving straight toward and through it. Steadicam-smooth: no bob, no sway, no shake; the gaze locked on the vanishing point ahead. As the camera crosses the threshold, the steel doorframe slides past the edges of frame and the cold night falls away behind; warm light wraps the frame; the corridor's ceiling fixtures pass overhead, their reflections sliding down the polished concrete underfoot. Over the final two seconds the glide accelerates toward the vanishing point — the space itself pulling you in — yet the image stays composed and sharp to the last frame, ending mid-glide on a clean, readable corridor frame. Film-noir grade: crushed matte-black shadows, desaturated graphite palette, warm tungsten highlights only, subtle 35mm grain.",
+      "negativePrompt": "head bob, footstep bounce, handheld shake, camera sway; hands, arms, feet, body parts or a walking shadow; vehicles or car parts; people; the door closing or moving; camera turning, looking around, tilting or reversing; stopping; heavy motion blur or smeared frames at the end; text or signage; strobe flicker; blue or teal shift; wall, slat or floor geometry warping; lens flare streaks; fog or smoke",
+      "post": "portrait all-intra scrub encode (720x1280) -> sb-02b-scrub.portrait.mp4 + portrait poster; mobile trim ends on the calm glide",
+      "qa": "frame 0 pixel-identical to door-industrial-open-m.png (invisible cut from SB-02-M's held last frame); no smeared tail; walls must not churn at the portrait edges",
+      "status": "live",
+      "prepImage": {
+        "output": "door-industrial-open-m.png",
+        "aspect": "9:16",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "door-industrial-closed-m.png",
+          "door-industrial-open.png"
+        ],
+        "prompt": "Continuity edit. Take the first reference photograph (vertical portrait, industrial door closed) and make ONE single change: the door is now fully OPEN — every slat retracted up and out of sight, leaving a clean rectangular aperture framed by the guide rails. Through the aperture, seen in correct linear perspective from this exterior camera position, the corridor is EXACTLY the one in the second reference photograph: one warm ceiling fixture lit in the near run, a second barely visible far ahead, long darkness between them, warm reflections pooling down the polished concrete centerline, slightly underexposed — a warm glowing volume that pulls the eye inward. Everything outside the aperture stays pixel-identical to the first reference: camera, vertical framing, night exterior, concrete, downlight, wet asphalt with its light pool now widened into a tall doorway reflection, grade, grain. This is a continuity frame for a film: any change beyond the door state is a failure. STRICTLY AVOID: vehicles, people, text, logos, cool or blue light, motion blur inside the corridor."
+      },
+      "selectedTake": "SB-02b-M-t1-kling-v3.0-pro-kdirect.mp4 (single take (credits ran out on t2 submit) — passes composed-tail QA)"
+    },
+    {
       "id": "SB-03",
       "act": 1,
       "treatment": "loop",

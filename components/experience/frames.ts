@@ -91,11 +91,15 @@ export const FRAMES: Frame[] = [
   // one centered vanishing point from the door aperture through SB-04's aisle,
   // and the first legible car in the film is the fleet itself. Centered copy
   // for the symmetric plate.
-  { id: 'SB-02', media: `${M}/door-industrial-closed.png`, movement: 'I', align: 'center', headline: 'The door is open.', weight: 2, mobileWeight: 1 },
+  // mobileWeight 2 (2026-07-07): phones now FINGER-SCRUB the door via the
+  // portrait-native encode (LIVING portraitSrc) — the band must give the
+  // gesture room. Save-data devices fall back to play-once and simply hold
+  // the opened door for the band tail (acceptable: it is the money frame).
+  { id: 'SB-02', media: `${M}/door-industrial-closed.png`, movement: 'I', align: 'center', headline: 'The door is open.', weight: 2, mobileWeight: 2 },
   // The walk-in: scroll carries the visitor through the doorway and down the
   // corridor (silent beat). Replaces SB-03's teleport-to-speed — velocity now
   // lives in this clip's final-second acceleration, blooming into SB-04.
-  { id: 'SB-02b', media: `${M}/door-industrial-open.png`, movement: 'I', aria: 'Walking through the open door and down the corridor into the garage', weight: 1.5, mobileWeight: 1 },
+  { id: 'SB-02b', media: `${M}/door-industrial-open.png`, movement: 'I', aria: 'Walking through the open door and down the corridor into the garage', weight: 1.5, mobileWeight: 1.5 },
   {
     id: 'SB-04', media: `${M}/garage-interior-v2.png`, movement: 'I', align: 'center',
     // Coming-soon promoted to first-class visual weight (deck §3.1 + §7.1):

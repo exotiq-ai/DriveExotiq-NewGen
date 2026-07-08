@@ -52,25 +52,29 @@ const HEADERS = {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Frame payloads: OpenRouter accepts b64 data URLs; keep each under ~1.5MB.
-// Center-crop to 16:9 first (legacy plates are 3:2; the stage shows them
-// object-cover, so the 16:9 center crop IS what viewers see — and it stops
-// providers reframing 3:2 inputs unpredictably). Cached by source mtime.
-function frameDataUrl(stillName) {
+// Center-crop to the beat's aspect first (default 16:9; portrait beats set
+// aspect '9:16' — 2026-07-07 mobile-native pass). Legacy plates are 3:2; the
+// stage shows them object-cover, so the center crop IS what viewers see — and
+// it stops providers reframing inputs unpredictably. Kling i2v derives output
+// aspect from the input frame, so the crop also selects portrait output.
+// Cached by source mtime + aspect.
+function frameDataUrl(stillName, aspect = '16:9') {
   const src = path.isAbsolute(stillName) ? stillName : path.join(STILLS, stillName);
   if (!fs.existsSync(src)) throw new Error(`frame image missing: ${src}`);
-  const key = `${path.basename(src).replace(/[^\w.-]/g, '_')}-${fs.statSync(src).mtimeMs}.jpg`;
+  const [aw, ah] = aspect.split(':').map(Number);
+  const key = `${path.basename(src).replace(/[^\w.-]/g, '_')}-${aw}x${ah}-${fs.statSync(src).mtimeMs}.jpg`;
   const cached = path.join(CACHE, key);
   if (!fs.existsSync(cached)) {
     execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', src,
-      '-vf', "crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale='min(1568,iw)':-2", '-q:v', '3', cached]);
+      '-vf', `crop='min(iw,ih*${aw}/${ah})':'min(ih,iw*${ah}/${aw})',scale='min(1568,iw)':-2`, '-q:v', '3', cached]);
   }
   return `data:image/jpeg;base64,${fs.readFileSync(cached).toString('base64')}`;
 }
 
 function buildRequest(beat, model) {
   const fi = [];
-  if (beat.frameImages?.first) fi.push({ type: 'image_url', image_url: { url: frameDataUrl(beat.frameImages.first) }, frame_type: 'first_frame' });
-  if (beat.frameImages?.last) fi.push({ type: 'image_url', image_url: { url: frameDataUrl(beat.frameImages.last) }, frame_type: 'last_frame' });
+  if (beat.frameImages?.first) fi.push({ type: 'image_url', image_url: { url: frameDataUrl(beat.frameImages.first, beat.aspect) }, frame_type: 'first_frame' });
+  if (beat.frameImages?.last) fi.push({ type: 'image_url', image_url: { url: frameDataUrl(beat.frameImages.last, beat.aspect) }, frame_type: 'last_frame' });
   // Veo durations are 4/6/8s (and 1080p requires 8s) — clamp when a >8s beat
   // (Hailuo-routed) is drafted or retaken on a Google model.
   let duration = beat.duration;
@@ -80,7 +84,7 @@ function buildRequest(beat, model) {
     prompt: beat.prompt,
     duration,
     resolution: beat.resolution || MANIFEST.defaults.resolution,
-    aspect_ratio: MANIFEST.defaults.aspect_ratio,
+    aspect_ratio: beat.aspect || MANIFEST.defaults.aspect_ratio,
     generate_audio: false,
   };
   if (fi.length) body.frame_images = fi;
@@ -256,7 +260,7 @@ const VIA = pick('--via') || 'openrouter'; // 'openrouter' | 'gemini' | 'kling-d
 // 1920×1080 where OpenRouter caps at 720p (probe 2026-07-03). Prepaid credits.
 async function runKlingJob(beat, out) {
   const H = { Authorization: `Bearer ${process.env.KLING_API_KEY}`, 'Content-Type': 'application/json' };
-  const b64 = (still) => frameDataUrl(still).replace(/^data:image\/jpeg;base64,/, '');
+  const b64 = (still) => frameDataUrl(still, beat.aspect).replace(/^data:image\/jpeg;base64,/, '');
   const body = {
     model_name: 'kling-v3',
     mode: 'pro',
