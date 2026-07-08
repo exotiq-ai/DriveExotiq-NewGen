@@ -1120,5 +1120,93 @@
     "file": "docs/redesign/storyboard/renders/SB-02-M/SB-02-M-t1-kling-v3.0-pro-kdirect.mp4",
     "seconds": 5,
     "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-08T21:06:29.803Z",
+    "beat": "SB-08-M",
+    "take": 1,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-08-M/SB-08-M-t1-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-08T21:07:43.055Z",
+    "beat": "SB-01-M",
+    "take": 1,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-01-M/SB-01-M-t1-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 8,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-08T21:07:58.775Z",
+    "beat": "SB-01-M",
+    "take": 2,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-01-M/SB-01-M-t2-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 8,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-08T21:07:59.565Z",
+    "beat": "SB-04-M",
+    "take": 1,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-04-M/SB-04-M-t1-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 8,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-08T21:08:14.872Z",
+    "beat": "SB-04-M",
+    "take": 2,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-04-M/SB-04-M-t2-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 8,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-08T21:10:16.489Z",
+    "beat": "SB-11b-M",
+    "take": 1,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-11b-M/SB-11b-M-t1-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-08T21:10:32.074Z",
+    "beat": "SB-11b-M",
+    "take": 2,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-11b-M/SB-11b-M-t2-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-08T21:12:56.705Z",
+    "beat": "SB-09",
+    "take": 1,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here)",
+    "file": "docs/redesign/storyboard/renders/SB-09/SB-09-t1-kling-v3.0-pro-kdirect.mp4",
+    "seconds": 4,
+    "resolution": "1080p"
   }
 ]

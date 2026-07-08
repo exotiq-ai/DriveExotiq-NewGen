@@ -174,6 +174,187 @@
       "selectedTake": "SB-02b-M-t1-kling-v3.0-pro-kdirect.mp4 (single take (credits ran out on t2 submit) — passes composed-tail QA)"
     },
     {
+      "id": "SB-01-M",
+      "act": 1,
+      "treatment": "loop",
+      "priority": "hero",
+      "pipelineOnly": "PORTRAIT-NATIVE mobile variant — wires into LIVING['SB-01'].portraitSrc (SB-20 bookend reuses it).",
+      "aspect": "9:16",
+      "still": "cold-open-m.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 8,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "cold-open-m.png",
+        "last": "cold-open-m.png"
+      },
+      "prompt": "Locked-off camera on a tripod, zero camera movement, vertical portrait framing. Inside a pitch-dark garage a car sleeps under a taut fabric cover, lit by one low warm tungsten key. Animate atmosphere only: fine dust motes drifting slowly through the warm pool of light, a single subtle breath of air moving across the fabric cover, the warm practical light breathing very slightly in intensity like an old filament. Everything else frozen. Film-noir grade: deep matte-black shadows stay fully crushed, desaturated graphite palette, warm highlights only, subtle 35mm film grain, shallow anamorphic depth of field. The clip must end on exactly its first frame.",
+      "negativePrompt": "no camera push, pan or drift; the cover never slips or reveals the car; no new light sources; no lens flares; no blue or teal color shift; no text, logos or people; no warping of floor, wall or cover geometry; no exposed wheels or grille",
+      "post": "portrait loop encode (720x1280, normal GOP) -> sb-01.portrait.mp4 + portrait poster; loop seam = first/last pin",
+      "qa": "cover silhouette must not swim; blacks must not lift; seam invisible",
+      "status": "live",
+      "prepImage": {
+        "output": "cold-open-m.png",
+        "aspect": "9:16",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "cold-open-v2.png"
+        ],
+        "prompt": "Recompose this photograph as a vertical 9:16 portrait frame from the same camera position: the SAME near-black private supercar garage just before dawn, the SAME car asleep under its fitted fabric cover with identical drape and silhouette, the SAME single faint warm tungsten pool low on the polished concrete floor — now framed vertically: more dark polished concrete in the foreground carrying the light pool's reflection, the covered car in the middle of the frame, and vast dark negative space rising above it. Same materials, same light logic, same stillness: this is the same location and moment, reframed for a phone screen. Flawless large-format photorealism: real cover-fabric weave, crisp concrete micro-texture, true deep blacks with detail at the edge of visibility, subtle 35mm film grain, desaturated graphite palette with warm highlights only. No text, no logos, no people. This is the opening frame of a film — museum-grade restraint."
+      },
+      "selectedTake": "SB-01-M-t1-kling-v3.0-pro-kdirect.mp4 (steadier cover; t2 breathes harder)"
+    },
+    {
+      "id": "SB-04-M",
+      "act": 2,
+      "treatment": "loop",
+      "priority": "hero",
+      "pipelineOnly": "PORTRAIT-NATIVE mobile variant — wires into LIVING['SB-04'].portraitSrc.",
+      "aspect": "9:16",
+      "still": "garage-interior-m.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 8,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "garage-interior-m.png",
+        "last": "garage-interior-m.png"
+      },
+      "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights, vertical portrait framing. Locked-off tripod camera in a dark underground garage aisle. All parked supercars remain perfectly motionless. The only motion: overhead ceiling lights breathe very subtly, the distant warm light at the vanishing point flickers gently like sodium vapor warming up, a faint layer of atmospheric haze drifts slowly left to right through the light shafts, and the wet-look floor reflections shimmer in response. Extremely subtle, slow, ambient. The clip must loop seamlessly, ending on exactly the first frame.",
+      "negativePrompt": "no camera movement, no car movement, no wheel rotation, no grille or panel warping, no people, no text or badges resolving, no color shift, no blue light, hold the film-noir warm-key grade throughout",
+      "post": "portrait loop encode (720x1280, normal GOP) -> sb-04.portrait.mp4 + portrait poster",
+      "qa": "cars stone-still; seam invisible; vanishing point stays centered",
+      "status": "live",
+      "prepImage": {
+        "output": "garage-interior-m.png",
+        "aspect": "9:16",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "garage-interior-v2.png"
+        ],
+        "prompt": "Recompose this photograph as a vertical 9:16 portrait frame from the same standing camera position on the aisle centerline: the SAME dark underground garage aisle with its two facing rows of low exotic supercars angled inward, the SAME central aisle receding to the single warm vanishing-point light — now framed vertically: the nearest car noses tighter at the left and right edges, more mirror-polished concrete in the foreground, and the ceiling with its receding pools of overhead light rising above the vanishing point. Same cars, same light logic, same atmosphere: the same place, reframed for a phone screen. Flawless large-format photorealism: accurate supercar body language and stance, crisp paint and floor reflections, real concrete texture, atmospheric haze in the light shafts, true deep blacks, subtle 35mm grain, desaturated graphite palette with warm highlights. No readable badges, text, logos or people."
+      },
+      "selectedTake": "SB-04-M-t2-kling-v3.0-pro-kdirect.mp4 (calmer near cars; t1 vanishing bloom pulses hard)"
+    },
+    {
+      "id": "SB-08-M",
+      "act": 2,
+      "treatment": "scrub",
+      "priority": "hero",
+      "pipelineOnly": "PORTRAIT-NATIVE mobile variant — wires into LIVING['SB-08'].portraitSrc (touch scrub: the Huracan creeps toward the thumb).",
+      "aspect": "9:16",
+      "still": "choose-m.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 5,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "choose-m.png"
+      },
+      "prompt": "Cinematic photograph brought to life, 35mm anamorphic, shallow DOF, film-noir single warm key vs deep matte-black shadow, restrained luxury automotive advertising, subtle grain, desaturated graphite palette with warm highlights, vertical portrait framing. A dark showroom void, the Lamborghini Huracan facing the camera head-on with headlights lit, flanking supercars only hinted at the frame edges in deep shadow. Camera locked at low hood height, zero camera movement. Motion: the center car alone rolls slowly and steadily straight toward the lens through the entire clip — one continuous creep at constant walking pace, growing larger in frame, headlights intensifying gently as it nears, warm reflections sliding across its nose and windshield, the floor reflection stretching toward the camera. The flanking cars never move. The clip ends with the Huracan's nose large and composed in frame, still rolling.",
+      "negativePrompt": "no visible wheel spokes or spoke rotation, no grille mesh warping, no badge or text artifacts, no body panel deformation, no movement from the flanking cars, no camera movement, camera shake or zoom, no blue light, no headlight flare blowing out the frame, hold the film-noir grade",
+      "post": "portrait all-intra scrub encode (720x1280) -> sb-08-scrub.portrait.mp4 + portrait poster; touch scrub",
+      "qa": "creep must be monotonic (maps to finger progress); no spoke resolve; flanking cars frozen; final frame composed",
+      "status": "live",
+      "prepImage": {
+        "output": "choose-m.png",
+        "aspect": "9:16",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "choose.png"
+        ],
+        "prompt": "Recompose this photograph as a vertical 9:16 portrait frame from the same low hood-height camera position: the SAME Lamborghini Huracan dead-center facing the camera with its headlights lit and its distinctive angular daytime-running-light signature identical to the reference — now framed vertically: the Huracan dominates the middle of the frame, the flanking supercars reduced to faint shadowed hints at the left and right edges, more dark reflective floor in the foreground carrying the headlight reflections toward the lens, and deep darkness rising above the car. Same light logic, same single warm key against matte-black void, same grade and grain: the same moment, reframed for a phone screen. Flawless large-format photorealism, true deep blacks, subtle 35mm grain, desaturated graphite palette with warm highlights. No readable badges, text or logos, no people."
+      },
+      "selectedTake": "SB-08-M-t1-kling-v3.0-pro-kdirect.mp4 (monotonic creep, composed final frame; t2 lost to the 1303 parallel cap)"
+    },
+    {
+      "id": "SB-09u-M",
+      "act": 2,
+      "treatment": "prep-only",
+      "priority": "hero",
+      "pipelineOnly": "PREP-ONLY: portrait door-CLOSED plate for the SB-09-M pair. DERIVATION FLIPPED 2026-07-08: the close-the-door edit recomposed the scene (angle/scale/grade drift — QA'd side-by-side), while open-the-door continuity edits have been reliable (SB-02b-M). So: closed = fresh recomposition, up = OPEN edit from it (SB-09-M prepImage). Never passed to generate-videos.",
+      "aspect": "9:16",
+      "still": "door-closed-m.png",
+      "status": "abandoned",
+      "prepImage": {
+        "output": "door-closed-m.png",
+        "aspect": "9:16",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "door-closed.png"
+        ],
+        "prompt": "Recompose this photograph as a vertical 9:16 portrait frame from the same camera position: the SAME McLaren 720S in the same pitch-black studio with its dihedral driver door fully CLOSED, panel seams flush — identical car, identical front three-quarter angle, identical single warm key light from the right, identical matte-black void and floor reflection — now framed vertically: the car's nose and driver's side crossing the middle of the frame, generous dark space above the roofline (where the door will rise), and the reflective studio floor in the foreground. Same light logic, same film-noir grade and grain: the same moment, reframed for a phone screen. Flawless large-format photorealism, true deep blacks with detail at the edge of visibility, subtle 35mm grain, desaturated graphite palette with warm highlights only. No badge text, no license plate, no readable logos, no people."
+      },
+      "abandonNote": "2026-07-08: BOTH derivation directions of the portrait McLaren door pair drifted (close edit recomposed angle/scale/grade; open edit zoomed in) — two strikes. Gemini recomposes on door-state changes for this subject. Portrait SB-09 ships as a 9:16 center-crop of a fresh 1080p landscape kdirect re-take instead (frame-pins hold by construction). Plates deleted."
+    },
+    {
+      "id": "SB-09-M",
+      "act": 2,
+      "treatment": "scrub",
+      "priority": "hero",
+      "pipelineOnly": "PORTRAIT-NATIVE mobile variant — wires into LIVING['SB-09'].portraitSrc (touch scrub: the dihedral door rises under the thumb). door-closed-m.png is a continuity CLOSE edit from door-up-m.png, mirroring the landscape pair.",
+      "aspect": "9:16",
+      "still": "door-up-m.png",
+      "duration": 5,
+      "resolution": "1080p",
+      "prompt": "Locked-off static camera, zero camera movement, vertical portrait framing. In a pitch-black studio, the dihedral driver door of the McLaren 720S rises smoothly and slowly through its full upward arc, rotating up and forward on its front hinge, warm rim light sweeping across the door panel and glass as it moves, motion decelerating gently as the door reaches full height and settles. The car body, wheels, and background remain perfectly still. Film-noir grade, single warm key light, deep matte-black shadows, subtle film grain.",
+      "negativePrompt": "camera movement, camera shake, zoom, pan, wheels rotating, wheel spokes morphing, grille mesh warping, body panels flexing, badge text, license plate, any text or logos changing, reflections swimming independently of the door, color shift, brightening of shadows, added light sources",
+      "post": "portrait all-intra scrub encode (720x1280) -> sb-09-scrub.portrait.mp4 + portrait poster; touch scrub",
+      "qa": "frame pins: first must equal door-closed-m.png, last door-up-m.png; panel-gap drift and reflection swim are the failure modes",
+      "status": "abandoned",
+      "prepImage": {
+        "output": "door-up-m.png",
+        "aspect": "9:16",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "door-closed-m.png",
+          "door-up.png"
+        ],
+        "prompt": "Continuity edit. Take the first reference photograph (vertical portrait, McLaren 720S, dihedral driver door CLOSED) and make ONE single change: raise the dihedral driver door through its full arc so it stands fully OPEN — rotated up and forward on its front hinge exactly as shown on the same car in the second reference photograph, the door blade reaching into the dark space above the roofline, its inner face catching the warm key light. EVERYTHING else must remain pixel-identical to the first reference: same vertical portrait crop, same zoom, the car body occupying exactly the same area of frame at exactly the same scale and position, same camera height and angle, same single warm key light from the right, same matte-black studio void, same floor reflection, same film-noir grade and grain. This is a continuity frame for a film: any change beyond the door state is a failure."
+      },
+      "abandonNote": "See SB-09u-M abandonNote: portrait scrub = ffmpeg crop x-centered on the door from SB-09-t1-kdirect (1080p re-take of the landscape entry), NOT a generated portrait pair."
+    },
+    {
+      "id": "SB-11b-M",
+      "act": 2,
+      "treatment": "play-once",
+      "priority": "hero",
+      "pipelineOnly": "PORTRAIT-NATIVE mobile variant — wires into LIVING['SB-11b'].portraitSrc (play-once: the cockpit-POV roll-out, phone-perfect vertical POV).",
+      "aspect": "9:16",
+      "still": "cockpit-pov-m.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
+      "duration": 5,
+      "resolution": "1080p",
+      "frameImages": {
+        "first": "cockpit-pov-m.png"
+      },
+      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir grade, subtle grain, desaturated graphite palette with warm highlights, vertical portrait framing. First frame is the supplied still: pre-dawn driver point of view inside the McLaren cabin, hands resting on the alcantara wheel, amber driver display glowing softly, dawn band on the horizon through the windscreen. Camera locked to the cockpit. Motion: the car eases forward out of the dark garage mouth at walking pace — the world through the windscreen begins to slide: the garage frame passes overhead and out of view, the pre-dawn sky and horizon widen and brighten gently, faint reflections travel across the windscreen glass. The hands stay resting calmly on the wheel with only the smallest natural adjustments; the cabin and dashboard stay dim and steady. The clip ends settled: rolling slowly in the open, dawn band composed through the glass.",
+      "negativePrompt": "no badges, crests, emblems or logos anywhere; the steering wheel center remains dark and unreadable; no brightening of the cabin interior, dashboard or wheel; no warping or melting dashboard geometry; no morphing steering wheel or hands, no extra fingers; no camera movement independent of the car; no speed-up; no blue or teal shift; no blown highlights",
+      "post": "portrait play-once encode (720x1280, normal GOP) -> sb-11b.portrait.mp4 + portrait poster; ends settled (hold-frame doctrine)",
+      "qa": "hands are the failure mode (fingers); cabin must not brighten; final frame composed and settled",
+      "status": "live",
+      "prepImage": {
+        "output": "cockpit-pov-m.png",
+        "aspect": "9:16",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "cockpit-pov-v2.png"
+        ],
+        "prompt": "Recompose this photograph as a vertical 9:16 portrait frame from the same driver point of view: the SAME authentic McLaren 720S cabin at pre-dawn — the same flat-bottom steering wheel with both hands resting naturally exactly as in the reference, five fingers each, the same amber driver display glow, the same deep panoramic windscreen with the soft dawn band on the horizon — now framed vertically: the windscreen and dawn sky filling the upper half of the frame, the wheel and hands anchoring the lower half, the dark dashboard and carbon sill closing the bottom. Same light logic, same deep matte-black cabin shadow, same shallow depth of field, subtle 35mm film grain, desaturated graphite palette with warm highlights. Restrained and quiet, a real pre-dawn moment. No readable text, numbers or logos anywhere; the wheel center stays dark and unreadable."
+      },
+      "selectedTake": "SB-11b-M-t1-kling-v3.0-pro-kdirect.mp4 (garage frame slides overhead then open dawn (the exit story); t2 already outside throughout. Hands zoom-checked natural)"
+    },
+    {
       "id": "SB-03",
       "act": 1,
       "treatment": "loop",
@@ -356,7 +537,8 @@
       "negativePrompt": "camera movement, camera shake, zoom, pan, wheels rotating, wheel spokes morphing, grille mesh warping, body panels flexing, badge text, license plate, any text or logos changing, reflections swimming independently of the door, color shift, brightening of shadows, added light sources",
       "qa": "panel-gap drift and reflection swim; select from 3-5 takes",
       "status": "live",
-      "selectedTake": "SB-09-t1-kling-v3.0-pro.mp4"
+      "selectedTake": "SB-09-t1-kling-v3.0-pro-kdirect.mp4 (1080p re-take 2026-07-08; also the portrait crop source, crop=608:1080:616:0)",
+      "rerenderNote": "2026-07-08: 1080p kdirect re-take fired (original t1 was OpenRouter-era 720p) — serves as the source for BOTH the upgraded landscape scrub and the portrait 9:16 crop (sb-09-scrub.portrait.mp4)."
     },
     {
       "id": "SB-10",

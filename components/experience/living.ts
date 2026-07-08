@@ -12,6 +12,10 @@ export type LivingMedia =
       src: string;
       /** 720p variant served under 768px viewports. */
       mobileSrc?: string;
+      /** PORTRAIT-NATIVE 9:16 encode — preferred over mobileSrc under 768px
+       *  (recomposed plates, not cropped landscape; 2026-07-08 mobile pass). */
+      portraitSrc?: string;
+      portraitPoster?: string;
       poster?: string;
       /** Steady playback rate (SB-08b ships SB-05's loop at 0.7). */
       playbackRate?: number;
@@ -22,6 +26,9 @@ export type LivingMedia =
       kind: 'play-once';
       src: string;
       mobileSrc?: string;
+      /** PORTRAIT-NATIVE 9:16 encode — preferred over mobileSrc under 768px. */
+      portraitSrc?: string;
+      portraitPoster?: string;
       poster?: string;
       /** Plate-local progress that triggers play (default 0.15). */
       playAt?: number;
@@ -170,6 +177,8 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-01.mp4'),
     mobileSrc: vid('sb-01.720.mp4'),
+    portraitSrc: vid('sb-01.portrait.mp4'),
+    portraitPoster: pos('/images/experience/poster/sb-01.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-01.jpg'),
   },
 
@@ -228,6 +237,8 @@ export const LIVING: Record<string, LivingMedia> = {
     src: vid('sb-08-scrub.mp4'),
     webmSrc: vid('sb-08-scrub.webm'),
     mobileSrc: vid('sb-08.mp4'),
+    portraitSrc: vid('sb-08-scrub.portrait.mp4'),
+    portraitPoster: pos('/images/experience/poster/sb-08.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-08.jpg'),
     deadZone: [0.15, 0.85],
   },
@@ -239,6 +250,8 @@ export const LIVING: Record<string, LivingMedia> = {
     src: vid('sb-09-scrub.mp4'),
     webmSrc: vid('sb-09-scrub.webm'),
     mobileSrc: vid('sb-09.mp4'),
+    portraitSrc: vid('sb-09-scrub.portrait.mp4'),
+    portraitPoster: pos('/images/experience/poster/sb-09.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-09.jpg'), // frame 0 = door closed (scrub start)
     deadZone: [0.15, 0.85],
   },
@@ -277,6 +290,8 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-04.mp4'),
     mobileSrc: vid('sb-04.720.mp4'),
+    portraitSrc: vid('sb-04.portrait.mp4'),
+    portraitPoster: pos('/images/experience/poster/sb-04.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-04.jpg'),
   },
 
@@ -297,6 +312,8 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'play-once',
     src: vid('sb-11b.mp4'),
     mobileSrc: vid('sb-11b.720.mp4'),
+    portraitSrc: vid('sb-11b.portrait.mp4'),
+    portraitPoster: pos('/images/experience/poster/sb-11b.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-11b.jpg'),
   },
 
@@ -387,6 +404,8 @@ export const LIVING: Record<string, LivingMedia> = {
     kind: 'loop',
     src: vid('sb-01.mp4'),
     mobileSrc: vid('sb-01.720.mp4'),
+    portraitSrc: vid('sb-01.portrait.mp4'),
+    portraitPoster: pos('/images/experience/poster/sb-01.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-01.jpg'),
   },
 

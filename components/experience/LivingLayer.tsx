@@ -66,7 +66,9 @@ function LoopLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 
   const ref = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
   const mobile = useIsMobile();
-  const src = mobile && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
+  // Portrait-native beats: phones get the recomposed 9:16 encode, not a crop.
+  const src = mobile && cfg.portraitSrc ? cfg.portraitSrc : mobile && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
+  const poster = mobile && cfg.portraitSrc ? (cfg.portraitPoster ?? cfg.poster) : cfg.poster;
 
   // loadeddata can fire before React attaches the handler (fast local loads) —
   // poll readiness imperatively as well.
@@ -106,7 +108,7 @@ function LoopLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 
         className="absolute inset-0 h-full w-full object-cover"
         style={focus ? { objectPosition: focus } : undefined}
         src={src}
-        poster={cfg.poster}
+        poster={poster}
         muted
         playsInline
         loop
@@ -124,7 +126,9 @@ function PlayOnceLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { ki
   const [ready, setReady] = useState(false);
   const played = useRef(false);
   const mobile = useIsMobile();
-  const src = mobile && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
+  // Portrait-native beats: phones get the recomposed 9:16 encode, not a crop.
+  const src = mobile && cfg.portraitSrc ? cfg.portraitSrc : mobile && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
+  const poster = mobile && cfg.portraitSrc ? (cfg.portraitPoster ?? cfg.poster) : cfg.poster;
 
   // Tap-to-unmute contract (cfg.sound beats only): the Copy layer's button
   // dispatches de:sound-toggle; we unmute + replay from the press, report
@@ -189,7 +193,7 @@ function PlayOnceLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { ki
         className="absolute inset-0 h-full w-full object-cover"
         style={focus ? { objectPosition: focus } : undefined}
         src={src}
-        poster={cfg.poster}
+        poster={poster}
         muted
         playsInline
         preload="auto"

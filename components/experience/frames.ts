@@ -138,9 +138,11 @@ export const FRAMES: Frame[] = [
   // Rhetorical, not imperative (deck §3.1): "Choose your car." was a buy-now
   // ask before anything is bookable. SB-08b's "This one's yours." still
   // answers it, four beats later and over real cars.
-  { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Which one’s yours?', weight: 2, mobileWeight: 1 },
+  // mobileWeight 2 (2026-07-08): phones finger-scrub the creep via the
+  // portrait encode — the band gives the gesture room (matches SB-02).
+  { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Which one’s yours?', weight: 2, mobileWeight: 2 },
   // ---------- McLaren drive-out (grouped: get in, wake it, roll out, run the road) ----------
-  { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.', weight: 2, mobileWeight: 1 },
+  { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.', weight: 2, mobileWeight: 2 },
   { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
   { id: 'SB-11b', media: `${M}/roll-out.png`, movement: 'I', aria: 'The nose eases out of the garage' },
   // SB-14c re-plated (owner 2026-07-06): the coast aerial is OUT — the reorder
