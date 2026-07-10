@@ -58,3 +58,6 @@ public/videos/*.webm
 # Supabase CLI local link state (keep migrations tracked)
 supabase/.temp/
 supabase/.branches/
+
+# Local render cache / clip candidates (owner-review material, not deploy assets)
+renders/

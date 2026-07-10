@@ -1,9 +1,14 @@
 # 09 — SHIPPABLE TODO
 
-> State as of 2026-07-06. Site is live + verified on staging
+> State as of 2026-07-09. Site is live + verified on staging
 > (driveexotiq-newgen.netlify.app). This is the punch list to ship, plus the
 > fully-specified film-reorder build. Nothing here needs AI generation — every
 > clip is on disk.
+>
+> **Copy pass:** the full copywriting + journey audit now lives in
+> `10-COPY-AND-JOURNEY-AUDIT.md` — hand that doc to the copywriter; its §7 is
+> the prioritized punch list (SB-08 "Choose your car" reframe, the film Menu
+> affordance, /tour naming, /apply sponsor-lane fix, etc.).
 
 ---
 
@@ -41,6 +46,24 @@ Remaining film cleanup (minor, non-blocking): re-encode `sb-11.mp4` without its
 (now-unused) audio track; optionally delete the dormant tap-to-unmute code in
 CinematicStage; add a clean tap-to-"hear it start" once a clean startup
 recording exists.
+
+### Post-reorder owner passes (2026-07-07 → 09) — also DONE
+- **SB-13b (S8 drive-away) cut** from the film per the copy audit's pacing rec
+  (two silent plant beats → one); encodes remain on disk if it ever returns.
+- **SB-08b relocated** after the coastal beat (fleet dream ends on the
+  conversion ask before the real-footage act); SB-03 renamed SB-02b.
+- **/tour hero: video → still** (owner 2026-07-07) — two videos on one page
+  competed; the roadbook windshield is the page's single moving picture and the
+  still buys LCP. §C below is superseded.
+- Portrait-native mobile encodes for hero beats; touch scrub; QA/E2E pass;
+  email v2 (brand-domain confirmations); Plausible events layer + weekly digest.
+- Sleeper post build-sheet pass + `mentions:` → BlogPosting JSON-LD brand
+  entities (Milltek, KyleTunedIt, Dyno Spectrum, Pirelli, CETE, Audi).
+- **2026-07-09 session catch:** an uncommitted WIP had swapped SB-14c's bytes
+  from the approved coastal-McLaren aerial to a cockpit-POV canyon run, with
+  manifest hashes baked from the WIP file. Restored the coastal bytes, fixed
+  the manifest, parked the POV clip at `renders/candidates/pov-canyon-run-5.9s.mp4`
+  (owner call — see §D).
 
 ## B. Film reorder — approved build (SHIPPED — see above)
 
@@ -99,13 +122,25 @@ full scroll and adversarially reviewed (like the crossfade change).
 - [ ] **Clean startup audio** for the optional tap-to-"hear it start" on the S8
       ignition (roadmap; film is silent by default).
 - [ ] **sameAs** — YouTube added (`@driveexotiq`); confirm the handle is right.
+- [ ] **POV canyon clip** (`renders/candidates/pov-canyon-run-5.9s.mp4`, 5.9s
+      windshield-POV dusk run): found as an uncommitted swap over SB-14c. Where
+      (if anywhere) do you want it — it can't replace the coastal McLaren beat
+      without breaking the approved storyboard + aria.
+- [ ] **Two new livery renders** in `public/images/cars/` ("Livery Hanger 1
+      tall facing right", "RS6 GT Heritage livery Tortilla flats front 45°"):
+      untracked, unwired. Natural homes: /sponsor asset section ("Your livery
+      goes here") or the sleeper post hero. Say where and they get wired +
+      optimized (PNG → AVIF/WebP; currently 2.4/2.9 MB).
 
 ---
 
 ## E. Make-it-shippable checklist (site-wide)
 
 **Content / copy**
-- [ ] More Stories posts: writing chat's finished `.md` → `content/blog/` (renders automatically).
+- [x] ~~More Stories posts~~ — 3 live (`the-car-sleeper-thesis`, `tour-denver`,
+      `tour-miami`); more from the writing chat drop straight into `content/blog/`.
+- [ ] Work `10-COPY-AND-JOURNEY-AUDIT.md` §7 punch list (blockers: SB-04
+      coming-soon weight, SB-08 reframe, film Menu affordance, /tour AEO anchor).
 - [ ] Sponsor route map is a v1 — swap for a literal US-map style if the owner's reference differs.
 
 **Perf / hygiene**
