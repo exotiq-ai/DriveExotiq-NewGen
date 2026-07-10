@@ -3,8 +3,9 @@ title: The sleeper thesis: why a 2017 Audi S8 leads a fleet of McLarens
 slug: the-car-sleeper-thesis
 pillar: The Car
 primary keyword: Audi S8 sleeper
-meta description: A McLaren announces itself. An Audi S8 does not. Here is why the sleeper leads the fleet, and why the drive, not the badge, is the product.
-cta: /experience
+meta description: A McLaren announces itself. An Audi S8 does not. Why the sleeper leads the fleet, how 605 factory horsepower became roughly 720 at the wheels, and why the drive is the product.
+cta: /
+mentions: Milltek Sport|https://www.millteksport.com/; KyleTunedIt|https://kyletunedit.com; Dyno Spectrum|https://www.dynospectrum.com/; Pirelli|https://www.pirelli.com/; CETE Automotive|https://www.cete-automotive.de/; Audi|https://www.audi.com/
 -->
 
 # The sleeper thesis: why a 2017 Audi S8 leads a fleet of McLarens
@@ -21,15 +22,35 @@ The supercar works the opposite way. It makes a promise on the sidewalk and then
 
 ## Why the S8 qualifies
 
-Look at the 2017 S8 and you see a full-size luxury sedan. Look under it and you find a twin-turbocharged 4.0-liter V8 — the D4-generation car came in two states of tune, 520 horsepower in the standard S8 and 605 in the S8 Plus, both routed to all four wheels through Audi's quattro system, both riding on adaptive air suspension that firms up when you want it and disappears when you do not. Either way it runs to 60 in the low three-second range. It can shut down half of its own cylinders when all you are doing is covering ground. It is quick enough to surprise people who should know better, and it does it while the cabin stays quiet enough to hold a conversation.
+Look at the 2017 S8 and you see a full-size luxury sedan. Look under it and you find a twin-turbocharged 4.0-liter V8. The D4-generation car came in two states of tune: 520 horsepower in the standard S8 and 605 in the S8 Plus, both routed to all four wheels through Audi's quattro system, both riding on adaptive air suspension that firms up when you want it and disappears when you do not. Either way it runs to 60 in the low three-second range. It can shut down half of its own cylinders when all you are doing is covering ground.
+
+That is the car Audi shipped. The one at the front of Drive Exotiq is the car Gregory built from it.
+
+## The one Gregory built
+
+It started as one of 593 S8 Plus sedans Audi sold in the United States, ordered with nearly every box ticked. It could have stayed exactly as it left the factory and still embarrassed most of what it lines up beside. Six hundred and five horsepower turned out to be a starting number.
+
+The first change is the one you hear. A set of Milltek downpipes feeds a [Milltek Sport](https://www.millteksport.com/) stainless exhaust, and the V8 stops being quiet about what it is. It is a sound you do not forget. A few hundred people already know it by heart, because it is what the front of the convoy sounds like at sunrise.
+
+The power is a custom tune by Kyle at [KyleTunedIt](https://kyletunedit.com), who has a quiet reputation for mapping the 4.0T better than almost anyone alive. Then there is the fuel. The car runs an E30 blend, thirty percent ethanol cut into 91 pump, which behaves like race fuel for a fraction of the cost. On the [DS1 platform by Dyno Spectrum](https://www.dynospectrum.com/), Gregory sets the ethanol content by hand and dials the fuel to whatever the day and the road are worth.
+
+The number at the end of all of it: roughly 720 horsepower at the wheels, measured a mile above sea level in Denver, in thin air that does dyno numbers no favors. Zero to sixty in about three seconds. Probably less. It rides on [Pirelli P Zeros](https://www.pirelli.com/) and sits lower than stock on a [CETE](https://www.cete-automotive.de/) module that drops the air suspension on command.
+
+And it still holds a conversation at seventy. The face never changes. The exhaust only speaks when it is asked, the ride only drops when it is told, and the rest of the time it is the same composed sedan that turns no heads in a parking garage. The build did not break the disguise. It widened the gap the disguise was always about.
 
 That is the trick. Most fast cars make you choose between comfort and violence. The S8 refuses the choice. It is a limousine and a weapon wearing the same skin, and it never changes its face to be either one.
 
 ## This is an old Audi move
 
-The disguise is not new. In 1988 Audi took a big, upright sedan, the 200 quattro, into American Trans-Am racing and won the championship in its first season. The following year it built something stranger still: the 90 quattro IMSA GTO, a car that kept the outline of a road-going four-door and hid a 720-horsepower, all-wheel-drive silhouette racer underneath the sheetmetal. It made its debut on the streets of Miami, and once it sorted itself out it won seven of the season's races.
+The disguise is not new. In 1988 Audi took a big, upright sedan, the 200 quattro, into American Trans-Am racing and won the championship in its first season. The next year it built something stranger: the 90 quattro IMSA GTO, a car that kept the outline of a road-going four-door and hid a 720-horsepower all-wheel-drive silhouette racer under the sheetmetal. It debuted on the streets of Miami, and once it sorted itself out it won seven of the season's races.
+
+Notice the number. Seven hundred and twenty horsepower, under four doors, thirty-seven years ago. Gregory's S8 makes almost exactly that at the wheels today, and the tour it leads happens to end in Miami. He did not plan the symmetry. He just recognized it.
 
 Audi has understood for forty years that four doors and a calm body are not a compromise. They are cover. The S8 is the current, road-legal chapter of that same idea, and putting it at the front of the fleet is our way of saying we know exactly which chapter we are in.
+
+## The one season the disguise comes off
+
+For the 2026 tour, the S8 wears a livery — heritage racing colors, Denver to Miami, ten markets, about five thousand miles. It is the same move the IMSA cars made: four doors, real speed, a name on the side. The build above is what carries that name through ten cities, and the crowds at every stop are the people who read build sheets the way this post just wrote one. The wrap is still open. [See the wrap opportunity.](/sponsor)
 
 ## The drive is the product
 

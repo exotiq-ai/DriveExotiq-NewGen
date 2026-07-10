@@ -21,6 +21,9 @@ export interface BlogPost {
   date: string | null;
   readTime: string;
   html: string;
+  /** Brands/entities named in the post — front-matter `mentions: Name|url; Name|url`.
+      Feeds BlogPosting JSON-LD `mentions` so brand tags carry structured-data weight. */
+  mentions: { name: string; url: string }[];
 }
 
 function parseFrontMatter(raw: string): { meta: Record<string, string>; body: string } {
@@ -71,6 +74,13 @@ function fileToPost(file: string): BlogPost | null {
   const category = meta.category || meta.pillar || 'Stories';
   const author = meta.author || 'Drive Exotiq';
   const date = meta.date || null;
+  const mentions = (meta.mentions || '')
+    .split(';')
+    .map((entry) => {
+      const [name, url] = entry.split('|').map((s) => s.trim());
+      return name && url ? { name, url } : null;
+    })
+    .filter((m): m is { name: string; url: string } => m !== null);
   return {
     slug,
     title,
@@ -80,6 +90,7 @@ function fileToPost(file: string): BlogPost | null {
     date,
     readTime: readTimeFor(body),
     html: marked.parse(body, { async: false }) as string,
+    mentions,
   };
 }
 

@@ -56,6 +56,15 @@ export default function StoryPage({ params }: { params: { slug: string } }) {
     ...(post.date ? { datePublished: post.date } : {}),
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE}/blog/${post.slug}` },
     articleSection: post.category,
+    ...(post.mentions.length
+      ? {
+          mentions: post.mentions.map((m) => ({
+            '@type': 'Brand',
+            name: m.name,
+            url: m.url,
+          })),
+        }
+      : {}),
   };
 
   return (
