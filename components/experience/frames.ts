@@ -108,6 +108,9 @@ export const FRAMES: Frame[] = [
     kicker: 'The fleet', headline: 'Every one of them, driven.',
     chip: 'Opening soon',
     body: 'exotiq.rent. The marketplace built for people who actually drive.',
+    // Weight 1.5 (owner 2026-07-17): the fleet reveal is the act's payoff and
+    // deserves a held statement — pairs with the earlier, longer arrival bloom.
+    weight: 1.5,
   },
   {
     id: 'SB-05', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left', kicker: '01', headline: 'McLaren 720S',

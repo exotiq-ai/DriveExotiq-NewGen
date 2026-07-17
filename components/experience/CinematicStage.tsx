@@ -429,10 +429,14 @@ function FinaleVignette({ p }: { p: MotionValue<number> }) {
 function Bloom({ progress, bands }: { progress: MotionValue<number>; bands: Bands }) {
   const k = FRAMES.findIndex((f) => f.id === 'SB-02b');
   const cut = bands.end[k];
+  // Asymmetric swell (owner 2026-07-17: the aisle's light should arrive
+  // SOONER): a long lead — the corridor's end brightens half a viewport
+  // before arrival — peaking harder at the cut, then a slow warm decay while
+  // the fleet aisle resolves underneath.
   const opacity = useTransform(
     progress,
-    [cut - 0.35 * bands.unit, cut, cut + 0.35 * bands.unit],
-    [0, 0.34, 0],
+    [cut - 0.55 * bands.unit, cut, cut + 0.45 * bands.unit],
+    [0, 0.42, 0],
   );
   return (
     <motion.div

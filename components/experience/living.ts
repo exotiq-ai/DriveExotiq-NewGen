@@ -115,8 +115,9 @@ export const FADES: Record<string, number> = {
   'SB-19': 0.5,
   // SB-02 scrub-end hold frame and SB-02b frame 0 are the same Plate B render
   // — compress the dissolve toward a film cut; wider would only invite drift
-  // between two identical images (Act I redesign 2026-07-06).
-  'SB-02': 0.5,
+  // between two identical images (Act I redesign 2026-07-06; tightened
+  // further 2026-07-17 with the deadZone stutter fix).
+  'SB-02': 0.35,
 };
 
 /**
@@ -194,7 +195,11 @@ export const LIVING: Record<string, LivingMedia> = {
     portraitSrc: vid('sb-02-scrub.portrait.mp4'),
     portraitPoster: pos('/images/experience/poster/sb-02.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-02.jpg'), // frame 0 = closed door + light blade
-    deadZone: [0.1, 0.9],
+    // Tightened 2026-07-17 (owner: the door→walk-in handoff read as a stutter
+    // on mobile): motion runs nearly wall-to-wall so the frozen-frame dead
+    // spot between the two scrubs almost vanishes; the same-frame pin keeps
+    // the boundary invisible.
+    deadZone: [0.06, 0.96],
   },
 
   // Act I redesign (2026-07-06) — SB-02b: the walk-in. Scroll carries the
@@ -209,7 +214,7 @@ export const LIVING: Record<string, LivingMedia> = {
     portraitSrc: vid('sb-02b-scrub.portrait.mp4'),
     portraitPoster: pos('/images/experience/poster/sb-02b.portrait.jpg'),
     poster: pos('/images/experience/poster/sb-02b.jpg'), // frame 0 = Plate B (door open)
-    deadZone: [0.1, 0.92],
+    deadZone: [0.04, 0.94],
   },
 
   // Phase 1 — SB-05: the 720S portrait breathes (Kling t2).
