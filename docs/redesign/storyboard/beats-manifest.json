@@ -325,34 +325,35 @@
     {
       "id": "SB-11b-M",
       "act": 2,
-      "treatment": "play-once",
+      "treatment": "scrub",
       "priority": "hero",
       "pipelineOnly": "PORTRAIT-NATIVE mobile variant — wires into LIVING['SB-11b'].portraitSrc (play-once: the cockpit-POV roll-out, phone-perfect vertical POV).",
       "aspect": "9:16",
-      "still": "cockpit-pov-m.png",
+      "still": "cockpit-door-closed-m.png",
       "videoModel": "kwaivgi/kling-v3.0-pro",
       "duration": 5,
       "resolution": "1080p",
       "frameImages": {
-        "first": "cockpit-pov-m.png"
+        "first": "cockpit-door-closed-m.png"
       },
-      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir grade, subtle grain, desaturated graphite palette with warm highlights, vertical portrait framing. First frame is the supplied still: pre-dawn driver point of view inside the McLaren cabin, hands resting on the alcantara wheel, amber driver display glowing softly, dawn band on the horizon through the windscreen. Camera locked to the cockpit. Motion: the car eases forward out of the dark garage mouth at walking pace — the world through the windscreen begins to slide: the garage frame passes overhead and out of view, the pre-dawn sky and horizon widen and brighten gently, faint reflections travel across the windscreen glass. The hands stay resting calmly on the wheel with only the smallest natural adjustments; the cabin and dashboard stay dim and steady. The clip ends settled: rolling slowly in the open, dawn band composed through the glass.",
-      "negativePrompt": "no badges, crests, emblems or logos anywhere; the steering wheel center remains dark and unreadable; no brightening of the cabin interior, dashboard or wheel; no warping or melting dashboard geometry; no morphing steering wheel or hands, no extra fingers; no camera movement independent of the car; no speed-up; no blue or teal shift; no blown highlights",
-      "post": "portrait play-once encode (720x1280, normal GOP) -> sb-11b.portrait.mp4 + portrait poster; ends settled (hold-frame doctrine)",
-      "qa": "hands are the failure mode (fingers); cabin must not brighten; final frame composed and settled",
+      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir grade, subtle grain, desaturated graphite palette with warm highlights, vertical portrait framing. First frame is the supplied still: pre-dawn driver point of view inside the McLaren cabin, hands resting on the alcantara wheel, amber driver display glowing softly, and through the windscreen a CLOSED sectional garage door one car-length ahead, warm dawn light leaking beneath its bottom edge onto the garage floor. Camera locked to the cockpit. Motion in two phases. FIRST: the garage door rises smoothly through its full travel, the blade of warm dawn light beneath it widening and flooding across the hood and into the cabin as the door climbs up and out of view. THEN: the car eases forward at walking pace out of the dark garage into the open pre-dawn world, the door frame passing overhead and gone, a quiet dawn road and wide horizon revealed ahead, the sky brightening gently through the glass. The hands stay resting calmly on the wheel with only the smallest natural adjustments; the cabin and dashboard stay dim and steady throughout. The clip ends settled and composed: rolling slowly on the open road, the dawn band on the horizon through the windscreen.",
+      "negativePrompt": "no badges, crests, emblems or logos anywhere; the steering wheel center remains dark and unreadable; no brightening of the cabin interior, dashboard or wheel; no warping or melting dashboard geometry; no morphing steering wheel or hands, no extra fingers; no camera movement independent of the car; no reversing; the door never closes again; no wipers; no other cars or people; no speed-up to highway speed; no blue or teal shift; no blown highlights",
+      "post": "portrait all-intra scrub encode (720x1280) -> sb-11b-scrub.portrait.mp4 + portrait poster; touch scrub",
+      "qa": "same as SB-11b; portrait edges must not churn",
       "status": "live",
       "prepImage": {
-        "output": "cockpit-pov-m.png",
+        "output": "cockpit-door-closed-m.png",
         "aspect": "9:16",
         "size": "4K",
         "model": "gemini-3-pro-image (direct)",
         "fallbackModel": "bytedance-seed/seedream-4.5",
         "inputReferences": [
-          "cockpit-pov-v2.png"
+          "cockpit-pov-m.png"
         ],
-        "prompt": "Recompose this photograph as a vertical 9:16 portrait frame from the same driver point of view: the SAME authentic McLaren 720S cabin at pre-dawn — the same flat-bottom steering wheel with both hands resting naturally exactly as in the reference, five fingers each, the same amber driver display glow, the same deep panoramic windscreen with the soft dawn band on the horizon — now framed vertically: the windscreen and dawn sky filling the upper half of the frame, the wheel and hands anchoring the lower half, the dark dashboard and carbon sill closing the bottom. Same light logic, same deep matte-black cabin shadow, same shallow depth of field, subtle 35mm film grain, desaturated graphite palette with warm highlights. Restrained and quiet, a real pre-dawn moment. No readable text, numbers or logos anywhere; the wheel center stays dark and unreadable."
+        "prompt": "Continuity edit. Take the reference photograph (the pre-dawn McLaren cabin driver point of view) and make ONE single change to the world OUTSIDE the windscreen: instead of the open horizon, the car now sits inside a dark garage facing a CLOSED sectional garage door one car-length ahead. Through the glass: the wide steel door fills the view, dark garage walls and ceiling closing around its edges, and warm pre-dawn light LEAKS BENEATH the door bottom edge as a thin bright blade that pools on the garage floor and faintly washes the hood. The warm glow that previously rimmed the windscreen now reads as this leaking dawn light, so the cabin lighting stays plausible and unchanged. EVERYTHING inside the cabin must stay pixel-identical to the reference: the same vertical portrait crop and camera position, the flat-bottom wheel with both hands resting naturally (five fingers each), the amber driver display, the dashboard, the deep matte-black cabin shadow, the grade and grain. This is a continuity frame for a film: any change inside the cabin is a failure. No readable text, numbers or logos anywhere; the wheel center stays dark."
       },
-      "selectedTake": "SB-11b-M-t1-kling-v3.0-pro-kdirect.mp4 (garage frame slides overhead then open dawn (the exit story); t2 already outside throughout. Hands zoom-checked natural)"
+      "designNote": "v2 2026-07-08: portrait twin of the door-rise roll-out scrub (v1 play-once takes read as driving past a garage — retired).",
+      "selectedTake": "SB-11b-M-t2-kling-v3.0-pro-kdirect-door.mp4 (authentic rectangular amber display throughout; t1 cluster morphed into generic twin dials). --tag door: v1 play-once files occupy the untagged names."
     },
     {
       "id": "SB-03",
@@ -603,20 +604,33 @@
     {
       "id": "SB-11b",
       "act": 4,
-      "treatment": "play-once",
+      "treatment": "scrub",
       "priority": "high",
-      "still": "roll-out.png",
-      "videoModel": "google/veo-3.1",
+      "still": "cockpit-door-closed.png",
+      "videoModel": "kwaivgi/kling-v3.0-pro",
       "draftModel": "google/veo-3.1-fast",
       "duration": 8,
       "resolution": "1080p",
       "frameImages": {
-        "first": "cockpit-pov-v2.png"
+        "first": "cockpit-door-closed.png"
       },
-      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir grade, subtle grain, desaturated graphite palette with warm highlights. First frame is the supplied still: pre-dawn driver POV inside the McLaren cabin, hands resting on the alcantara wheel, amber driver display glowing softly under its hood, dawn band on the horizon through the windscreen. Camera locked to the cockpit; the cabin, dashboard, steering wheel and hands remain rigid, dark and pixel-stable for the entire clip — the wheel center stays in shadow. The car creeps forward at walking pace out of a garage mouth onto open asphalt: the last edge of garage shadow wipes up and off the top of the windscreen in the first two seconds, the amber horizon steadies and widens, foreground asphalt slides slowly toward camera with a breath of suspension sway, exposure through the GLASS lifts almost imperceptibly while the cabin interior stays dark. The final second is near-steady — constant slow creep, stable horizon — so the last frame can hold.",
-      "negativePrompt": "no badges, crests, emblems or logos anywhere — the steering wheel center remains dark and unreadable; no brightening of the cabin interior, dashboard or wheel; no warping or melting dashboard geometry; no morphing steering wheel or hands, no extra fingers; no text, icons or invented digits; no people outside; no other cars; no camera shake beyond gentle suspension sway; do not change the grade",
+      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir grade, subtle grain, desaturated graphite palette with warm highlights. First frame is the supplied still: pre-dawn driver point of view inside the McLaren cabin, hands resting on the alcantara wheel, amber driver display glowing softly, and through the windscreen a CLOSED sectional garage door one car-length ahead, warm dawn light leaking beneath its bottom edge onto the garage floor. Camera locked to the cockpit. Motion in two phases. FIRST: the garage door rises smoothly through its full travel, the blade of warm dawn light beneath it widening and flooding across the hood and into the cabin as the door climbs up and out of view. THEN: the car eases forward at walking pace out of the dark garage into the open pre-dawn world, the door frame passing overhead and gone, a quiet dawn road and wide horizon revealed ahead, the sky brightening gently through the glass. The hands stay resting calmly on the wheel with only the smallest natural adjustments; the cabin and dashboard stay dim and steady throughout. The clip ends settled and composed: rolling slowly on the open road, the dawn band on the horizon through the windscreen.",
+      "negativePrompt": "no badges, crests, emblems or logos anywhere; the steering wheel center remains dark and unreadable; no brightening of the cabin interior, dashboard or wheel; no warping or melting dashboard geometry; no morphing steering wheel or hands, no extra fingers; no camera movement independent of the car; no reversing; the door never closes again; no wipers; no other cars or people; no speed-up to highway speed; no blue or teal shift; no blown highlights",
       "status": "live",
-      "selectedTake": "SB-11b-t1-veo-3.1-v2.mp4"
+      "post": "all-intra scrub encode + normal-GOP mobileSrc fallback cut; ends composed rolling on the open road, dissolving into SB-14c (the windscreen dawn-canyon run — same POV family)",
+      "qa": "two-phase motion is the risk: door must FULLY rise before the car moves (scrub maps to scroll); hands natural; final second composed, no smear; cabin never brightens",
+      "designNote": "2026-07-08 owner redesign: the old takes read as driving PAST a garage, not OUT of one (outside -> door slides by -> outside). New beat: THE THIRD SCROLL-OPERATED DOOR — cabin POV facing the closed door (dawn leaking under it = SB-10 glow continuity + Act I light-blade motif), scrub rises the door and rolls out, handing POV-to-POV into the corrected SB-14c windscreen run.",
+      "prepImage": {
+        "output": "cockpit-door-closed.png",
+        "size": "4K",
+        "model": "gemini-3-pro-image (direct)",
+        "fallbackModel": "bytedance-seed/seedream-4.5",
+        "inputReferences": [
+          "cockpit-pov-v2.png"
+        ],
+        "prompt": "Continuity edit. Take the reference photograph (the pre-dawn McLaren cabin driver point of view) and make ONE single change to the world OUTSIDE the windscreen: instead of the open horizon, the car now sits inside a dark garage facing a CLOSED sectional garage door one car-length ahead. Through the glass: the wide steel door fills the view, dark garage walls and ceiling closing around its edges, and warm pre-dawn light LEAKS BENEATH the door bottom edge as a thin bright blade that pools on the garage floor and faintly washes the hood. The warm glow that previously rimmed the windscreen now reads as this leaking dawn light, so the cabin lighting stays plausible and unchanged. EVERYTHING inside the cabin must stay pixel-identical to the reference: the same 16:9 crop and camera position, the flat-bottom wheel with both hands resting naturally (five fingers each), the amber driver display, the dashboard, the deep matte-black cabin shadow, the grade and grain. This is a continuity frame for a film: any change inside the cabin is a failure. No readable text, numbers or logos anywhere; the wheel center stays dark."
+      },
+      "selectedTake": "SB-11b-t1-kling-v3.0-pro-kdirect.mp4 (balanced phases: door ~45% / exit ~55% maps best to scroll; t2 golden blade prettier but exit crams the last 15%). Warm-graded at encode."
     },
     {
       "id": "SB-12",
@@ -690,7 +704,8 @@
       "resolution": "1080p",
       "status": "live",
       "selectedTake": "SB-12-t1-hailuo-2.3.mp4 (reused render — no new generation)",
-      "replateNote": "2026-07-06 (owner): the coast aerial (SB-14-t1) is REJECTED for this beat — the film reorder had revived it by mistake; SB-14 t2/t3 are same-look coast siblings, also out. Re-plated with the original dawn-canyon windscreen POV (SB-12's pre-real-swap selected take): closes the cockpit thread (SB-10 settle in → SB-11b roll out → drive) and ends the AI storyline from the driver's seat before SB-08b lands the ask on the first real-footage frame. Traveling POV → play-once, fresh encode with NO loop seam (the 0.5s xfade lived only in the retired sb-12 loop encode). Poster/still = open-road.png (frame 0 of the take)."
+      "replateNote": "2026-07-06 (owner): the coast aerial (SB-14-t1) is REJECTED for this beat — the film reorder had revived it by mistake; SB-14 t2/t3 are same-look coast siblings, also out. Re-plated with the original dawn-canyon windscreen POV (SB-12's pre-real-swap selected take): closes the cockpit thread (SB-10 settle in → SB-11b roll out → drive) and ends the AI storyline from the driver's seat before SB-08b lands the ask on the first real-footage frame. Traveling POV → play-once, fresh encode with NO loop seam (the 0.5s xfade lived only in the retired sb-12 loop encode). Poster/still = open-road.png (frame 0 of the take).",
+      "encodeNote": "2026-07-08: sb-14c.mp4/.720 finally re-encoded from SB-12-t1 per the 07-06 re-plate (the encode step had been missed — production was still playing the REJECTED coast aerial under the dawn-run plate: the poster-to-video mismatch was the visible jump the owner felt)."
     },
     {
       "id": "SB-15",

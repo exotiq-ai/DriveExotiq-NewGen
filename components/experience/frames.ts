@@ -144,7 +144,13 @@ export const FRAMES: Frame[] = [
   // ---------- McLaren drive-out (grouped: get in, wake it, roll out, run the road) ----------
   { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.', weight: 2, mobileWeight: 2 },
   { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
-  { id: 'SB-11b', media: `${M}/roll-out.png`, movement: 'I', aria: 'The nose eases out of the garage' },
+  // 2026-07-08 owner redesign: the roll-out is now the film's THIRD scroll-
+  // operated door — cabin POV facing the closed garage door (dawn leaking
+  // beneath it, the Act I light-blade motif from the driver's seat), the
+  // scroll rises the door and rolls the car out into the dawn, handing
+  // POV-to-POV into SB-14c's windscreen canyon run. The old takes read as
+  // driving PAST a garage (outside → door slides by → outside) — retired.
+  { id: 'SB-11b', media: `${M}/cockpit-door-closed.png`, movement: 'I', aria: 'The garage door rises ahead and the car rolls out into the dawn', weight: 2, mobileWeight: 2 },
   // SB-14c re-plated (owner 2026-07-06): the coast aerial is OUT — the reorder
   // had revived the rejected coast take. Back in: the original dawn-canyon run
   // THROUGH THE WINDSCREEN (SB-12-t1, the pre-swap "road opens" POV). It closes

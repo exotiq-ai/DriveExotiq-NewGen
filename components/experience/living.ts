@@ -306,15 +306,22 @@ export const LIVING: Record<string, LivingMedia> = {
   // SB-07 is still-only since the real-458 swap (locked-off macro — the plate
   // + ken-burns carry it; zero video bytes by design).
 
-  // Phase 2 — SB-11b: the first movement of the film — the car creeps out of
-  // the garage (Veo v2-t1 from the authentic cabin frame; plays once, holds).
+  // SB-11b v3 (owner redesign 2026-07-08): THE THIRD SCROLL-OPERATED DOOR.
+  // Cabin POV facing the closed garage door, dawn leaking beneath it; the
+  // scrub rises the door (light floods the hood) then rolls the car out into
+  // the open dawn, dissolving POV-to-POV into SB-14c's windscreen canyon run.
+  // Kling t1 (balanced phases: door ~45%, exit ~55%), warm-graded at encode
+  // to seat the pale exterior into the print. Prior play-once takes read as
+  // driving PAST a garage — retired (files remain on disk).
   'SB-11b': {
-    kind: 'play-once',
-    src: vid('sb-11b.mp4'),
-    mobileSrc: vid('sb-11b.720.mp4'),
-    portraitSrc: vid('sb-11b.portrait.mp4'),
+    kind: 'scrub',
+    src: vid('sb-11b-scrub.mp4'),
+    webmSrc: vid('sb-11b-scrub.webm'),
+    mobileSrc: vid('sb-11b.mp4'),
+    portraitSrc: vid('sb-11b-scrub.portrait.mp4'),
     portraitPoster: pos('/images/experience/poster/sb-11b.portrait.jpg'),
-    poster: pos('/images/experience/poster/sb-11b.jpg'),
+    poster: pos('/images/experience/poster/sb-11b.jpg'), // frame 0 = closed door through the windscreen
+    deadZone: [0.06, 0.94],
   },
 
   // SB-12 REAL: the aspen-road aerial. Traveling shot → PLAY-ONCE (owner
