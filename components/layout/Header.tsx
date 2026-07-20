@@ -76,13 +76,15 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Mobile sheet */}
+      {/* Mobile sheet — overflow-y-auto + min-h-full (UX audit 2026-07-20):
+          justify-center on an overflowing column clips both ends with body
+          scroll locked; landscape phones lost the top links and the CTA. */}
       <div
-        className={`fixed inset-0 z-40 bg-canvas transition-opacity duration-400 ease-de lg:hidden ${
+        className={`fixed inset-0 z-40 overflow-y-auto bg-canvas transition-opacity duration-400 ease-de lg:hidden ${
           open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}
       >
-        <div className="flex h-full flex-col justify-center px-8 pb-16">
+        <div className="flex min-h-full flex-col justify-center px-8 pb-[max(4rem,env(safe-area-inset-bottom))] pt-20">
           <nav className="space-y-1">
             {NAV.map((item) => (
               <Link

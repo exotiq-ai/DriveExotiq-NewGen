@@ -1307,5 +1307,39 @@
     "file": "docs/redesign/storyboard/renders/SB-14c/SB-14c-t1-kling-v3-kdirect-seampin.mp4",
     "seconds": 6,
     "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-20T22:25:35.097Z",
+    "beat": "SB-10",
+    "take": 1,
+    "model": "gemini-direct:veo-3.1-generate-preview",
+    "cost": 1.6,
+    "costNote": "estimated list price, billed to Google project; SB-09->SB-10 settle-in bridge (seam audit boundary #9); Kling-direct 1102 credits-exhausted fallback",
+    "file": "docs/redesign/storyboard/renders/SB-10/SB-10-t1-veo-3.1-gdirect-bridge.mp4",
+    "seconds": 8,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-20T22:28:50.496Z",
+    "beat": "SB-10",
+    "take": 2,
+    "model": "gemini-direct:veo-3.1-generate-preview",
+    "cost": 1.6,
+    "costNote": "estimated list price, billed to Google project; SB-09->SB-10 settle-in bridge (seam audit boundary #9); Kling-direct 1102 credits-exhausted fallback",
+    "file": "docs/redesign/storyboard/renders/SB-10/SB-10-t2-veo-3.1-gdirect-bridge.mp4",
+    "seconds": 8,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-20T22:35:35.926Z",
+    "beat": "SB-10",
+    "take": 3,
+    "model": "kwaivgi/kling-v3.0-pro",
+    "jobId": "nge341Y1pQoMxR0RpfCO",
+    "cost": 0.56,
+    "costNote": "SB-09->SB-10 settle-in bridge take 3 (OpenRouter route; Kling-direct 1102 credits-exhausted, Veo failed f0 pin twice)",
+    "file": "docs/redesign/storyboard/renders/SB-10/SB-10-t3-kling-v3.0-pro-bridge.mp4",
+    "seconds": 5,
+    "resolution": "720p"
   }
 ]

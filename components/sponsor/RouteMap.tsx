@@ -72,9 +72,14 @@ export default function RouteMap() {
   const last = STOPS[STOPS.length - 1];
 
   return (
+    // Mobile legibility (UX audit 2026-07-20): at 375px the 1160-unit canvas
+    // rendered ~277px wide — 18px labels painted at ~4px. The map keeps a
+    // 640px floor and SCROLLS horizontally on small screens instead of
+    // shrinking into noise; ≥md it fills the card as before.
+    <div className="overflow-x-auto">
     <svg
       viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-      className="h-auto w-full"
+      className="h-auto w-full min-w-[640px]"
       role="img"
       aria-label={`The 2026 tour route: ten markets from Denver to Miami, following the interstates through Colorado, New Mexico, Texas, Louisiana, Mississippi, Alabama, and Florida: ${BEATS.map((b) => b.name).join(', ')}.`}
     >
@@ -176,5 +181,6 @@ export default function RouteMap() {
         );
       })}
     </svg>
+    </div>
   );
 }

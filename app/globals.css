@@ -329,7 +329,11 @@
   --de-bg: #0B0B0C;        --de-bg-2: #101012;
   --de-surface: #161618;   --de-surface-2: #1F1F23;
   --de-line: #28282C;      --de-line-2: #3A3A40;
-  --de-text: #F3F1EC;      --de-text-2: #ABA8A1;     --de-text-3: #6F6D67;
+  /* text-3 lifted #6F6D67 → #8A887F (UX audit 2026-07-20): the old value
+     measured 3.8:1 on canvas — below AA for the body/caption sizes it ships
+     at (worst: /tour's mobile timeline copy). ~4.6:1 now; still the dimmest
+     voice on screen. */
+  --de-text: #F3F1EC;      --de-text-2: #ABA8A1;     --de-text-3: #8A887F;
   --de-metal: #C9C6BD;
   --de-gulf: #6CBDE6;      --de-gulf-2: #8ED0F0;     --de-gulf-soft: rgba(108,189,230,.12);
   --de-on-gulf: #08222E;

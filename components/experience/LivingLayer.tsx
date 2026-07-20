@@ -27,8 +27,15 @@ function useSaveData() {
   return save;
 }
 
+// Lazy inits (UX-audit perf fix 2026-07-20): effect-time initialization made
+// the first client render match the SSR fallback, so hydration mounted the
+// DESKTOP <video> sources on phones and swapped after the effect — up to
+// ~5 MB fetched and discarded. Lazy init picks the right branch on the very
+// first client render (same doctrine as useNoTextBlur in CinematicStage).
 function useIsMobile() {
-  const [mobile, setMobile] = useState(false);
+  const [mobile, setMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches,
+  );
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)');
     setMobile(mq.matches);
@@ -39,9 +46,31 @@ function useIsMobile() {
   return mobile;
 }
 
+/**
+ * The 720 ladder's audience (UX-audit perf fix): tablets 768-1023px run the
+ * COARSE band path (no scrub) but the old <768px check served them full
+ * desktop encodes — the .720 ladder was unreachable exactly where it pays.
+ * Matches the coarse side of SCRUB_MQ.
+ */
+function useCoarseLadder() {
+  const [coarse, setCoarse] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px), (pointer: coarse)').matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px), (pointer: coarse)');
+    setCoarse(mq.matches);
+    const on = (e: MediaQueryListEvent) => setCoarse(e.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  return coarse;
+}
+
 /** Desktop-fine-pointer check for the scrub tier (mobile never scrubs — iOS never prebuffers). */
 function useCanScrub() {
-  const [ok, setOk] = useState(false);
+  const [ok, setOk] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px) and (pointer: fine)').matches,
+  );
   useEffect(() => {
     setOk(window.matchMedia('(min-width: 1024px) and (pointer: fine)').matches);
   }, []);
@@ -67,7 +96,10 @@ function LoopLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 
   const [ready, setReady] = useState(false);
   const mobile = useIsMobile();
   // Portrait-native beats: phones get the recomposed 9:16 encode, not a crop.
-  const src = mobile && cfg.portraitSrc ? cfg.portraitSrc : mobile && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
+  // The .720 ladder serves the whole COARSE path (tablets included) — see
+  // useCoarseLadder.
+  const coarseLadder = useCoarseLadder();
+  const src = mobile && cfg.portraitSrc ? cfg.portraitSrc : coarseLadder && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
   const poster = mobile && cfg.portraitSrc ? (cfg.portraitPoster ?? cfg.poster) : cfg.poster;
 
   // loadeddata can fire before React attaches the handler (fast local loads) —
@@ -137,7 +169,10 @@ function PlayOnceLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { ki
   const played = useRef(false);
   const mobile = useIsMobile();
   // Portrait-native beats: phones get the recomposed 9:16 encode, not a crop.
-  const src = mobile && cfg.portraitSrc ? cfg.portraitSrc : mobile && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
+  // The .720 ladder serves the whole COARSE path (tablets included) — see
+  // useCoarseLadder.
+  const coarseLadder = useCoarseLadder();
+  const src = mobile && cfg.portraitSrc ? cfg.portraitSrc : coarseLadder && cfg.mobileSrc ? cfg.mobileSrc : cfg.src;
   const poster = mobile && cfg.portraitSrc ? (cfg.portraitPoster ?? cfg.poster) : cfg.poster;
 
   // Tap-to-unmute contract (cfg.sound beats only): the Copy layer's button

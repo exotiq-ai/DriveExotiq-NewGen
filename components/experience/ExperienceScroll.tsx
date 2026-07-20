@@ -155,15 +155,17 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
               className="flex items-center gap-2"
               style={{ opacity: renterNavOpacity, pointerEvents: renterNavEvents }}
             >
+              {/* min-h-[44px] on all chrome CTAs (UX audit): px-4 py-2 text-xs
+                  rendered ~32px tall — under the coarse-pointer floor. */}
               <Link
                 href="/sponsor"
-                className="hidden rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-block"
+                className="hidden min-h-[44px] items-center rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-flex"
               >
                 Sponsor the wrap
               </Link>
               <Link
                 href="/apply"
-                className="rounded-sm bg-gulf px-4 py-2 text-xs font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
+                className="inline-flex min-h-[44px] items-center rounded-sm bg-gulf px-4 py-2 text-xs font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
               >
                 Get on the list
               </Link>
@@ -175,13 +177,13 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
             >
               <Link
                 href="/apply"
-                className="hidden rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-block"
+                className="hidden min-h-[44px] items-center rounded-sm border border-line-2 px-4 py-2 text-xs font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3 sm:inline-flex"
               >
                 Get on the list
               </Link>
               <Link
                 href="/sponsor"
-                className="rounded-sm bg-gulf px-4 py-2 text-xs font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
+                className="inline-flex min-h-[44px] items-center rounded-sm bg-gulf px-4 py-2 text-xs font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
               >
                 Sponsor the wrap
               </Link>

@@ -122,18 +122,23 @@ export default function FilmMenu({
       // No `inert`: this React version warns on the boolean form and drops it
       // anyway. visibility:hidden (below) already removes the closed sheet
       // from the tab order and the accessibility tree — browser-verified.
-      className={`fixed inset-0 z-[80] bg-canvas transition-[opacity,visibility] duration-400 ease-de ${
+      // overflow-y-auto + min-h-full inner (UX audit 2026-07-20): the sheet's
+      // content exceeds short viewports (SE-class portrait, any landscape
+      // phone) and justify-center on an overflowing column clips BOTH ends
+      // with body scroll locked — nav links became unreachable. min-h-full
+      // keeps the centered look when content fits; overflow scrolls when not.
+      className={`fixed inset-0 z-[80] overflow-y-auto bg-canvas transition-[opacity,visibility] duration-400 ease-de ${
         open ? 'visible pointer-events-auto opacity-100' : 'invisible pointer-events-none opacity-0'
       }`}
     >
       <button
         type="button"
         onClick={close}
-        className="absolute right-6 top-4 p-2 text-xs font-semibold text-ink-2 transition-colors duration-250 ease-de hover:text-ink md:right-8"
+        className="fixed right-4 top-1 inline-flex min-h-[44px] min-w-[44px] items-center justify-center p-2 text-xs font-semibold text-ink-2 transition-colors duration-250 ease-de hover:text-ink md:right-6"
       >
         Close
       </button>
-      <div className="flex h-full flex-col justify-center px-8 pb-16">
+      <div className="flex min-h-full flex-col justify-center px-8 pb-[max(4rem,env(safe-area-inset-bottom))] pt-16">
         <nav className="space-y-1">
           {NAV.map((item) => (
             <Link
@@ -162,7 +167,7 @@ export default function FilmMenu({
                   close();
                   j.onSelect();
                 }}
-                className={`py-1 text-[13px] transition-colors duration-250 ease-de hover:text-ink ${
+                className={`py-2.5 text-[13px] transition-colors duration-250 ease-de hover:text-ink ${
                   j.active ? 'text-metal' : 'text-ink-2'
                 }`}
               >
@@ -191,7 +196,10 @@ export default function FilmMenu({
         aria-controls="film-menu-sheet"
         aria-label="Menu"
         onClick={() => setOpen(true)}
-        className="font-sans text-xs font-semibold text-ink-2 transition-colors duration-250 ease-de hover:text-ink"
+        // -m-3 p-3 min-h/w 44px: touch-target expansion without layout shift
+        // (UX audit — the bare text was a ~30×16px target, the phone's only
+        // nav affordance on the film).
+        className="-m-3 inline-flex min-h-[44px] min-w-[44px] items-center justify-center p-3 font-sans text-xs font-semibold text-ink-2 transition-colors duration-250 ease-de hover:text-ink"
       >
         Menu
       </button>
