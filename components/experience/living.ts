@@ -125,6 +125,11 @@ export const FADES: Record<string, number> = {
   // re-render (13-SEAM-AUDIT.md §5: first-frame QA SSIM 0.976) — compress
   // toward the cut like every matched pair.
   'SB-11b': 0.35,
+  // SB-09's scrub-end (snap-to-final holds the extracted last frame) IS the
+  // settle-in bridge's frame 0/poster (2026-07-20 bridge, visual sign-off:
+  // same composition re-lit — SSIM 0.713 vs a 0.888 measurement ceiling on
+  // this near-black frame, so the tight dissolve reads as a light shift).
+  'SB-09': 0.35,
 };
 
 /**
@@ -139,6 +144,7 @@ export const FADES: Record<string, number> = {
  */
 export const SEAMS: Record<string, true> = {
   'SB-02': true,  // door scrub end → walk-in frame 0 (same Plate B render)
+  'SB-09': true,  // door-up scrub end → settle-in bridge f0 = sb-09's extracted last frame (visual sign-off, 2026-07-20)
   'SB-10': true,  // settle-in still → roll-out scrub frame 0 (same dash render)
   'SB-11b': true, // roll-out scrub end → canyon-run frame 0 (2026-07-20 seam-pin re-render)
   'SB-19': true,  // livery money frame → founder get-in (treatment film cut)
@@ -286,11 +292,27 @@ export const LIVING: Record<string, LivingMedia> = {
     deadZone: [0.15, 0.85],
   },
 
-  // (SB-10 loop retired 2026-07-20 with the owner's re-plate: "Settle in."
-  // now sits STILL on the forward-facing 720S dash — the same render SB-11b
-  // scrubs from — so settle-in → door-rise → roll-out is one continuous POV.
-  // The SEAMS + FADES entries below make the handoff a same-frame cut.
-  // sb-10.mp4 encodes stay on disk for revert.)
+  // SB-10 settle-in BRIDGE (2026-07-20, seam audit boundary #9 — the last
+  // NEEDS-WORK seam): play-once that carries you from SB-09's held end frame
+  // (dihedral door up, exterior — the poster/frame 0 IS that extracted frame,
+  // renders/seam-audit/sb-09-lastframe.png) in through the open door and down
+  // into the driver's seat, landing composed on the forward-facing 720S dash
+  // (cockpit-door-closed.png = the SB-10 plate = SB-11b's frame 0) — so
+  // door-rise → get-in → settle-in → roll-out is one continuous POV.
+  // Kling-direct kling-v3 pro t4 (first+last frame pins), approved on VISUAL
+  // sign-off: the f0 ≥0.9 SSIM bar is unattainable on this near-black frame
+  // (the generation payload itself only measures 0.888 vs the pin; encode f0
+  // 0.713 = same composition re-lit, reads as a light shift through the
+  // FADES dissolve), landing 0.927 ≥0.9 vs the plate. The mid-clip golden
+  // flood was pulled back inside the studio noir with a time-ramped
+  // highlight-pull grade at encode (identity at both endpoints — recipe in
+  // the manifest rerenderNote).
+  'SB-10': {
+    kind: 'play-once',
+    src: vid('sb-10.mp4'),
+    mobileSrc: vid('sb-10.720.mp4'),
+    poster: pos('/images/experience/poster/sb-10.jpg'), // frame 0 = sb-09's extracted last frame
+  },
 
   // SB-11 REAL: the S8 start-button press (Roller 24.9–30.4s) — plays once as
   // the band enters, the cluster wakes, the V8 barks at ~3s and settles to

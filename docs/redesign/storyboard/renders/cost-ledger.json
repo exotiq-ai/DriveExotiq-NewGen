@@ -1341,5 +1341,27 @@
     "file": "docs/redesign/storyboard/renders/SB-10/SB-10-t3-kling-v3.0-pro-bridge.mp4",
     "seconds": 5,
     "resolution": "720p"
+  },
+  {
+    "ts": "2026-07-20T23:16:32.831Z",
+    "beat": "SB-10",
+    "take": 4,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here); SB-09->SB-10 settle-in bridge, seam audit boundary #9",
+    "file": "docs/redesign/storyboard/renders/SB-10/SB-10-t4-kling-v3-kdirect-bridge.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-20T23:20:15.261Z",
+    "beat": "SB-10",
+    "take": 5,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here); SB-09->SB-10 settle-in bridge, seam audit boundary #9",
+    "file": "docs/redesign/storyboard/renders/SB-10/SB-10-t5-kling-v3-kdirect-bridge.mp4",
+    "seconds": 5,
+    "resolution": "1080p"
   }
 ]

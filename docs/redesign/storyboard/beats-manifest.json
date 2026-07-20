@@ -546,21 +546,21 @@
     {
       "id": "SB-10",
       "act": 3,
-      "treatment": "still",
+      "treatment": "play-once",
       "priority": "high",
-      "still": "cockpit-pov-v2.png",
+      "still": "cockpit-door-closed.png",
       "videoModel": "kwaivgi/kling-v3.0-pro",
-      "duration": 6,
-      "resolution": "720p",
+      "duration": 5,
+      "resolution": "1080p",
       "frameImages": {
-        "first": "cockpit-pov-v2.png",
-        "last": "cockpit-pov-v2.png"
+        "first": "renders/seam-audit/sb-09-lastframe.png",
+        "last": "cockpit-door-closed.png"
       },
-      "prompt": "Completely static first-person driver point of view inside a dark supercar cabin at dawn, locked-off camera, zero camera movement. Subtle living motion only: the warm dawn glow on the horizon through the windscreen gently brightens and dims as if clouds are slowly thinning, soft light shifting slightly across the dashboard; the driver's hands make one slow, small adjustment of grip on the steering wheel and settle; faint dust motes drift in the dawn light; the amber instrument glow pulses very faintly. All motion returns to rest. Film-noir grade, deep matte-black cabin shadows, warm highlights only on the horizon and gauge glow, subtle film grain, shallow depth of field.",
-      "negativePrompt": "camera movement, camera shake, pan, zoom, steering wheel turning, hands leaving the wheel, extra fingers, hand deformation, gauge needles sweeping, dashboard text or numbers changing, any readable text, windshield wipers, scenery moving past as if driving, brightness jumps, color shift away from the graphite-and-amber palette",
-      "qa": "QA hands hardest — finger morphing is the failure mode; budget 4-6 takes",
+      "prompt": "Cinematic footage, 35mm anamorphic, shallow DOF, film-noir grade, subtle grain, desaturated graphite palette with warm highlights. First frame is the supplied still: a McLaren 720S seen from the front three-quarter in a pitch-black studio void, its dihedral driver door raised fully UP, a single warm key light raking the bodywork from the right. ONE continuous unbroken camera move, no cuts: the camera glides slowly and calmly forward toward the open driver doorway, eases THROUGH the raised door opening and lowers gently into the driver's seat; as the camera settles into place the dihedral door swings smoothly down on its front hinge and closes with a soft final settle, the dark cabin wrapping around the view. The move decelerates gradually and comes to rest as the driver's first-person point of view facing forward over the steering wheel: both hands resting calmly on the alcantara wheel, the amber McLaren driver display glowing softly with the tachometer at rest, and through the windscreen a CLOSED sectional garage door one car-length ahead, warm dawn light leaking beneath its bottom edge onto the garage floor. The clip ends perfectly still, settled and composed exactly on that final cockpit frame. The instrument cluster stays steady and legible throughout; the McLaren emblem on the wheel center remains exactly as the final frame; the hands are natural with five fingers each and barely move. Calm and quiet — a person settling into their car before dawn, felt from the inside; the entire move reads as one slow breath, never rushed.",
+      "negativePrompt": "hard cut, jump cut, crossfade, dissolve, scene change, morphing geometry, the dihedral door bending or warping, door panels flexing, door geometry unstable, extra fingers, hand deformation, morphing hands, hands appearing suddenly, morphing or redrawn instrument cluster, gauge numerals changing or smearing or becoming unreadable, the speed readout jumping erratically, the McLaren wheel emblem warping or rotating or duplicating, badges or readable text appearing anywhere else, camera shake, whip pan, sudden exposure shifts, brightness jumps, blown highlights, blue or teal shift, wheels rotating, the car driving away, scenery moving past as if driving, brightening of the studio void",
+      "qa": "endpoint pins: f0 vs the EXTRACTED sb-09 last frame (13-SEAM-AUDIT §3.3 — never door-up.png), last vs cockpit-door-closed; mid-motion grid: no cuts, stable dihedral geometry, noir grade holds (golden-flood is the observed failure mode, treated at encode)",
       "takes": 5,
-      "status": "replated-still",
+      "status": "live",
       "prepImage": {
         "output": "cockpit-pov-v2.png",
         "model": "gemini-3-pro-image (direct)",
@@ -570,8 +570,8 @@
         ],
         "prompt": "Recreate this photograph with the same composition, camera position, dawn lighting and film-noir grade — but make the cabin an authentic McLaren 720S interior, faithful to the real car: slim floating carbon-fiber center console, McLaren driver display screen behind the compact flat-bottom steering wheel (plain wheel face, no buttons), circular air vents, exposed carbon structure on the sills, black alcantara with minimal stitching, low scuttle and thin A-pillars with the deep panoramic 720S windscreen. Both hands resting naturally on the wheel, five fingers each, relaxed grip. Keep: the soft dawn glow band across the top of the windscreen, deep matte-black cabin shadow, warm amber instrument glow, shallow depth of field, subtle 35mm film grain, desaturated graphite palette with warm highlights, 16:9. Restrained and quiet — a real pre-dawn moment, not an advertisement. No readable text, numbers or logos anywhere."
       },
-      "rerenderNote": "2026-07-20 owner re-plate: 'Settle in.' now sits STILL on the forward-facing 720S dash (cockpit-door-closed.png — the exact render SB-11b scrubs from), making settle-in -> door-rise -> roll-out one continuous POV with a same-frame cut (SEAMS/FADES in living.ts). The Nano Banana cockpit-pov-v2 plate + Kling loop retired; encodes on disk for revert.",
-      "selectedTake": "SB-10-t1-kling-v3.0-pro-kdirect.mp4 (1080p direct)"
+      "rerenderNote": "2026-07-20 settle-in BRIDGE (seam audit boundary #9, the last NEEDS-WORK seam 0.22): SB-10 is now a play-once that gets you INTO the car — camera moves from SB-09's true end frame (dihedral door up, exterior) in through the door and settles on the forward-facing dash, landing on cockpit-door-closed.png (= the SB-10 plate = SB-11b's frame 0). frameImages.first is the EXTRACTED encode last frame at repo-root renders/seam-audit/sb-09-lastframe.png (NOT door-up.png — its declared pin is soft, SSIM 0.70, 13-SEAM-AUDIT §3.3; same frameDataUrl repo-root-path caveat as SB-14c: pass absolute or copy into stillsDir to regenerate). Selected take approved on VISUAL SIGN-OFF with the f0 bar noted as miscalibrated: the ≥0.9 f0 SSIM bar is unattainable on this near-black frame (the 16:9/1568px JPEG payload itself scores only 0.888 vs the pin; 5 takes across Veo-direct/OpenRouter-Kling/Kling-direct all landed f0 0.66-0.72 = same composition re-lit). Shipped QA (960x540): encode f0 vs pin 0.713, encode last vs cockpit-door-closed 0.927 (bar >=0.9 PASS), motion grid clean. Mid-clip golden flood (breaking noir ~50% in) corrected at encode with a time-ramped blacks-protected highlight-pull grade, identity at both endpoints: B5 = curves=all='0/0 0.05/0.048 0.15/0.105 0.3/0.175 0.5/0.26 0.75/0.38 1/0.50',eq=saturation=0.60,colorbalance=rm=.06:bm=-.08:rh=.04:bh=-.06, blended in via blend all_expr weight clip((T-0.35)/0.55)*(1-clip((T-2.6)/0.7)) (flood pulled YAVG 45.6->34.0 peak, 35.8->28.2 at 1.2s, vs studio reference 21-25). Prior takes t1-t3 (2x Veo, 1x OpenRouter Kling) and t5 (single-pin Kling, tail drifted 0.37) rejected — renders on disk. The 2026-07-20 owner re-plate note (cockpit-door-closed still, retired cockpit-pov-v2 loop) is superseded by this bridge; old loop encodes remain on disk for revert.",
+      "selectedTake": "SB-10-t4-kling-v3-kdirect-bridge.mp4 (kling-direct kling-v3 pro 1080p, image+image_tail pins; graded + encoded 2026-07-20)"
     },
     {
       "id": "SB-11",
