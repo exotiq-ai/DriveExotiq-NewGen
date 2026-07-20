@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'framer-motion';
+import { motion, useMotionValueEvent, useScroll, useTransform, useReducedMotion, type MotionValue } from 'framer-motion';
 import CinematicStage from './CinematicStage';
 import FilmMenu from './FilmMenu';
 import { FRAMES } from './frames';
 import { OVERLAYS } from './living';
 import { NAV } from '@/lib/nav';
-import { FINE_BANDS, useBands, bandAtVh, type Bands } from './bands';
+import { FINE_BANDS, useBands, bandAt, bandAtVh, type Bands } from './bands';
+import { CHAPTERS, chapterAt } from './chapters';
 
 const N = FRAMES.length;
 
@@ -50,7 +51,8 @@ function chromeFadeStops(b: Bands): { stops: number[]; values: number[] } {
 }
 
 /**
- * All progress-driven chrome (header fade, hairline, scroll cue) lives here,
+ * All progress-driven chrome (header fade, hairline, chapter rail, scroll
+ * cue) lives here,
  * KEYED by the active weight table in the parent: framer's useTransform
  * captures its stop arrays, so a breakpoint flip remounts this shell to
  * rebuild the choreography against the new band geometry.
@@ -90,6 +92,20 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
       at: (bands.anchorVh[i] / (bands.total - 1)) * 100,
       label: f.id === 'SB-18' ? 'Skip to the tour' : 'Skip to the ask',
     }));
+  const askK = FRAMES.findIndex((f) => f.id === 'SB-20');
+
+  // Active chapter for the rail + the mobile chrome label: band OWNERSHIP →
+  // chapter, the same containment rule the keyboard stepper uses (never
+  // nearest-anchor). setState with an unchanged index bails out of the
+  // re-render, so the per-frame scroll event costs nothing between chapter
+  // crossings. The mount-time sync covers scroll restoration: the change
+  // event only fires once progress moves, and a restored mid-film load
+  // would otherwise label chapter one until the first scroll.
+  const [activeChapter, setActiveChapter] = useState(0);
+  useMotionValueEvent(progress, 'change', (v) => setActiveChapter(chapterAt(bandAt(v, bands))));
+  useEffect(() => {
+    setActiveChapter(chapterAt(bandAt(progress.get(), bands)));
+  }, [progress, bands]);
 
   return (
     <>
@@ -107,17 +123,36 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
               The Menu sits outside the renter↔sponsor cross-fade (that fade is
               the CTA cluster's), renders on every viewport (mobile had zero nav
               before it), and carries no Gulf: navigation is not an action. */}
-          <div className="flex items-center gap-5">
-            <Link href="/" className="font-display text-sm font-bold tracking-tight-exotiq text-ink">
-              Drive Exotiq
-            </Link>
-            <FilmMenu
-              jumps={TICKS.map((t) => ({
-                // The act ticks' chapter jumps, with a discoverable labeled home.
-                label: t.label.replace('Skip', 'Jump'),
-                onSelect: () => jumpTo(t.i),
-              }))}
-            />
+          <div>
+            <div className="flex items-center gap-5">
+              <Link href="/" className="font-display text-sm font-bold tracking-tight-exotiq text-ink">
+                Drive Exotiq
+              </Link>
+              <FilmMenu
+                // The Menu doubles as the chapter list (Phase E): every
+                // chapter jumps to its first beat's copy anchor, plus the
+                // direct line to the finale the returning sponsor had before
+                // ("Jump to the tour" is now the last chapter itself).
+                jumps={[
+                  ...CHAPTERS.map((c, ci) => ({
+                    label: c.title,
+                    active: ci === activeChapter,
+                    onSelect: () => jumpTo(c.first),
+                  })),
+                  ...(askK >= 0
+                    ? [{ label: 'Jump to the ask', onSelect: () => jumpTo(askK) }]
+                    : []),
+                ]}
+              />
+            </div>
+            {/* Mobile wayfinding (Phase E): the rail is desktop-only, so the
+                current chapter rides here — the left column's second line, the
+                one spot the header owns on phones (the right edge is the Gulf
+                CTA's, the center is contested by both clusters at 375px).
+                Metal, 13px, sentence case: a status, never an action. */}
+            <p className="mt-0.5 text-[13px] leading-tight text-metal sm:hidden">
+              {CHAPTERS[activeChapter]?.title}
+            </p>
           </div>
           <div className="relative">
             {/* Movement-I nav: the renter ask holds the Gulf. */}
@@ -185,6 +220,63 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
           </button>
         ))}
       </div>
+
+      {/* Chapter rail (Phase E): right-edge wayfinding — one tick per chapter
+          at the chapter's first-beat anchor, a thin metal fill so the film's
+          total length is legible at a glance, the active chapter labeled.
+          Same laws as the act ticks: mount-gated (tick positions come from
+          the weight table, which SSR can't know) and remounted with
+          StageChrome on a table flip. The Gulf stays the hairline's — the
+          rail is line-2/metal only, flat marks, no glow. The vertical insets
+          keep the track clear of the header band and the viewport corners;
+          tick spacing is proportional inside it, same anchorVh/(total−1)
+          math as the hairline ticks. The active label sits on a whisper of
+          canvas so a right-aligned copy block transiting beneath it at
+          ~1180–1400px viewports can't make it illegible. Desktop-only, same
+          gate as the act ticks: hairline marks are poor touch targets and
+          the labels would clip at the edge — mobile wayfinding is the header
+          label + the Menu's chapter list. */}
+      <nav aria-label="Film chapters" className="fixed bottom-16 right-0 top-24 z-[61] hidden w-16 sm:block">
+        {mounted && (
+          <>
+            <div aria-hidden="true" className="absolute inset-y-0 right-6 w-px bg-line-2/60" />
+            <motion.div
+              aria-hidden="true"
+              className="absolute inset-y-0 right-6 w-px origin-top bg-metal/80"
+              style={{ scaleY: progressScale }}
+            />
+            {CHAPTERS.map((c, ci) => {
+              const active = ci === activeChapter;
+              return (
+                <button
+                  key={c.title}
+                  type="button"
+                  aria-label={`Jump to ${c.title}`}
+                  aria-current={active || undefined}
+                  onClick={() => jumpTo(c.first)}
+                  className="group absolute right-0 flex h-6 w-16 -translate-y-1/2 cursor-pointer items-center justify-end"
+                  style={{ top: `${(bands.anchorVh[c.first] / (bands.total - 1)) * 100}%` }}
+                >
+                  <span
+                    className={`pointer-events-none absolute right-10 whitespace-nowrap rounded-sm bg-canvas/60 px-1.5 py-0.5 text-[13px] leading-none transition-opacity duration-250 ease-de ${
+                      active
+                        ? 'text-metal opacity-100'
+                        : 'text-ink-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'
+                    }`}
+                  >
+                    {c.title}
+                  </span>
+                  <span
+                    className={`mr-4 block h-px transition-all duration-250 ease-de ${
+                      active ? 'w-4 bg-metal' : 'w-2.5 bg-line-2 group-hover:bg-metal/70'
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </>
+        )}
+      </nav>
 
       {/* Quiet scroll cue over the cold open only. */}
       <motion.div

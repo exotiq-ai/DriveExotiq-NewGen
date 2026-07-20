@@ -28,8 +28,13 @@ import { NAV } from '@/lib/nav';
 export default function FilmMenu({
   jumps,
 }: {
-  /** Optional in-film chapter jumps (`Jump to the tour` / `Jump to the ask`). */
-  jumps?: { label: string; onSelect: () => void }[];
+  /**
+   * Optional in-film wayfinding jumps (Phase E: the chapter list plus the
+   * direct `Jump to the ask`). `active` marks the chapter currently on
+   * screen so the menu doubles as a "you are here" — the film chrome owns
+   * that state and passes it down.
+   */
+  jumps?: { label: string; onSelect: () => void; active?: boolean }[];
 }) {
   const [open, setOpen] = useState(false);
   // Portal target exists only after mount (SSR renders the trigger alone).
@@ -143,15 +148,23 @@ export default function FilmMenu({
         </nav>
         {jumps && jumps.length > 0 && (
           <div className="mt-8 flex flex-col items-start gap-1">
+            {/* The film's chapter list (Phase E) — the sheet is mobile's whole
+                wayfinding surface, so the seven bare titles get a quiet
+                eyebrow naming what they are. Active chapter in metal: a
+                status, not an action, so no Gulf and no border. */}
+            <p className="mb-1 text-[11px] tracking-[0.08em] text-ink-3">The film</p>
             {jumps.map((j) => (
               <button
                 key={j.label}
                 type="button"
+                aria-current={j.active || undefined}
                 onClick={() => {
                   close();
                   j.onSelect();
                 }}
-                className="py-1 text-[13px] text-ink-2 transition-colors duration-250 ease-de hover:text-ink"
+                className={`py-1 text-[13px] transition-colors duration-250 ease-de hover:text-ink ${
+                  j.active ? 'text-metal' : 'text-ink-2'
+                }`}
               >
                 {j.label}
               </button>
