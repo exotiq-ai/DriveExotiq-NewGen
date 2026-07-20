@@ -1296,5 +1296,16 @@
     "file": "docs/redesign/storyboard/renders/SB-11b/SB-11b-t1-kling-v3.0-pro-kdirect-dash.mp4",
     "seconds": 8,
     "resolution": "1080p"
+  },
+  {
+    "ts": "2026-07-20T20:14:37.068Z",
+    "beat": "SB-14c",
+    "take": 1,
+    "model": "kling-direct:kling-v3-pro-1080p",
+    "cost": 0,
+    "costNote": "prepaid Kling credits (not USD-metered here); seam-pin regen, phase D",
+    "file": "docs/redesign/storyboard/renders/SB-14c/SB-14c-t1-kling-v3-kdirect-seampin.mp4",
+    "seconds": 6,
+    "resolution": "1080p"
   }
 ]

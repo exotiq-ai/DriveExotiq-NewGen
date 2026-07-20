@@ -121,6 +121,10 @@ export const FADES: Record<string, number> = {
   // SB-10's still IS SB-11b's frame 0 (owner re-plate 2026-07-20) — same
   // same-frame-cut doctrine as SB-02.
   'SB-10': 0.35,
+  // SB-11b's scrub-end frame IS SB-14c's frame 0 since the 2026-07-20 seam-pin
+  // re-render (13-SEAM-AUDIT.md §5: first-frame QA SSIM 0.976) — compress
+  // toward the cut like every matched pair.
+  'SB-11b': 0.35,
 };
 
 /**
@@ -136,6 +140,7 @@ export const FADES: Record<string, number> = {
 export const SEAMS: Record<string, true> = {
   'SB-02': true,  // door scrub end → walk-in frame 0 (same Plate B render)
   'SB-10': true,  // settle-in still → roll-out scrub frame 0 (same dash render)
+  'SB-11b': true, // roll-out scrub end → canyon-run frame 0 (2026-07-20 seam-pin re-render)
   'SB-19': true,  // livery money frame → founder get-in (treatment film cut)
 };
 

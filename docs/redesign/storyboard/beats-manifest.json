@@ -704,6 +704,10 @@
       "still": "open-road.png",
       "duration": 6,
       "resolution": "1080p",
+      "frameImages": {
+        "first": "renders/seam-audit/sb-11b-lastframe.png"
+      },
+      "rerenderNote": "2026-07-20 (final design push, phase D seam audit): frameImages.first PINNED to the true final frame of the shipped sb-11b-scrub.mp4 encode (extracted via ffmpeg -sseof; 1600x900), so the canyon-run regeneration begins on the exact pixels the roll-out scrub holds at the SB-11b→SB-14c boundary — the plan's named unpinned seam (docs/redesign/12-FINAL-DESIGN-PUSH.md PHASE D). NOTE: the path is repo-root-relative (renders/ is gitignored working territory), unlike other beats' stills-dir-relative bare filenames — generate-videos.mjs frameDataUrl() resolves bare names against stillsDir only, so a regeneration run must pass this frame as an absolute path (or the file must be copied into stillsDir) until the resolver learns repo-relative paths. The current sb-14c.mp4 encode (reused SB-12-t1 dawn-canyon take, frame 0 = open-road.png) does NOT match this pin — real-pixel SSIM at the boundary is 0.22-0.29 (renders/seam-audit/cmp-11-sb11b-sb14c.jpg).",
       "status": "live",
       "selectedTake": "SB-12-t1-hailuo-2.3.mp4 (reused render — no new generation)",
       "replateNote": "2026-07-06 (owner): the coast aerial (SB-14-t1) is REJECTED for this beat — the film reorder had revived it by mistake; SB-14 t2/t3 are same-look coast siblings, also out. Re-plated with the original dawn-canyon windscreen POV (SB-12's pre-real-swap selected take): closes the cockpit thread (SB-10 settle in → SB-11b roll out → drive) and ends the AI storyline from the driver's seat before SB-08b lands the ask on the first real-footage frame. Traveling POV → play-once, fresh encode with NO loop seam (the 0.5s xfade lived only in the retired sb-12 loop encode). Poster/still = open-road.png (frame 0 of the take).",
