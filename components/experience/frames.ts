@@ -72,10 +72,25 @@ export interface Frame {
    * when this is set; the flag is pure data, no styling lives here.
    */
   brightPlate?: boolean;
+  /**
+   * Opt OUT of the copy pin (final design push 2026-07-20). Copy-bearing
+   * beats dock their copy at ~25svh from the viewport top and hold while the
+   * plate plays behind (the owner's "read while still scrolling"); pin: false
+   * restores the traveling anchor-window treatment for a beat that shouldn't
+   * dock. Pinned beats need weight ≥ ~1.5 — the sticky child's remaining
+   * travel inside the block is what funds the hold.
+   */
+  pin?: boolean;
 }
 
 const M = '/images/experience/photo';
 
+// Pin-floor weights (final design push 2026-07-20): every copy-bearing beat
+// that sat at weight 1 rises to 1.5 so its pinned copy has hold distance —
+// the sticky child's remaining travel inside the block IS the hold. This
+// lengthens the film from 34 to 40 viewports on both tables (owner-visible
+// side effect, flagged at the B checkpoint of the push plan). Wordless beats
+// keep their weights.
 export const FRAMES: Frame[] = [
   // ---------- Movement I — The Experience (renters) ----------
   {
@@ -86,6 +101,7 @@ export const FRAMES: Frame[] = [
     // visitors work for the premise). The verbatim AEO anchor lives in the
     // page spine; the Exotiq Inc. lineage lives on the end card.
     body: 'Exotic rentals, invite-only drives, and a Denver-to-Miami tour.',
+    weight: 1.5,
   },
   // Act I redesign (2026-07-06): the industrial door opens ONTO the corridor —
   // one centered vanishing point from the door aperture through SB-04's aisle,
@@ -115,11 +131,13 @@ export const FRAMES: Frame[] = [
   {
     id: 'SB-05', media: `${M}/mclaren-720s-v2.png`, movement: 'I', align: 'left', kicker: '01', headline: 'McLaren 720S',
     body: 'Twin-turbo V8 behind your shoulders. The one that rewards the driver, not the parking lot.',
+    weight: 1.5,
   },
   {
     id: 'SB-06', media: `${M}/porsche-gt3rs.png`, movement: 'I', align: 'right', kicker: '02', headline: 'Porsche 911 GT3 RS',
     jewel: 'The canyon carver.',
     body: 'GT3 is Porsche’s motorsport bloodline, naturally aspirated in every generation. RS is that bloodline, concentrated.',
+    weight: 1.5,
   },
   // 458 nose macro, restaged (owner 2026-07-06): the real Telluride photo
   // (daylight, gravel) popped out of the all-AI Movement-I stretch after the
@@ -135,6 +153,7 @@ export const FRAMES: Frame[] = [
     // every Ferrari V8 went turbo.
     body: 'The last naturally aspirated Ferrari V8.',
     brightPlate: true,
+    weight: 1.5,
   },
   // SB-07b cut (owner + copy plan §4): the film asked before the viewer had
   // chosen. Its ask now lands on SB-08b — desire → choice → possession → ask.
@@ -146,7 +165,7 @@ export const FRAMES: Frame[] = [
   { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Which one’s yours?', weight: 2, mobileWeight: 2 },
   // ---------- McLaren drive-out (grouped: get in, wake it, roll out, run the road) ----------
   { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.', weight: 2, mobileWeight: 2 },
-  { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.' },
+  { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.', weight: 1.5 },
   // 2026-07-08 owner redesign: the roll-out is now the film's THIRD scroll-
   // operated door — cabin POV facing the closed garage door (dawn leaking
   // beneath it, the Act I light-blade motif from the driver's seat), the
@@ -182,7 +201,7 @@ export const FRAMES: Frame[] = [
   },
 
   // ---------- Real footage → the drives ----------
-  { id: 'SB-12', media: `${M}/road-real.jpg`, movement: 'I', align: 'center', headline: 'The road opens.' },
+  { id: 'SB-12', media: `${M}/road-real.jpg`, movement: 'I', align: 'center', headline: 'The road opens.', weight: 1.5 },
   {
     id: 'SB-14', media: `${M}/highcountry-real.jpg`, movement: 'I', align: 'center',
     // "Colorado's high country" is the film's one geography anchor (audit:
@@ -190,6 +209,7 @@ export const FRAMES: Frame[] = [
     kicker: 'The drives', body: 'Invite-only, the last Sunday of every month. Sunrise in Colorado’s high country, then Cars & Coffee.',
     aria: 'Aerial over a high-country road, two cars in convoy',
     brightPlate: true,
+    weight: 1.5,
   },
   // The Gather beat (audit: the film claimed community and showed one human).
   // Re-plated 2026-07-06 (owner): the Senna/Veyron shot is OUT (it also
@@ -202,10 +222,11 @@ export const FRAMES: Frame[] = [
     jewel: 'No stanchions. No judging.',
     aria: 'Golden hour at the Cars & Coffee, the row of supercars nose to nose',
     focus: '58% 50%',
+    weight: 1.5,
   },
 
   // ---------- The turn ----------
-  { id: 'SB-15', media: `${M}/chase-real.jpg`, movement: 'I', align: 'right', jewel: 'This could be you.' },
+  { id: 'SB-15', media: `${M}/chase-real.jpg`, movement: 'I', align: 'right', jewel: 'This could be you.', weight: 1.5 },
 
   // ---------- S8 storyline (grouped, silent): the founder's car, before it is named ----------
   // The lone dark S8 stays UNEXPLAINED here — a plant, not a spoiler; SB-18's
@@ -217,7 +238,7 @@ export const FRAMES: Frame[] = [
   // from the numbered 01/02/03 fleet, so its recurrence registers and the
   // SB-18 reveal lands on a car the viewer has been tracking.
   { id: 'SB-11', media: `${M}/ignition-real.jpg`, movement: 'I', align: 'left', kicker: 'Push to start', jewel: 'Not one of the three.', aria: 'Push to start. The real V8 wakes.', weight: 1.5 },
-  { id: 'SB-13', media: `${M}/drive-real.jpg`, movement: 'I', align: 'left', kicker: 'The high country', jewel: 'This is the drive.' },
+  { id: 'SB-13', media: `${M}/drive-real.jpg`, movement: 'I', align: 'left', kicker: 'The high country', jewel: 'This is the drive.', weight: 1.5 },
   // (SB-13b taillights-receding CUT 2026-07-06, deck §2 fork: four silent S8
   // beats was a long trough right where a cold viewer decides whether to keep
   // scrolling. Ignition → drive → wheel-slowing keeps the decel (SB-16)
@@ -254,6 +275,7 @@ export const FRAMES: Frame[] = [
     jewel: 'A billboard that drives.',
     body: 'Ten markets. {n} miles. Summer to fall 2026.', odometerTarget: 5000,
     secondaryCta: 'See the tour plan', secondaryCtaHref: '/tour',
+    weight: 1.5,
   },
   {
     id: 'SB-19', media: `${M}/wrap-photoreal.png`, movement: 'II', align: 'center',
@@ -290,5 +312,6 @@ export const FRAMES: Frame[] = [
     body: 'Get on the list to drive. Sponsor the wrap for the tour.',
     cta: 'Sponsor the wrap', ctaHref: '/sponsor',
     secondaryCta: 'Get on the list', secondaryCtaHref: '/apply',
+    weight: 1.5,
   },
 ];

@@ -1,47 +1,96 @@
 /**
- * The tour route as a map. Ten markets plotted at their real geographic
- * positions (Denver NW → the Gulf → the Florida coast), connected by the gulf
- * route line. Replaces the old "Reach: Inquire" list — the route IS the media
- * plan (copy brief §9.3). Reach figures arrive with the media kit.
+ * The tour route as a real map. Three static layers, all baked path data from
+ * components/tour/route-geo.ts (zero runtime deps, server-safe):
  *
- * The dense Florida cluster (Tampa→Miami) gets a clean right-side label stack
- * with leader lines so every market stays legible.
+ *   1. State outlines — the states the route crosses (CO NM TX LA MS AL FL)
+ *      plus immediate neighbors for context, hairline `--de-line-2` over a
+ *      whisper of `--de-surface`.
+ *   2. The road-following Denver→Miami driving route (OSRM polyline —
+ *      I-25→Raton→US-287, I-35, I-10, I-75/I-4, the Turnpike) in `--de-gulf`,
+ *      the route's sanctioned accent. No point-to-point lines.
+ *   3. The ten tour stops from BEATS (components/tour/data.ts) — inland
+ *      markets labelled in place, the dense Florida cluster as a right-side
+ *      label stack with leader lines so every market stays legible.
+ *
+ * Stop dots are OSRM's snapped waypoint locations, so they sit on the route
+ * line by construction. Labels carry a `--de-bg-2` knockout (paint-order:
+ * stroke) so state hairlines never strike through the type.
+ *
+ * Geometry is PROVISIONAL until the owner's Google Maps screenshot arrives —
+ * regeneration procedure lives in the route-geo.ts header.
  */
 
-type Dot = { n: number; name: string; x: number; y: number };
+import { BEATS } from '@/components/tour/data';
+import {
+  ROUTE_D,
+  STATES_FILL_D,
+  STATES_MESH_D,
+  STOP_XY,
+  VIEW_H,
+  VIEW_W,
+} from '@/components/tour/route-geo';
 
-// Directly-labelled inland markets.
-const INLAND: (Dot & { lx: number; ly: number; anchor: 'start' | 'middle' | 'end' })[] = [
-  { n: 1, name: 'Denver', x: 96, y: 104, lx: 96, ly: 80, anchor: 'middle' },
-  { n: 2, name: 'Dallas / Ft Worth', x: 362, y: 300, lx: 362, ly: 278, anchor: 'middle' },
-  { n: 3, name: 'Austin', x: 338, y: 372, lx: 300, ly: 388, anchor: 'end' },
-  { n: 4, name: 'Houston', x: 420, y: 392, lx: 420, ly: 424, anchor: 'middle' },
-  { n: 5, name: 'New Orleans', x: 590, y: 372, lx: 590, ly: 350, anchor: 'middle' },
-];
+type Anchor = 'start' | 'middle' | 'end';
 
-// Florida cluster — dots in place, labels stacked on the right with leaders.
-const FLORIDA: (Dot & { ly: number })[] = [
-  { n: 6, name: 'Tampa / St Pete', x: 812, y: 430, ly: 384 },
-  { n: 7, name: 'Orlando', x: 852, y: 402, ly: 416 },
-  { n: 8, name: 'Palm Beach', x: 900, y: 452, ly: 448 },
-  { n: 9, name: 'Ft Lauderdale', x: 908, y: 480, ly: 480 },
-  { n: 10, name: 'Miami', x: 912, y: 508, ly: 512 },
-];
+/** Directly-labelled inland markets — label offset from the dot. */
+const INLAND: Record<string, { dx: number; dy: number; anchor: Anchor }> = {
+  denver: { dx: 0, dy: -20, anchor: 'middle' },
+  'dallas-ft-worth': { dx: 16, dy: 6, anchor: 'start' },
+  austin: { dx: -16, dy: 5, anchor: 'end' },
+  houston: { dx: 0, dy: 30, anchor: 'middle' },
+  'new-orleans': { dx: 0, dy: 30, anchor: 'middle' },
+};
+
+/**
+ * Florida cluster — label baselines for the right-side stack, ordered
+ * north→south (not leg order) so no leader line ever crosses another.
+ */
+const STACK: Record<string, number> = {
+  orlando: 410,
+  'tampa-st-pete': 442,
+  'palm-beach': 474,
+  'ft-lauderdale': 506,
+  miami: 538,
+};
 
 const LABEL_X = 962;
-const ALL = [...INLAND, ...FLORIDA].sort((a, b) => a.n - b.n);
-const routeD = ALL.map((s, i) => `${i === 0 ? 'M' : 'L'} ${s.x} ${s.y}`).join(' ');
+
+const XY = STOP_XY as Record<string, readonly [number, number]>;
+const STOPS = BEATS.flatMap((b) => {
+  const xy = XY[b.id];
+  return xy ? [{ beat: b, x: xy[0], y: xy[1] }] : [];
+});
+
+const LABEL_STYLE = {
+  fontSize: '18px',
+  letterSpacing: '0.01em',
+  paintOrder: 'stroke',
+} as const;
 
 export default function RouteMap() {
+  const first = STOPS[0];
+  const last = STOPS[STOPS.length - 1];
+
   return (
     <svg
-      viewBox="0 0 1160 560"
+      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
       className="h-auto w-full"
       role="img"
-      aria-label="The 2026 tour route: ten markets from Denver to Miami: Denver, Dallas/Ft Worth, Austin, Houston, New Orleans, Tampa/St Pete, Orlando, Palm Beach, Ft Lauderdale, and Miami."
+      aria-label={`The 2026 tour route: ten markets from Denver to Miami, following the interstates through Colorado, New Mexico, Texas, Louisiana, Mississippi, Alabama, and Florida: ${BEATS.map((b) => b.name).join(', ')}.`}
     >
+      {/* 1 — states: silhouette whisper + hairline borders */}
+      <path d={STATES_FILL_D} fill="var(--de-surface)" fillOpacity="0.5" />
       <path
-        d={routeD}
+        d={STATES_MESH_D}
+        fill="none"
+        stroke="var(--de-line-2)"
+        strokeWidth="1"
+        strokeLinejoin="round"
+      />
+
+      {/* 2 — the road-following route */}
+      <path
+        d={ROUTE_D}
         fill="none"
         stroke="var(--de-gulf)"
         strokeWidth="2"
@@ -50,54 +99,82 @@ export default function RouteMap() {
         opacity="0.55"
       />
 
-      {/* Inland markets — direct labels */}
-      {INLAND.map((s) => (
-        <g key={s.n}>
-          <circle cx={s.x} cy={s.y} r={s.n === 1 ? 7 : 4.5} fill="var(--de-gulf)" />
-          {s.n === 1 && (
-            <circle cx={s.x} cy={s.y} r="12" fill="none" stroke="var(--de-gulf)" strokeWidth="1" opacity="0.5" />
-          )}
-          <text
-            x={s.lx}
-            y={s.ly}
-            textAnchor={s.anchor}
-            fill="var(--de-text-2)"
-            style={{ fontSize: '18px', letterSpacing: '0.01em' }}
-            fontFamily="var(--font-sans)"
-          >
-            {s.name}
-          </text>
-        </g>
-      ))}
-      <text x="96" y="136" textAnchor="middle" fill="var(--de-text-3)" style={{ fontSize: '13px' }} fontFamily="var(--font-serif)" fontStyle="italic">
-        start
-      </text>
-
-      {/* Florida cluster — dots + leader lines + stacked labels */}
-      {FLORIDA.map((s) => (
-        <g key={s.n}>
-          <polyline
-            points={`${s.x},${s.y} ${s.x + 18},${s.y} ${LABEL_X - 10},${s.ly - 4} ${LABEL_X - 4},${s.ly - 4}`}
-            fill="none"
-            stroke="var(--de-line-2)"
-            strokeWidth="1"
-          />
-          <circle cx={s.x} cy={s.y} r={s.n === 10 ? 7 : 4.5} fill="var(--de-gulf)" />
-          {s.n === 10 && (
-            <circle cx={s.x} cy={s.y} r="12" fill="none" stroke="var(--de-gulf)" strokeWidth="1" opacity="0.5" />
-          )}
-          <text
-            x={LABEL_X}
-            y={s.ly}
-            textAnchor="start"
-            fill="var(--de-text-2)"
-            style={{ fontSize: '18px', letterSpacing: '0.01em' }}
-            fontFamily="var(--font-sans)"
-          >
-            {s.name}
-          </text>
-        </g>
-      ))}
+      {/* 3 — stops */}
+      {STOPS.map((s) => {
+        const inland = INLAND[s.beat.id];
+        const stackY = STACK[s.beat.id];
+        const terminus = s === first || s === last;
+        return (
+          <g key={s.beat.id}>
+            {stackY !== undefined && (
+              <polyline
+                points={`${s.x},${s.y} ${s.x + 18},${s.y} ${LABEL_X - 10},${stackY - 4} ${LABEL_X - 4},${stackY - 4}`}
+                fill="none"
+                stroke="var(--de-line-2)"
+                strokeWidth="1"
+              />
+            )}
+            <circle cx={s.x} cy={s.y} r={terminus ? 7 : 4.5} fill="var(--de-gulf)" />
+            {terminus && (
+              <circle
+                cx={s.x}
+                cy={s.y}
+                r="12"
+                fill="none"
+                stroke="var(--de-gulf)"
+                strokeWidth="1"
+                opacity="0.5"
+              />
+            )}
+            {inland && (
+              <text
+                x={s.x + inland.dx}
+                y={s.y + inland.dy}
+                textAnchor={inland.anchor}
+                fill="var(--de-text-2)"
+                stroke="var(--de-bg-2)"
+                strokeWidth="4"
+                strokeLinejoin="round"
+                style={LABEL_STYLE}
+                fontFamily="var(--font-sans)"
+              >
+                {s.beat.name}
+              </text>
+            )}
+            {stackY !== undefined && (
+              <text
+                x={LABEL_X}
+                y={stackY}
+                textAnchor="start"
+                fill="var(--de-text-2)"
+                stroke="var(--de-bg-2)"
+                strokeWidth="4"
+                strokeLinejoin="round"
+                style={LABEL_STYLE}
+                fontFamily="var(--font-sans)"
+              >
+                {s.beat.name}
+              </text>
+            )}
+            {s.beat.tag && (
+              <text
+                x={s.x - 20}
+                y={s.y + 5}
+                textAnchor="end"
+                fill="var(--de-text-3)"
+                stroke="var(--de-bg-2)"
+                strokeWidth="4"
+                strokeLinejoin="round"
+                style={{ fontSize: '13px', paintOrder: 'stroke' }}
+                fontFamily="var(--font-serif)"
+                fontStyle="italic"
+              >
+                {s.beat.tag}
+              </text>
+            )}
+          </g>
+        );
+      })}
     </svg>
   );
 }

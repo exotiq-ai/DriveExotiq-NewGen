@@ -51,19 +51,28 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            className="relative z-50 -mr-2 p-2 text-ink lg:hidden"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-            aria-expanded={open}
-          >
-            <div className="flex h-5 w-6 flex-col justify-between">
-              <span className={`h-px w-full bg-current transition-all duration-300 ${open ? 'translate-y-2 rotate-45' : ''}`} />
-              <span className={`h-px w-full bg-current transition-all duration-300 ${open ? 'opacity-0' : 'opacity-100'}`} />
-              <span className={`h-px w-full bg-current transition-all duration-300 ${open ? '-translate-y-2 -rotate-45' : ''}`} />
-            </div>
-          </button>
+          {/* Compact row (below lg) — Sponsor surfaced beside the toggle so
+              the sponsor path never hides in the sheet (design push F5). */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <Link
+              href="/sponsor"
+              className="px-3 py-2 text-[15px] text-ink-2 transition-colors duration-250 hover:text-ink"
+            >
+              Sponsor
+            </Link>
+            <button
+              className="relative z-50 -mr-2 p-2 text-ink"
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+              aria-expanded={open}
+            >
+              <div className="flex h-5 w-6 flex-col justify-between">
+                <span className={`h-px w-full bg-current transition-all duration-300 ${open ? 'translate-y-2 rotate-45' : ''}`} />
+                <span className={`h-px w-full bg-current transition-all duration-300 ${open ? 'opacity-0' : 'opacity-100'}`} />
+                <span className={`h-px w-full bg-current transition-all duration-300 ${open ? '-translate-y-2 -rotate-45' : ''}`} />
+              </div>
+            </button>
+          </div>
         </nav>
       </header>
 

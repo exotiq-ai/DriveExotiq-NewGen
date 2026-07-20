@@ -4,12 +4,14 @@ import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import RoadbookStage from '@/components/tour/RoadbookStage';
-import { BEATS, ODO_TARGET } from '@/components/tour/data';
+import SponsorPill from '@/components/tour/SponsorPill';
+import { BEATS, ODO_TARGET, TOUR_FINALE, TOUR_HERO } from '@/components/tour/data';
+import { TOUR_PLACEHOLDERS } from '@/components/tour/placeholders';
 
 export const metadata: Metadata = {
   title: 'The Exotic Tour: Denver to Miami',
   description:
-    'Scroll the drive. One 2017 Audi S8, ten markets, ~5,000 miles. Drive Exotiq’s Denver-to-Miami exotic tour, summer into fall 2026. The wrap is still yours to claim.',
+    'We’re driving one 2017 Audi S8 from Denver to Miami: ten markets, about 5,000 miles, summer into fall 2026, parked in front of the people who run exotic fleets. The wrap is for sale.',
   alternates: { canonical: '/tour' },
 };
 
@@ -26,35 +28,65 @@ export default function TourPage() {
     <>
       <Header />
       <main id="main" className="bg-canvas">
-        {/* Intro — full-bleed S8 hero carrying the one <h1>. A STILL from the
-            hero footage (owner 2026-07-07): two videos on one page competed —
-            the roadbook's rolling windshield below is the page's single moving
-            picture, and the still buys a faster LCP. The copy is unchanged. */}
-        <section className="relative flex min-h-[92svh] items-end overflow-hidden">
-          <Image
-            src="/images/experience/poster/tour-hero.jpg"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
+        {/* Intro — full-bleed liveried-S8 hero carrying the one <h1>. Still a
+            STILL (owner 2026-07-07: two videos on one page competed — the
+            roadbook's rolling windshield below is the page's single moving
+            picture). Design push F1: the two owner renders replace the distant
+            unliveried berm shot — Tortilla Flats front-45 on desktop, the
+            Hangar No. 1 portrait as mobile art direction. The breakpoint-
+            conditioned `sizes` keep the hidden variant's preload at thumbnail
+            weight so LCP holds with two priority images. */}
+        <section id="tour-hero" className="relative flex min-h-[92svh] items-end overflow-hidden bg-canvas">
+          {/* Desktop — overscan wrapper mirrors the stage's right-shift (F4)
+              so the car reads right-of-center and copy owns the dark left. */}
+          <div aria-hidden="true" className="absolute inset-y-0 left-0 right-[-18%] hidden md:block">
+            <Image
+              src="/images/experience/poster/tour-hero-livery.jpg"
+              alt=""
+              fill
+              priority
+              sizes="(min-width: 768px) 118vw, 1vw"
+              placeholder="blur"
+              blurDataURL={TOUR_PLACEHOLDERS['/images/experience/poster/tour-hero-livery.jpg']}
+              className="object-cover"
+              style={{ objectPosition: '20% 60%' }}
+            />
+          </div>
+          {/* Mobile — portrait art direction: the car low in frame, the wet
+              tarmac's dark lower third as natural ground for the copy. */}
+          <div aria-hidden="true" className="absolute inset-0 md:hidden">
+            <Image
+              src="/images/experience/poster/tour-hero-hangar.jpg"
+              alt=""
+              fill
+              priority
+              sizes="(min-width: 768px) 1vw, 100vw"
+              placeholder="blur"
+              blurDataURL={TOUR_PLACEHOLDERS['/images/experience/poster/tour-hero-hangar.jpg']}
+              className="object-cover"
+              style={{ objectPosition: '45% 50%' }}
+            />
+          </div>
+          {/* Bottom scrim — capped under the copy block so the car reads
+              instantly instead of dimming the whole frame (F1). */}
           <div
             aria-hidden="true"
             className="absolute inset-0"
-            style={{ background: 'linear-gradient(to top, rgba(11,11,12,0.94) 4%, rgba(11,11,12,0.55) 42%, rgba(11,11,12,0.18) 100%)' }}
+            style={{ background: 'linear-gradient(to top, rgba(11,11,12,0.92) 0%, rgba(11,11,12,0.6) 24%, rgba(11,11,12,0.12) 46%, transparent 62%)' }}
           />
+          {/* Left scrim — the stage's explicit canvas curve (F4), desktop only;
+              the portrait crop earns its floor from the bottom scrim alone. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(to right, rgba(11,11,12,0.7) 0%, rgba(11,11,12,0.1) 55%, transparent 100%)' }}
+            className="absolute inset-0 hidden md:block"
+            style={{ background: 'linear-gradient(to right, #0B0B0C 0%, rgba(11,11,12,0.82) 22%, rgba(11,11,12,0.35) 45%, transparent 65%)' }}
           />
 
           <div className="relative mx-auto w-full max-w-content px-6 pb-14 md:px-10 md:pb-20">
             <div className="flex items-center gap-3">
               <span className="h-px w-8 bg-gulf" />
               <span className="text-[13px] tracking-[0.04em] text-ink-2">
-                The tour · Denver → Miami · summer–fall 2026
+                {TOUR_HERO.kicker}
               </span>
             </div>
 
@@ -62,20 +94,37 @@ export default function TourPage() {
               className="mt-6 max-w-[20ch] font-display text-[clamp(2.4rem,6vw,4.8rem)] font-semibold leading-[0.98] tracking-tightest text-ink"
               style={{ textShadow: '0 2px 40px rgba(0,0,0,0.65)' }}
             >
-              Before first light, in Denver, the engine is already warm.
+              {TOUR_HERO.headline}
             </h1>
 
             <p
               className="mt-6 max-w-[54ch] text-[clamp(1.05rem,1.7vw,1.3rem)] leading-snug text-ink"
               style={{ textShadow: '0 1px 24px rgba(0,0,0,0.7)' }}
             >
-              One 2017 Audi S8, ten markets, ~5,000 miles. The Denver-to-Miami
-              exotic tour, summer into fall 2026. The wrap is still yours to claim.
+              {TOUR_HERO.sub}
             </p>
 
             <p className="mt-5 font-serif text-[clamp(1.1rem,2vw,1.5rem)] italic text-gulf">
-              The long way south, on purpose.
+              {TOUR_HERO.jewel}
             </p>
+
+            {/* Hero CTA row (F5) — the owner's dictated value line, quiet
+                bordered treatment: the persistent pill downpage is the tour's
+                one Gulf action, so this stays hairline, not accent. */}
+            <div className="mt-8">
+              <Link
+                href="/sponsor?interest=title-wrap"
+                className="group inline-flex min-h-[52px] items-center gap-3 rounded-sm border border-line-2 bg-canvas/60 px-5 py-3 text-[15px] font-medium text-ink backdrop-blur-sm transition-colors duration-250 ease-de hover:border-ink-3 hover:bg-canvas/80"
+              >
+                <span>Why this wrap is worth $10 million — partner or sponsor the wrap.</span>
+                <span
+                  aria-hidden="true"
+                  className="text-ink-2 transition-transform duration-250 ease-de group-hover:translate-x-0.5"
+                >
+                  →
+                </span>
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -120,24 +169,27 @@ export default function TourPage() {
           </ol>
         </RoadbookStage>
 
-        {/* Finale — always rendered server-side. Real CTAs (crawlable links). */}
+        {/* Finale — always rendered server-side. Real CTAs (crawlable links).
+            Copy reads from TOUR_FINALE (data.ts) — the stage consumes the same
+            strings, so the finale can never drift again (F2). */}
         <section
+          id="tour-finale-section"
           aria-labelledby="tour-finale"
           className="relative mx-auto max-w-content px-6 py-section text-center md:px-10"
         >
           <p className="font-serif text-[clamp(1.1rem,2vw,1.4rem)] italic text-gulf">
-            the end of the line, under a falling sun.
+            {TOUR_FINALE.jewel}
           </p>
 
           <h2
             id="tour-finale"
             className="mx-auto mt-5 max-w-[18ch] font-display text-[clamp(2.6rem,8vw,5rem)] font-semibold leading-[0.94] tracking-tightest text-ink"
           >
-            5,000 miles. Ten cities. One blank canvas.
+            {TOUR_FINALE.headline}
           </h2>
 
-          <p className="mx-auto mt-6 max-w-[44ch] text-[clamp(1rem,1.6vw,1.15rem)] leading-snug text-ink-2">
-            This is the car. This is the route. The wrap is still yours to claim.
+          <p className="mx-auto mt-6 max-w-[54ch] text-[clamp(1rem,1.6vw,1.15rem)] leading-snug text-ink-2">
+            {TOUR_FINALE.sub}
           </p>
 
           {/* AEO anchor, server-rendered (§1.3 law) — copy, not a CTA. */}
@@ -165,6 +217,11 @@ export default function TourPage() {
             {ODO_TARGET.toLocaleString()} miles round trip · {BEATS.length} markets · one car
           </p>
         </section>
+
+        {/* Persistent sponsor pill (F5) — the page's one Gulf action once the
+            hero scrolls away; suppressed at the finale so the ask never
+            doubles. Crawlable <a> from first paint (client island SSRs it). */}
+        <SponsorPill />
       </main>
       <Footer />
     </>

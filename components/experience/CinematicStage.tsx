@@ -9,6 +9,7 @@ import {
   useTransform,
   useInView,
   useReducedMotion,
+  useMotionValue,
   useMotionValueEvent,
   type MotionValue,
 } from 'framer-motion';
@@ -48,11 +49,9 @@ function useNoTextBlur() {
   return noBlur;
 }
 
-function Copy({ frame, index }: { frame: Frame; index?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+function Copy({ frame, index, progress, bands }: { frame: Frame; index?: number; progress?: MotionValue<number>; bands?: Bands }) {
   const reduce = useReducedMotion();
   const noBlur = useNoTextBlur();
-  const inView = useInView(ref, { amount: 0.55 });
 
   // Chrome guard (owner bug 2026-07-08, 375×812): the fixed chrome (wordmark +
   // Menu + CTA row, ~64px + hairline) rides over the film, and a SHORT copy
@@ -73,7 +72,56 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
   const chromeGuardRef = useRef<HTMLDivElement>(null);
   const nearChrome = useInView(chromeGuardRef, { margin: '0px 0px -87% 0px' });
   const chromeGuarded = noBlur && !frame.cta && !frame.secondaryCta && nearChrome;
-  const show = reduce || (inView && !chromeGuarded);
+
+  // A1 (final design push 2026-07-20): copy visibility is a pure function of
+  // stage progress — the same band math the plates consume — so forward and
+  // reverse scroll trace the identical curve, and a pinned block (Phase B)
+  // can hold lit through any stretch of its band. The old useInView(0.55)
+  // time-tween replayed nondeterministically on reverse and could never
+  // release a block that stays in view. Stops key off the copy ANCHOR, not
+  // the band start: on weighted beats the anchor sits deep in the band and
+  // start-keyed stops would light copy while it is still off-screen below.
+  // The copyAt clamp in bands.ts guarantees anchor ≤ end − 0.5·unit, which
+  // keeps these stops monotone for every legal beat. Exit completes by
+  // end − 0.15·unit — the plate dissolve's own margin — so copy is gone
+  // before the next plate is meaningfully lit (Phase B inherits this as the
+  // pin's release point).
+  const film = index !== undefined && !!progress && !!bands;
+  const fallbackProgress = useMotionValue(1); // static path renders fully lit
+  const mv = film ? progress! : fallbackProgress;
+  const u = film ? bands!.unit : 1;
+  const anchor = film ? bands!.anchorVh[index!] * bands!.unit : 0;
+  const in0 = anchor - 0.48 * u;
+  const in1 = anchor - 0.26 * u;
+  const out1 = film ? Math.max(bands!.end[index!] - 0.15 * u, in1 + 0.3 * u) : 2;
+  const out0 = out1 - 0.22 * u;
+  // The [0,1] stop clamps are load-bearing (same law as the Plate dissolve):
+  // framer compiles these into WAAPI scroll animations whose keyframe offsets
+  // must be non-decreasing within [0,1] — a negative cold-open stop or a
+  // finale stop past 1 throws at hydration and re-creates the whole tree.
+  // Edge beats therefore drop the out-of-range ramp instead of clamping it:
+  // the cold open is lit from v=0, the finale stays lit to v=1.
+  const first = in1 <= 0;
+  const last = out0 >= 1;
+  const stops = first ? [0, out0, out1] : last ? [Math.max(0, in0), in1, 1] : [Math.max(0, in0), in1, out0, Math.min(1, out1)];
+  const opacityValues = first ? [1, 1, 0] : last ? [0, 1, 1] : [0, 1, 1, 0];
+  const yValues = first ? [0, 0, -18] : last ? [24, 0, 0] : [24, 0, 0, -18];
+  // Opacity + y only — NO blur on the scroll path. The tween-era de-blur
+  // needed a style branch that diverges across the SSR boundary (noBlur is
+  // false on the server, true on coarse clients), and a style-prop MotionValue
+  // serializes into the SSR HTML — the divergence produced hydration
+  // mismatches and framer useInsertionEffect errors that re-created the whole
+  // tree on load. Style MotionValues must be unconditional and identical
+  // server/client (the Plate pattern).
+  const scrollOpacity = useTransform(mv, stops, opacityValues);
+  const scrollY = useTransform(mv, stops, yValues);
+  // SB-20's ask arrives as film: the CTA row rises a beat after the block —
+  // staggered in SCROLL distance, not seconds, so the reveal scrubs cleanly
+  // in both directions.
+  const ctaOpacity = useTransform(mv, [in0 + 0.1 * u, in1 + 0.1 * u], [0, 1]);
+  const ctaY = useTransform(mv, [in0 + 0.1 * u, in1 + 0.1 * u], [24, 0]);
+  const cta2Opacity = useTransform(mv, [in0 + 0.16 * u, in1 + 0.16 * u], [0, 1]);
+  const cta2Y = useTransform(mv, [in0 + 0.16 * u, in1 + 0.16 * u], [24, 0]);
 
   // Tap-to-unmute affordance (film path only — StaticStage has no video).
   // The button talks to the beat's PlayOnceLayer over a window event pair;
@@ -100,6 +148,12 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
         '--wc': COARSE_BANDS.weight[index!],
         '--af': FINE_BANDS.copyAt[index!] * FINE_BANDS.weight[index!] - 0.5,
         '--ac': COARSE_BANDS.copyAt[index!] * COARSE_BANDS.weight[index!] - 0.5,
+        // Pin spacer (Phase B): (copyAt·weight − 0.25)·100svh of flow ahead of
+        // the sticky child puts the dock engage point EXACTLY at anchorVh —
+        // engage s = prefix + S − 0.25 = prefix + copyAt·w − 0.5 = anchorVh —
+        // so jumps, ticks, and the A1 reveal stops need no redefinition.
+        '--pf': Math.max(0, FINE_BANDS.copyAt[index!] * FINE_BANDS.weight[index!] - 0.25),
+        '--pc': Math.max(0, COARSE_BANDS.copyAt[index!] * COARSE_BANDS.weight[index!] - 0.25),
       } as React.CSSProperties)
     : undefined;
 
@@ -150,23 +204,19 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
         />
       )}
       <div ref={chromeGuardRef} className="copy-block relative mx-auto w-full max-w-content px-6 md:px-8">
+        {/* Outer layer: scroll-derived reveal (deterministic both directions). */}
         <motion.div
-          ref={ref}
+          className="w-full"
+          style={film ? { opacity: scrollOpacity, y: scrollY } : undefined}
+        >
+        {/* Inner layer: the mobile chrome guard — a quick 0.3s duck when the
+            block's top crosses into the fixed-chrome zone. Multiplies with the
+            scroll opacity above; desktop never flips it. */}
+        <motion.div
           className={cn('flex w-full flex-col', alignItems)}
           initial={false}
-          animate={
-            reduce
-              ? undefined
-              : noBlur
-                // filter pinned to 0 (not omitted): clears any stale blur if
-                // the pointer class flips mid-session; a constant costs nothing.
-                ? { opacity: show ? 1 : 0, y: show ? 0 : 30, filter: 'blur(0px)' }
-                : { opacity: show ? 1 : 0, y: show ? 0 : 30, filter: show ? 'blur(0px)' : 'blur(6px)' }
-          }
-          // Chrome-guard hides are quick (clear the zone in ~0.3s); every other
-          // reveal/hide keeps the film's 0.85s resolve. Desktop is untouched —
-          // chromeGuarded is always false on fine pointers ≥768px.
-          transition={{ duration: chromeGuarded ? 0.3 : 0.85, ease: [0.22, 1, 0.36, 1] }}
+          animate={film && !reduce ? { opacity: chromeGuarded ? 0 : 1, y: chromeGuarded ? 12 : 0 } : undefined}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
           {chip && (
             // The status chip (deck §7.1, SB-04 `Opening soon`): a quiet
@@ -218,19 +268,15 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
           )}
           {(frame.cta || frame.secondaryCta) && (
             // The finale's ask arrives as film: the CTA row rises a beat after
-            // the jewel line, each button staggered (SB-20 only; elsewhere the
-            // row resolves with the block).
+            // the jewel line, staggered in scroll distance (SB-20 only;
+            // elsewhere the row resolves with the block).
             <motion.div
               className={cn('mt-8 flex flex-wrap gap-3', justify)}
-              initial={false}
-              animate={
-                reduce || frame.id !== 'SB-20'
-                  ? undefined
-                  : noBlur
-                    ? { opacity: show ? 1 : 0, y: show ? 0 : 24, filter: 'blur(0px)' }
-                    : { opacity: show ? 1 : 0, y: show ? 0 : 24, filter: show ? 'blur(0px)' : 'blur(6px)' }
+              style={
+                film && frame.id === 'SB-20'
+                  ? { opacity: ctaOpacity, y: ctaY }
+                  : undefined
               }
-              transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
               {frame.cta && (
                 <Link href={frame.ctaHref || '#'} className="rounded-sm bg-gulf px-6 py-3 text-sm font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2">
@@ -239,9 +285,11 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
               )}
               {frame.secondaryCta && (
                 <motion.span
-                  initial={false}
-                  animate={reduce || frame.id !== 'SB-20' ? undefined : { opacity: show ? 1 : 0, y: show ? 0 : 24 }}
-                  transition={{ duration: 0.7, delay: 0.47, ease: [0.16, 1, 0.3, 1] }}
+                  style={
+                    film && frame.id === 'SB-20'
+                      ? { opacity: cta2Opacity, y: cta2Y }
+                      : undefined
+                  }
                 >
                   <Link href={frame.secondaryCtaHref || '#'} className="rounded-sm border border-line-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3">
                     {frame.secondaryCta}
@@ -251,17 +299,33 @@ function Copy({ frame, index }: { frame: Frame; index?: number }) {
             </motion.div>
           )}
         </motion.div>
+        </motion.div>
       </div>
     </>
   );
 
+  // The pin (Phase B, final design push): copy enters with scroll, docks at
+  // --de-pin-top (~25svh), holds while the plate's video plays behind, and
+  // releases as a FADE at the dock (the A1 exit completes before the sticky
+  // child un-pins). Sticky is legal here: Lenis uses native scroll and the
+  // copy column has no transformed ancestor — and the sticky node itself is
+  // never animated (framer only ever transforms its descendants). pin: false
+  // in frames.ts restores the traveling anchor window.
+  const pinned = film && frame.pin !== false;
   return heavy ? (
-    // The weighted block: weight·100svh tall, with a 100svh anchor window
-    // absolutely positioned at copyAt so the copy centers at the treatment's
-    // chosen plate-local progress (SB-19's caption rides the held money frame).
-    <div className="beat-h relative" style={beatVars}>
-      <div className="beat-anchor absolute inset-x-0 flex h-[100svh] items-center">{inner}</div>
-    </div>
+    pinned ? (
+      <div className="beat-h relative" style={beatVars}>
+        <div className="beat-pin-spacer" aria-hidden="true" />
+        <div className="beat-pin">{inner}</div>
+      </div>
+    ) : (
+      // The weighted block: weight·100svh tall, with a 100svh anchor window
+      // absolutely positioned at copyAt so the copy centers at the treatment's
+      // chosen plate-local progress (SB-19's caption rides the held money frame).
+      <div className="beat-h relative" style={beatVars}>
+        <div className="beat-anchor absolute inset-x-0 flex h-[100svh] items-center">{inner}</div>
+      </div>
+    )
   ) : (
     <div className="relative flex h-[100svh] items-center">{inner}</div>
   );
@@ -557,12 +621,16 @@ export default function CinematicStage() {
 
   if (reduce) return <StaticStage />;
 
+  // Copy blocks are keyed by table identity for the same reason the plates
+  // are: useTransform captures its stop arrays at hook time, so a breakpoint
+  // flip must remount to rebuild every reveal with the new band geometry.
+  const mode = bands === FINE_BANDS ? 'f' : 'c';
   return (
     <section ref={ref} className="relative">
       <StageMedia progress={scrollYProgress} bands={bands} />
       <div className="relative z-10 -mt-[100svh]">
         {FRAMES.map((f, i) => (
-          <Copy key={f.id} frame={f} index={i} />
+          <Copy key={`${f.id}-${mode}`} frame={f} index={i} progress={scrollYProgress} bands={bands} />
         ))}
       </div>
     </section>

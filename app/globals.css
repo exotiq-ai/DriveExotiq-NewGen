@@ -415,6 +415,28 @@
   .beat-anchor { top: calc(var(--af, 0) * 100svh); }
 }
 
+/* The pin (final design push 2026-07-20): copy-bearing beats dock their copy
+   at --de-pin-top from the viewport top and HOLD there while the plate's
+   video plays on behind — the owner's "read while still scrolling" ask.
+   Geometry: a flow spacer of (copyAt·weight − 0.25)·100svh ahead of a sticky
+   auto-height child makes the dock engage EXACTLY at the beat's anchorVh, so
+   keyboard nav, act ticks, FilmMenu jumps, and the copy's scroll-linked
+   reveal all stay keyed to the existing anchor with zero band-math changes.
+   The reveal's exit (end − 0.15·unit) completes before the sticky child ever
+   un-pins for copy up to ~0.4 viewports tall — the release is a fade at the
+   dock, not a visible slide. Same fine/coarse var pattern as .beat-h. The
+   dock offset is ONE tunable: --de-pin-top ("top 75" read as 25svh —
+   owner-confirm item #8 in docs/redesign/12-FINAL-DESIGN-PUSH.md). */
+.beat-pin-spacer { height: calc(var(--pc, 0) * 100svh); }
+.beat-pin { position: sticky; top: var(--de-pin-top, 25svh); }
+/* The pinned child is auto-height (its remaining travel funds the hold), so
+   its scrims extend into an oversized halo to keep today's around-the-copy
+   vignette; the radial fades to transparent well inside these edges. */
+.beat-pin .copy-scrim { top: -42svh; bottom: -42svh; }
+@media (min-width: 1024px) and (pointer: fine) {
+  .beat-pin-spacer { height: calc(var(--pf, 0) * 100svh); }
+}
+
 /* Copy legibility over the film (/experience). Desktop: the 16:9 frame keeps
    its dark thirds behind the copy — a soft scrim suffices. Narrow/coarse
    viewports portrait-crop the plates (only the center ~46% of frame width

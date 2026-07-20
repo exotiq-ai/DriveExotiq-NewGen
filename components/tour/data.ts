@@ -8,6 +8,27 @@
 /** Round-trip odometer target. Matches the "~5,000 miles" headline. Single constant. */
 export const ODO_TARGET = 4980;
 
+/**
+ * Hero + finale copy — hoisted here (design push F2) so the server page
+ * (app/tour/page.tsx) and the cinematic stage (RoadbookStage.tsx) read one
+ * source and the strings can never drift again. Owner voice: explaining the
+ * trip to a friend; every number is a canonical fact (2017 S8, ten markets,
+ * ~5,000 mi, summer–fall 2026) and the venue names come from the tour blog
+ * intel (content/blog/tour-denver.md, tour-miami.md).
+ */
+export const TOUR_HERO = {
+  kicker: 'The tour · Denver → Miami · summer–fall 2026',
+  headline: 'We’re driving one car from Denver to Miami. The wrap is for sale.',
+  sub: 'The car is a 2017 Audi S8 in heritage racing livery, a sleeper. We’re driving it to ten markets, about 5,000 miles over summer into fall 2026, and parking it in front of the people who run exotic fleets and the crowds that gather around them.',
+  jewel: 'The long way south, on purpose.',
+} as const;
+
+export const TOUR_FINALE = {
+  jewel: 'the end of the line, under a falling sun.',
+  headline: '5,000 miles. Ten cities. One blank canvas.',
+  sub: 'Ten markets, and the people who run them: exotic-fleet operators, collectors, and the Cars & Coffee crowds around them. The car parks where they already gather, from Espresso and Exhaust in Denver to Supercar Saturdays in South Florida. One brand gets the canvas for the whole route.',
+} as const;
+
 export interface CityBeat {
   /** 1-indexed leg number. */
   leg: number;

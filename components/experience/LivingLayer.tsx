@@ -71,20 +71,30 @@ function LoopLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 
   const poster = mobile && cfg.portraitSrc ? (cfg.portraitPoster ?? cfg.poster) : cfg.poster;
 
   // loadeddata can fire before React attaches the handler (fast local loads) —
-  // poll readiness imperatively as well.
+  // poll readiness imperatively as well. Deps include `ready` (reverse-scroll
+  // fix): a real playback failure downgrades to the still, but the watch
+  // restarts, so the beat can come back — previously one rejection locked the
+  // beat onto its still for the rest of the session.
   useEffect(() => {
     const v = ref.current;
-    if (!v) return;
+    if (!v || ready) return;
     if (v.readyState >= 2) { setReady(true); return; }
     const id = setInterval(() => { if (v.readyState >= 2) { setReady(true); clearInterval(id); } }, 250);
     return () => clearInterval(id);
-  }, [src]);
+  }, [src, ready]);
 
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    if (near && ready) v.play().catch(() => setReady(false));
-    else if (!near) v.pause();
+    if (near && ready) {
+      v.play().catch((err: unknown) => {
+        // A fast reversal interrupts play() with our own pause() — that
+        // AbortError is bookkeeping, not failure. Killing `ready` on it is
+        // what froze beats on their stills after quick scroll flips.
+        if ((err as DOMException)?.name === 'AbortError') return;
+        setReady(false);
+      });
+    } else if (!near) v.pause();
   }, [near, src, ready]);
 
   useEffect(() => {
@@ -162,27 +172,75 @@ function PlayOnceLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { ki
 
   useEffect(() => {
     const v = ref.current;
-    if (!v) return;
+    if (!v || ready) return;
     if (v.readyState >= 2) { setReady(true); return; }
     const id = setInterval(() => { if (v.readyState >= 2) { setReady(true); clearInterval(id); } }, 250);
     return () => clearInterval(id);
-  }, [src]);
+  }, [src, ready]);
+
+  // Reverse-scroll integrity (final design push 2026-07-20). The old model —
+  // play once past playAt, rewind only below a p<0.02 sliver — had four
+  // failure modes at speed: an interrupted play() killed `ready` for the
+  // session; a reversal landing in p∈[0.02,0.15] left the ended frame frozen
+  // with no way to replay; the rewind fired inside the visible dissolve (a
+  // stuck-then-snap artifact); and any upward entry played the clip forward
+  // under a backward scroll. New model: rewinds happen only while the layer
+  // is out of the working set (near=false ⇒ covered or beyond the adjacent
+  // band — not visible); direction decides re-entry state.
+  const prevP = useRef(0);
+  const armedReplay = useRef(false);
+  const wasNear = useRef(false);
+  useEffect(() => {
+    const vid = ref.current;
+    if (!vid) { wasNear.current = near; return; }
+    if (!near && wasNear.current) {
+      vid.pause();
+    } else if (near && !wasNear.current) {
+      if (!ready) return; // media not up yet — this effect re-runs on `ready`
+      const v = p.get();
+      armedReplay.current = false;
+      if (v >= (cfg.playAt ?? 0.15)) {
+        // Entering from above (reverse scroll) or a mid-band teleport: hold
+        // the settled final frame — never play forward under an upward scroll.
+        played.current = true;
+        if (vid.duration) { try { vid.currentTime = Math.max(0, vid.duration - 0.05); } catch { /* not seekable yet */ } }
+      } else {
+        // Entering from below: re-arm a fresh play while still invisible.
+        played.current = false;
+        try { vid.currentTime = 0; } catch { /* not seekable yet */ }
+      }
+    }
+    wasNear.current = near;
+  }, [near, ready]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const maybePlay = (v: number) => {
     const vid = ref.current;
     if (!vid) return;
-    if (v >= (cfg.playAt ?? 0.15) && near && !played.current) {
+    const down = v >= prevP.current;
+    prevP.current = v;
+    const playAt = cfg.playAt ?? 0.15;
+    if (down && near && v >= playAt && !played.current) {
       played.current = true;
-      vid.play().catch(() => { played.current = false; setReady(false); });
-    } else if (v < (cfg.resetBelow ?? 0.02) && played.current) {
-      played.current = false;
-      vid.pause();
-      try { vid.currentTime = 0; } catch { /* not seekable yet */ }
+      vid.play().catch((err: unknown) => {
+        played.current = false; // allow a retry pass either way
+        if ((err as DOMException)?.name === 'AbortError') return; // interrupted, not failed
+        setReady(false);
+      });
+    } else if (down && near && v >= playAt && armedReplay.current) {
+      // The owner's "it's not replaying": retreated above the trigger, then
+      // came back down. play() on an ended element natively restarts from 0.
+      armedReplay.current = false;
+      if (vid.ended) vid.play().catch(() => { /* still-first: hold the frame */ });
+      else { try { vid.currentTime = 0; } catch { /* not seekable */ } vid.play().catch(() => { /* still-first */ }); }
+    } else if (!down && v < playAt && played.current) {
+      armedReplay.current = true; // restart waits for the next downward pass
     }
   };
   useMotionValueEvent(p, 'change', maybePlay);
   // A plate can mount already inside its band (mid-page reload, teleport) —
-  // no 'change' fires then, so evaluate once media is ready.
+  // no 'change' fires then, so evaluate once media is ready. (The near-entry
+  // effect above runs first — component definition order — so an upward or
+  // teleport entry has already set played=true and this is a no-op.)
   useEffect(() => { if (ready) maybePlay(p.get()); }, [ready, near]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -222,18 +280,21 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
   const ref = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
   const target = useRef(0);
-  const seekGate = useRef(false);
+  // 0 = gate open; otherwise the performance.now() timestamp the gate closed
+  // (a lost 'seeked' used to deadlock the chase forever — see watchdog below).
+  const seekGate = useRef(0);
   const primed = useRef(false);
+  const lastP = useRef(0);
 
   const [d0, d1] = cfg.deadZone ?? [0.12, 0.88];
 
   useEffect(() => {
     const v = ref.current;
-    if (!v || !active) return;
+    if (!v || !active || ready) return;
     if (v.readyState >= 2) { setReady(true); return; }
     const id = setInterval(() => { if (v.readyState >= 2) { setReady(true); clearInterval(id); } }, 250);
     return () => clearInterval(id);
-  }, [active]);
+  }, [active, ready]);
 
   // iOS decoder primer: Safari may not paint currentTime seeks on a video that
   // has never played — one muted play()/pause() on ready wakes the decoder.
@@ -245,6 +306,7 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
   }, [touchScrub, ready]);
 
   const syncTarget = (v: number) => {
+    lastP.current = v;
     const vid = ref.current;
     if (!vid || !vid.duration) return;
     target.current = clamp((v - d0) / (d1 - d0), 0, 1) * (vid.duration - 0.05);
@@ -262,12 +324,23 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
     let raf = 0;
     const tick = () => {
       const vid = ref.current;
-      if (vid && vid.duration && !seekGate.current) {
-        const cur = vid.currentTime;
-        const next = cur + (target.current - cur) * chase;
-        if (Math.abs(next - cur) > 0.012) {
-          seekGate.current = true;
-          vid.currentTime = next;
+      if (vid && vid.duration) {
+        // Watchdog (reverse-scroll fix): Safari can drop 'seeked' under rapid
+        // currentTime writes on covered/paused elements — a lost event used
+        // to freeze the scrub at an arbitrary frame for good. 250ms with no
+        // 'seeked' reopens the gate.
+        if (seekGate.current && performance.now() - seekGate.current > 250) seekGate.current = 0;
+        if (!seekGate.current) {
+          const cur = vid.currentTime;
+          // Snap-to-final (seam integrity, plan D1): inside either dead zone
+          // the target is pinned to an end frame — bypass the lerp there so a
+          // fast pass can never carry a mid-clip frame into the dissolve.
+          const snap = lastP.current >= d1 || lastP.current <= d0;
+          const next = snap ? target.current : cur + (target.current - cur) * chase;
+          if (Math.abs(next - cur) > 0.012) {
+            seekGate.current = performance.now();
+            vid.currentTime = next;
+          }
         }
       }
       raf = requestAnimationFrame(tick);
@@ -306,8 +379,9 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
           preload="auto"
           disableRemotePlayback
           onLoadedData={() => setReady(true)}
-          onSeeked={() => { seekGate.current = false; }}
-          onError={() => setReady(false)}
+          onSeeked={() => { seekGate.current = 0; }}
+          onStalled={() => { seekGate.current = 0; }}
+          onError={() => { seekGate.current = 0; setReady(false); }}
         >
           {touchScrub ? (
             <source src={cfg.portraitSrc} type="video/mp4" />
