@@ -15,7 +15,7 @@ import {
 } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { FRAMES, type Frame } from './frames';
-import { LIVING, OVERLAYS, EXITS, FADES, GRADE } from './living';
+import { LIVING, OVERLAYS, EXITS, FADES, GRADE, SEAMS } from './living';
 import { PLACEHOLDERS } from './placeholders';
 import { FINE_BANDS, COARSE_BANDS, useBands, bandAt, type Bands } from './bands';
 import LivingLayer from './LivingLayer';
@@ -177,32 +177,8 @@ function Copy({ frame, index, progress, bands }: { frame: Frame; index?: number;
       ? <div className="beat-h" style={beatVars} aria-hidden="true" />
       : <div className="h-[100svh]" aria-hidden="true" />;
 
-  // Copy sits at mid-viewport where the global scrim is most transparent —
-  // a soft local scrim keyed to alignment protects contrast over live video.
-  // The scrim is a CSS class (globals.css): portrait crops discard the plates'
-  // dark thirds, so narrow/coarse viewports get a stronger, wider scrim plus
-  // a text-shadow on .copy-block (mobile pass: white copy over the white 458
-  // hood measured effective luminance 113 behind the desktop scrim — illegible).
-  const scrimX = frame.align === 'center' ? '50%' : frame.align === 'right' ? '78%' : '22%';
-
   const inner = (
     <>
-      <div
-        aria-hidden="true"
-        className="copy-scrim pointer-events-none absolute inset-0"
-        style={{ '--sx': scrimX } as React.CSSProperties}
-      />
-      {/* Bright-plate assist (type pass 2026-07-06): plates flagged brightPlate
-          keep no dark third behind the copy on desktop — a second, quieter pass
-          of the scrim treatment layers behind the copy zone only, ≥1024px
-          (globals.css .copy-scrim-bright; mobile already ships the strong scrim). */}
-      {brightPlate && (
-        <div
-          aria-hidden="true"
-          className="copy-scrim copy-scrim-bright pointer-events-none absolute inset-0"
-          style={{ '--sx': scrimX } as React.CSSProperties}
-        />
-      )}
       <div ref={chromeGuardRef} className="copy-block relative mx-auto w-full max-w-content px-6 md:px-8">
         {/* Outer layer: scroll-derived reveal (deterministic both directions). */}
         <motion.div
@@ -218,6 +194,22 @@ function Copy({ frame, index, progress, bands }: { frame: Frame; index?: number;
           animate={film && !reduce ? { opacity: chromeGuarded ? 0 : 1, y: chromeGuarded ? 12 : 0 } : undefined}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
+        {/* The copy plate (owner 2026-07-20): contrast lives around the text
+            ITSELF — a soft pool shrink-wrapped to the copy's actual extent
+            with ~50px of reach, replacing the scene-wide radial scrims (they
+            vignetted the whole frame and dragged the film darker than the
+            print intends). w-fit tracks the text's true size; the parent's
+            items-* keeps the beat's alignment. The plate is a positioned
+            earlier sibling, so the relative text wrapper paints above it. */}
+        <div className="relative w-fit max-w-full">
+          <div
+            aria-hidden="true"
+            className={cn(
+              'copy-plate pointer-events-none absolute -inset-x-6 -inset-y-[50px] md:-inset-[50px]',
+              brightPlate && 'copy-plate-bright',
+            )}
+          />
+          <div className={cn('relative flex w-fit max-w-full flex-col', alignItems)}>
           {chip && (
             // The status chip (deck §7.1, SB-04 `Opening soon`): a quiet
             // eyebrow above the kicker line. Hairline border, no Gulf, no
@@ -298,6 +290,8 @@ function Copy({ frame, index, progress, bands }: { frame: Frame; index?: number;
               )}
             </motion.div>
           )}
+          </div>
+        </div>
         </motion.div>
         </motion.div>
       </div>
@@ -371,10 +365,23 @@ function Plate({ frame, index, progress, priority, active, bands }: { frame: Fra
   // The [0,1] clamps are load-bearing: without them plate 0's range starts
   // negative and the cold open would paint mid-zoom on the LCP frame.
   const finale = frame.id === 'SB-20';
+  // Seam zoom-continuity (SEAMS in living.ts): when the PREVIOUS plate flags
+  // this boundary, our ken-burns starts at the scale the outgoing plate
+  // carries at our range start — matched-frame handoffs (door → walk-in)
+  // stop double-exposing the same render at a ~9% size offset. Evaluate the
+  // outgoing curve with ITS OWN clamped range so the two lines meet exactly.
+  let startScale = 1.06;
+  if (index > 0 && SEAMS[FRAMES[index - 1].id]) {
+    const prevA = Math.max(0, bands.start[index - 1] - 0.1 * bands.unit);
+    const prevB = Math.min(1, bands.end[index - 1] + 0.1 * bands.unit);
+    const at = Math.max(0, bands.start[index] - 0.1 * bands.unit);
+    const t = Math.min(1, Math.max(0, (at - prevA) / (prevB - prevA)));
+    startScale = 1.06 + t * 0.1;
+  }
   const scale = useTransform(
     progress,
     [Math.max(0, bands.start[index] - 0.1 * bands.unit), Math.min(1, bands.end[index] + 0.1 * bands.unit)],
-    finale ? [1, 1] : [1.06, 1.16],
+    finale ? [1, 1] : [startScale, 1.16],
   );
   // Plate-local progress: 0 at band entry, 1 at band exit (same band math).
   const p = useTransform(progress, [bands.start[index], bands.end[index]], [0, 1]);
@@ -558,11 +565,15 @@ function StageMedia({ progress, bands }: { progress: MotionValue<number>; bands:
         className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
         style={{ backgroundImage: 'url(/images/experience/grain.png)', backgroundRepeat: 'repeat', backgroundSize: '256px 256px' }}
       />
+      {/* Global seat, LIGHTENED (owner 2026-07-20): copy legibility now lives
+          on the local copy plate, so the stage vignette drops to a whisper —
+          just enough edge seating for the fixed chrome. Dark and moody, but
+          the plates themselves read brighter. */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(120% 90% at 50% 42%, transparent 40%, rgba(11,11,12,.5) 85%), linear-gradient(180deg, rgba(11,11,12,.5), transparent 22%, transparent 60%, rgba(11,11,12,.85))',
+            'radial-gradient(120% 90% at 50% 42%, transparent 48%, rgba(11,11,12,.28) 88%), linear-gradient(180deg, rgba(11,11,12,.34), transparent 20%, transparent 64%, rgba(11,11,12,.55))',
         }}
       />
     </div>

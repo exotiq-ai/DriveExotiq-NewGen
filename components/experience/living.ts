@@ -121,6 +121,21 @@ export const FADES: Record<string, number> = {
 };
 
 /**
+ * Seam zoom-continuity flags (final design push phase D, owner screengrab
+ * 2026-07-20), keyed by the OUTGOING plate id. Each plate carries an
+ * independent ken-burns (1.06 → 1.16 across its band), so at a boundary the
+ * outgoing sits near 1.16 while the incoming enters at 1.06 — matched-frame
+ * handoffs double-exposed the SAME render at a ~9% size offset (the owner's
+ * "gap between the first garage shots"). For flagged seams the incoming
+ * plate's ken-burns STARTS at the scale the outgoing carries into the
+ * boundary, so identical frames line up through the dissolve.
+ */
+export const SEAMS: Record<string, true> = {
+  'SB-02': true,  // door scrub end → walk-in frame 0 (same Plate B render)
+  'SB-19': true,  // livery money frame → founder get-in (treatment film cut)
+};
+
+/**
  * Film-print unifier for the REAL-footage beats (owner note: the jump from the
  * graded AI film world to clean 4K digital reads as a different movie). Keeps
  * the documentary legibility — the car stays clean — but seats the shots in

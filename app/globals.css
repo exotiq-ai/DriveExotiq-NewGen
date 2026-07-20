@@ -429,22 +429,26 @@
    owner-confirm item #8 in docs/redesign/12-FINAL-DESIGN-PUSH.md). */
 .beat-pin-spacer { height: calc(var(--pc, 0) * 100svh); }
 .beat-pin { position: sticky; top: var(--de-pin-top, 25svh); }
-/* The pinned child is auto-height (its remaining travel funds the hold), so
-   its scrims extend into an oversized halo to keep today's around-the-copy
-   vignette; the radial fades to transparent well inside these edges. */
-.beat-pin .copy-scrim { top: -42svh; bottom: -42svh; }
 @media (min-width: 1024px) and (pointer: fine) {
   .beat-pin-spacer { height: calc(var(--pf, 0) * 100svh); }
 }
 
-/* Copy legibility over the film (/experience). Desktop: the 16:9 frame keeps
-   its dark thirds behind the copy — a soft scrim suffices. Narrow/coarse
-   viewports portrait-crop the plates (only the center ~46% of frame width
-   survives at 375×812), which can leave white copy on a white car — so the
-   scrim strengthens and widens, and the copy gains a soft shadow. Media query
-   = NOT the scrub-capable query (see SCRUB_MQ in components/experience/bands.ts). */
-.copy-scrim {
-  background: radial-gradient(58% 52% at var(--sx, 50%) 50%, rgba(11, 11, 12, 0.42), transparent 72%);
+/* Copy legibility over the film (/experience) — the copy PLATE (owner
+   2026-07-20): contrast lives around the text itself. A soft pool
+   shrink-wrapped to the copy block's actual extent with ~50px of reach
+   (CinematicStage renders it inside a w-fit wrapper, so it is dynamic to the
+   text's length), replacing the scene-wide radial scrims that vignetted the
+   whole frame and dragged the film darker than the print intends. The
+   ellipse radii track the padded box; corners fall to transparent — a light
+   pool, not a card. Rides the pin: it docks and travels with the text. */
+.copy-plate {
+  border-radius: 4px;
+  background: radial-gradient(100% 100% at 50% 50%, rgba(11, 11, 12, 0.6), rgba(11, 11, 12, 0.42) 60%, rgba(11, 11, 12, 0) 100%);
+}
+/* brightPlate beats (frames.ts): plates with no dark ground under the copy
+   get a deeper pool core. */
+.copy-plate-bright {
+  background: radial-gradient(100% 100% at 50% 50%, rgba(11, 11, 12, 0.74), rgba(11, 11, 12, 0.52) 60%, rgba(11, 11, 12, 0) 100%);
 }
 /* Type + contrast pass (2026-07-06, owner-approved): the film's copy support
    tier measured under-legible on desktop, so the legibility floor rises
@@ -463,24 +467,7 @@
 .copy-block .idx {
   color: var(--de-metal);
 }
-/* Bright-plate assist: beats flagged `brightPlate` (frames.ts) keep no dark
-   third behind the copy on desktop — CinematicStage layers a second scrim div
-   carrying this class, so the existing .copy-scrim treatment repeats at ~1/3
-   opacity behind the copy zone only. Desktop-only: the mobile media query
-   below already ships the stronger scrim (query matches .beat-h's). */
-.copy-scrim-bright {
-  display: none;
-}
-@media (min-width: 1024px) and (pointer: fine) {
-  .copy-scrim-bright {
-    display: block;
-    opacity: 0.33;
-  }
-}
 @media (max-width: 1023px), (pointer: coarse) {
-  .copy-scrim {
-    background: radial-gradient(75% 62% at var(--sx, 50%) 50%, rgba(11, 11, 12, 0.6), transparent 80%);
-  }
   /* Centered multi-line body copy is hard to track on narrow portrait crops —
      body text always reads left on mobile. Headlines, jewels, and kickers
      keep the beat's alignment (the flex column still centers the block). */
