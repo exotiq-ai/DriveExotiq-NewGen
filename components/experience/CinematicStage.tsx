@@ -115,13 +115,8 @@ function Copy({ frame, index, progress, bands }: { frame: Frame; index?: number;
   // server/client (the Plate pattern).
   const scrollOpacity = useTransform(mv, stops, opacityValues);
   const scrollY = useTransform(mv, stops, yValues);
-  // SB-20's ask arrives as film: the CTA row rises a beat after the block —
-  // staggered in SCROLL distance, not seconds, so the reveal scrubs cleanly
-  // in both directions.
-  const ctaOpacity = useTransform(mv, [in0 + 0.1 * u, in1 + 0.1 * u], [0, 1]);
-  const ctaY = useTransform(mv, [in0 + 0.1 * u, in1 + 0.1 * u], [24, 0]);
-  const cta2Opacity = useTransform(mv, [in0 + 0.16 * u, in1 + 0.16 * u], [0, 1]);
-  const cta2Y = useTransform(mv, [in0 + 0.16 * u, in1 + 0.16 * u], [24, 0]);
+  // (SB-20's CTA scroll-stagger retired 2026-07-20, owner call: a CTA is for
+  // clicking — the row reveals with the block and stays lit with it.)
 
   // Tap-to-unmute affordance (film path only — StaticStage has no video).
   // The button talks to the beat's PlayOnceLayer over a window event pair;
@@ -220,18 +215,19 @@ function Copy({ frame, index, progress, bands }: { frame: Frame; index?: number;
             // eyebrow above the kicker line. Hairline border, no Gulf, no
             // glow — it is a status, not an action. Inherits the beat's copy
             // reveal; static under reduced motion like the rest of the block.
-            <span className="mb-4 inline-flex items-center rounded-sm border border-line px-2.5 py-1 text-[11px] tracking-[0.08em] text-ink-2">
+            <span className="mb-4 inline-flex items-center rounded-sm border border-line px-2.5 py-1 text-[13px] tracking-[0.08em] text-ink-2">
               {chip}
             </span>
           )}
-          {frame.kicker && (
+          {frame.kicker && !frame.kickerBottom && (
             // Brand law: kickers are sentence-case (never uppercase); purely
             // numeric kickers render as the Spectral-italic .idx numeral
             // (color lifted to metal by .copy-block .idx — the type pass; the
-            // ink-3 default measured as the dimmest text on screen).
+            // ink-3 default measured as the dimmest text on screen). 13px
+            // (owner 2026-07-20: the 11px eyebrows read too small).
             /^\d+$/.test(frame.kicker)
               ? <span className="idx mb-5 text-lg">{frame.kicker}</span>
-              : <span className="mb-5 text-[11px] tracking-[0.08em] text-metal">{frame.kicker}</span>
+              : <span className="mb-5 text-[13px] tracking-[0.08em] text-metal">{frame.kicker}</span>
           )}
           {frame.sound && index !== undefined && (
             <button
@@ -263,37 +259,29 @@ function Copy({ frame, index, progress, bands }: { frame: Frame; index?: number;
                 : frame.body}
             </p>
           )}
+          {frame.kicker && frame.kickerBottom && (
+            // The signature position (owner 2026-07-20): the kicker closes the
+            // block instead of opening it — SB-19b's "Gregory, founder".
+            <span className="mt-5 text-[13px] tracking-[0.08em] text-metal">{frame.kicker}</span>
+          )}
           {(frame.cta || frame.secondaryCta) && (
-            // The finale's ask arrives as film: the CTA row rises a beat after
-            // the jewel line, staggered in scroll distance (SB-20 only;
-            // elsewhere the row resolves with the block).
-            <motion.div
-              className={cn('mt-8 flex flex-wrap gap-3', justify)}
-              style={
-                film && frame.id === 'SB-20'
-                  ? { opacity: ctaOpacity, y: ctaY }
-                  : undefined
-              }
-            >
+            // CTA row (owner 2026-07-20): NO stagger, no separate fade — a CTA
+            // is for clicking, so it reveals with the block and stays lit with
+            // it. Both buttons are direct flex items (the old nested
+            // motion.span gave the outline button its own line box and the
+            // pair rendered uneven). items-center keeps them on one baseline.
+            <div className={cn('mt-8 flex flex-wrap items-center gap-3', justify)}>
               {frame.cta && (
                 <Link href={frame.ctaHref || '#'} className="rounded-sm bg-gulf px-6 py-3 text-sm font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2">
                   {frame.cta}
                 </Link>
               )}
               {frame.secondaryCta && (
-                <motion.span
-                  style={
-                    film && frame.id === 'SB-20'
-                      ? { opacity: cta2Opacity, y: cta2Y }
-                      : undefined
-                  }
-                >
-                  <Link href={frame.secondaryCtaHref || '#'} className="rounded-sm border border-line-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3">
-                    {frame.secondaryCta}
-                  </Link>
-                </motion.span>
+                <Link href={frame.secondaryCtaHref || '#'} className="rounded-sm border border-line-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-250 ease-de hover:border-ink-3">
+                  {frame.secondaryCta}
+                </Link>
               )}
-            </motion.div>
+            </div>
           )}
           </div>
         </div>

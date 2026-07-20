@@ -35,6 +35,12 @@ export interface Frame {
   /** Accessible label when the frame carries no headline. */
   aria?: string;
   /**
+   * Render the kicker at the BOTTOM of the copy block instead of above the
+   * headline — a signature, not an eyebrow (owner 2026-07-20; SB-19b's
+   * "Gregory, founder").
+   */
+  kickerBottom?: boolean;
+  /**
    * Scroll weight on scrub-capable viewports (≥1024px, fine pointer): the
    * beat's copy block is weight·100svh tall, so it owns `weight` viewports of
    * scroll (default 1). Reviewed change — see bands.ts for the band math.
@@ -165,7 +171,12 @@ export const FRAMES: Frame[] = [
   { id: 'SB-08', media: `${M}/choose.png`, movement: 'I', align: 'center', headline: 'Which one’s yours?', weight: 2, mobileWeight: 2 },
   // ---------- McLaren drive-out (grouped: get in, wake it, roll out, run the road) ----------
   { id: 'SB-09', media: `${M}/door-up.png`, movement: 'I', align: 'right', headline: 'Doors up.', weight: 2, mobileWeight: 2 },
-  { id: 'SB-10', media: `${M}/cockpit-pov-v2.png`, movement: 'I', align: 'center', jewel: 'Settle in.', weight: 1.5 },
+  // SB-10 re-plated (owner 2026-07-20): "Settle in." now sits on the forward-
+  // facing 720S dash — the SAME render SB-11b scrubs from — so settle-in →
+  // door-rise → roll-out is one continuous POV (SEAMS + FADES flag the
+  // same-frame handoff in living.ts). The old cockpit-pov-v2 loop retired;
+  // still-only here, the ken-burns and the dawn light-blade carry it.
+  { id: 'SB-10', media: `${M}/cockpit-door-closed.png`, movement: 'I', align: 'center', jewel: 'Settle in.', weight: 1.5 },
   // 2026-07-08 owner redesign: the roll-out is now the film's THIRD scroll-
   // operated door — cabin POV facing the closed garage door (dawn leaking
   // beneath it, the Act I light-blade motif from the driver's seat), the
@@ -211,19 +222,9 @@ export const FRAMES: Frame[] = [
     brightPlate: true,
     weight: 1.5,
   },
-  // The Gather beat (audit: the film claimed community and showed one human).
-  // Re-plated 2026-07-06 (owner): the Senna/Veyron shot is OUT (it also
-  // carried another organizer's MAGNA placard in-scene — provenance flag
-  // resolved). In: the owner's own lineup (Lambos + R8s nose to nose at
-  // golden hour, 8K source), graded into the print at encode; the GRADE
-  // overlay seats it like every real plate. Pays off SB-14's Cars & Coffee.
-  {
-    id: 'SB-14b', media: `${M}/lineup-real.jpg`, movement: 'I', align: 'left',
-    jewel: 'No stanchions. No judging.',
-    aria: 'Golden hour at the Cars & Coffee, the row of supercars nose to nose',
-    focus: '58% 50%',
-    weight: 1.5,
-  },
+  // (SB-14b Gather beat CUT 2026-07-20, owner call — scene and copy out
+  // entirely. lineup-real.jpg and its grade stay on disk for revert, same
+  // doctrine as SB-03/SB-13b.)
 
   // ---------- The turn ----------
   { id: 'SB-15', media: `${M}/chase-real.jpg`, movement: 'I', align: 'right', jewel: 'This could be you.', weight: 1.5 },
@@ -237,7 +238,9 @@ export const FRAMES: Frame[] = [
   // The register-flag jewel (deck §3.1): flags this as one lone car set apart
   // from the numbered 01/02/03 fleet, so its recurrence registers and the
   // SB-18 reveal lands on a car the viewer has been tracking.
-  { id: 'SB-11', media: `${M}/ignition-real.jpg`, movement: 'I', align: 'left', kicker: 'Push to start', jewel: 'Not one of the three.', aria: 'Push to start. The real V8 wakes.', weight: 1.5 },
+  // Copy stripped (owner 2026-07-20): the real button press carries the beat
+  // wordless — the register-flag jewel retired with it.
+  { id: 'SB-11', media: `${M}/ignition-real.jpg`, movement: 'I', aria: 'Push to start. The real V8 wakes.', weight: 1.5 },
   { id: 'SB-13', media: `${M}/drive-real.jpg`, movement: 'I', align: 'left', kicker: 'The high country', jewel: 'This is the drive.', weight: 1.5 },
   // (SB-13b taillights-receding CUT 2026-07-06, deck §2 fork: four silent S8
   // beats was a long trough right where a cold viewer decides whether to keep
@@ -253,7 +256,8 @@ export const FRAMES: Frame[] = [
     // The reveal lives in the HEADLINE (deck §3.1: "The drive is the product."
     // was a slogan, not information — cut). "This one's the founder's." echoes
     // SB-08b's "This one's yours.": renter's yours → founder's founder's.
-    kicker: 'One more thing', headline: 'This one’s the founder’s.', jewel: 'The story goes further.',
+    // Kicker cut (owner 2026-07-20).
+    headline: 'This one’s the founder’s.', jewel: 'The story goes further.',
     // The reveal now names its payoff (audit: every persona hit "it's… a
     // sedan?"): the plant from the pass becomes the founder's own car.
     body: 'The 2017 Audi S8 you kept seeing. The founder’s own car, driven every mile.',
@@ -267,8 +271,9 @@ export const FRAMES: Frame[] = [
     // REAL dusk S-curve (Roller 70.9–75.2s) — the S8 small in a vast twilight
     // landscape: the journey at journey scale. Timing is canonical (§1.4);
     // the ghost link gives sponsor traffic its missing fact path (audit).
+    // Kicker cut (owner 2026-07-20): the headline names the tour itself.
     id: 'SB-17', media: `${M}/scurve-real.jpg`, movement: 'II', align: 'left',
-    kicker: 'The tour', headline: 'One car. Denver to Miami.',
+    headline: 'One car. Denver to Miami.',
     // The value bridge (deck §3.1): reframes the tour as an advertising asset
     // (pre-echoes /sponsor's "The car is a billboard that drives.") so the
     // SB-19 livery ask lands as the obvious payoff.
@@ -291,9 +296,10 @@ export const FRAMES: Frame[] = [
   {
     id: 'SB-19b', media: `${M}/gregory-getin.jpg`, movement: 'II', align: 'left',
     // The film's one human gets a name (audit: anonymous founder = wasted
-    // trust moment for every persona).
-    kicker: 'Gregory, founder',
-    headline: 'The garage door is open.', jewel: 'The road starts here.',
+    // trust moment for every persona). Owner 2026-07-20: the name reads as a
+    // SIGNATURE now — kicker moves to the bottom of the block.
+    kicker: 'Gregory, founder', kickerBottom: true,
+    headline: 'The garage door is open.', jewel: 'The journey starts now.',
     // The real founder get-in (8.3s play-once) — at weight 1 the film cut away
     // ~25% into the one human money shot. Play-once ends settled, so the tail
     // of the band is a composed held frame on every device.

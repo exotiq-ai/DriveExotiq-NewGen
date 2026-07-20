@@ -545,7 +545,7 @@
     {
       "id": "SB-10",
       "act": 3,
-      "treatment": "loop",
+      "treatment": "still",
       "priority": "high",
       "still": "cockpit-pov-v2.png",
       "videoModel": "kwaivgi/kling-v3.0-pro",
@@ -559,7 +559,7 @@
       "negativePrompt": "camera movement, camera shake, pan, zoom, steering wheel turning, hands leaving the wheel, extra fingers, hand deformation, gauge needles sweeping, dashboard text or numbers changing, any readable text, windshield wipers, scenery moving past as if driving, brightness jumps, color shift away from the graphite-and-amber palette",
       "qa": "QA hands hardest — finger morphing is the failure mode; budget 4-6 takes",
       "takes": 5,
-      "status": "live",
+      "status": "replated-still",
       "prepImage": {
         "output": "cockpit-pov-v2.png",
         "model": "gemini-3-pro-image (direct)",
@@ -569,7 +569,7 @@
         ],
         "prompt": "Recreate this photograph with the same composition, camera position, dawn lighting and film-noir grade — but make the cabin an authentic McLaren 720S interior, faithful to the real car: slim floating carbon-fiber center console, McLaren driver display screen behind the compact flat-bottom steering wheel (plain wheel face, no buttons), circular air vents, exposed carbon structure on the sills, black alcantara with minimal stitching, low scuttle and thin A-pillars with the deep panoramic 720S windscreen. Both hands resting naturally on the wheel, five fingers each, relaxed grip. Keep: the soft dawn glow band across the top of the windscreen, deep matte-black cabin shadow, warm amber instrument glow, shallow depth of field, subtle 35mm film grain, desaturated graphite palette with warm highlights, 16:9. Restrained and quiet — a real pre-dawn moment, not an advertisement. No readable text, numbers or logos anywhere."
       },
-      "rerenderNote": "v2 plate re-rendered 2026-07-03 via Nano Banana Pro (owner: prior plates read AI-lame) — authentic 720S cabin; loop regenerated from v2.",
+      "rerenderNote": "2026-07-20 owner re-plate: 'Settle in.' now sits STILL on the forward-facing 720S dash (cockpit-door-closed.png — the exact render SB-11b scrubs from), making settle-in -> door-rise -> roll-out one continuous POV with a same-frame cut (SEAMS/FADES in living.ts). The Nano Banana cockpit-pov-v2 plate + Kling loop retired; encodes on disk for revert.",
       "selectedTake": "SB-10-t1-kling-v3.0-pro-kdirect.mp4 (1080p direct)"
     },
     {

@@ -118,6 +118,9 @@ export const FADES: Record<string, number> = {
   // between two identical images (Act I redesign 2026-07-06; tightened
   // further 2026-07-17 with the deadZone stutter fix).
   'SB-02': 0.35,
+  // SB-10's still IS SB-11b's frame 0 (owner re-plate 2026-07-20) — same
+  // same-frame-cut doctrine as SB-02.
+  'SB-10': 0.35,
 };
 
 /**
@@ -132,6 +135,7 @@ export const FADES: Record<string, number> = {
  */
 export const SEAMS: Record<string, true> = {
   'SB-02': true,  // door scrub end → walk-in frame 0 (same Plate B render)
+  'SB-10': true,  // settle-in still → roll-out scrub frame 0 (same dash render)
   'SB-19': true,  // livery money frame → founder get-in (treatment film cut)
 };
 
@@ -160,7 +164,8 @@ export const GRADE: Record<string, { wash?: number; grain?: number; vignette?: n
   // (SB-13b drive-away CUT 2026-07-06 with the beat, deck §2 fork — its
   // print-seat entry retired with it; re-add alongside the beat on revert.)
   'SB-14': { wash: 0.06, grain: 0.02, vignette: 0.08 },
-  'SB-14b': { wash: 0.06, grain: 0.02, vignette: 0.10 },
+  // (SB-14b Gather beat CUT 2026-07-20 with its frame — print-seat retired;
+  // re-add alongside the beat on revert.)
   'SB-15': { wash: 0.06, grain: 0.02, vignette: 0.08 },
   'SB-16': { wash: 0.06, grain: 0.02, vignette: 0.08 },
 };
@@ -276,14 +281,11 @@ export const LIVING: Record<string, LivingMedia> = {
     deadZone: [0.15, 0.85],
   },
 
-  // Phase 1v2 — SB-10: a held breath at dawn in the authentic 720S cabin
-  // (Nano Banana Pro re-render + Kling v2-t1, seam 0.965).
-  'SB-10': {
-    kind: 'loop',
-    src: vid('sb-10.mp4'),
-    mobileSrc: vid('sb-10.720.mp4'),
-    poster: pos('/images/experience/poster/sb-10.jpg'),
-  },
+  // (SB-10 loop retired 2026-07-20 with the owner's re-plate: "Settle in."
+  // now sits STILL on the forward-facing 720S dash — the same render SB-11b
+  // scrubs from — so settle-in → door-rise → roll-out is one continuous POV.
+  // The SEAMS + FADES entries below make the handoff a same-frame cut.
+  // sb-10.mp4 encodes stay on disk for revert.)
 
   // SB-11 REAL: the S8 start-button press (Roller 24.9–30.4s) — plays once as
   // the band enters, the cluster wakes, the V8 barks at ~3s and settles to
