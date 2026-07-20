@@ -145,14 +145,9 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
                 ]}
               />
             </div>
-            {/* Mobile wayfinding (Phase E): the rail is desktop-only, so the
-                current chapter rides here — the left column's second line, the
-                one spot the header owns on phones (the right edge is the Gulf
-                CTA's, the center is contested by both clusters at 375px).
-                Metal, 13px, sentence case: a status, never an action. */}
-            <p className="mt-0.5 text-[13px] leading-tight text-metal sm:hidden">
-              {CHAPTERS[activeChapter]?.title}
-            </p>
+            {/* (Mobile current-chapter header line REMOVED 2026-07-20 PM,
+                owner call — chapter wayfinding on phones lives in the Menu's
+                chapter list only.) */}
           </div>
           <div className="relative">
             {/* Movement-I nav: the renter ask holds the Gulf. */}

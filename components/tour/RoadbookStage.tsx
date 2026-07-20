@@ -13,6 +13,7 @@ import { BEATS, TOUR_FINALE } from './data';
 import Roadbook from './Roadbook';
 import Odometer from './Odometer';
 import CityBeat from './CityBeat';
+import MobileWindshield from './MobileWindshield';
 
 interface RoadbookStageProps {
   /**
@@ -248,8 +249,14 @@ export default function RoadbookStage({ children }: RoadbookStageProps) {
       )}
 
       {/* Crawlable static content. Hidden on desktop (the stage carries the
-          visual), shown as a vertical timeline on mobile + reduced motion. */}
-      <div className="md:hidden">{children}</div>
+          visual), shown as a vertical timeline on mobile + reduced motion.
+          The MobileWindshield strip (owner 2026-07-20 PM) gives phones the
+          rolling footage the desktop stage owns — video WITHOUT text over it,
+          between the hero and the timeline. */}
+      <div className="md:hidden">
+        <MobileWindshield />
+        {children}
+      </div>
     </>
   );
 }

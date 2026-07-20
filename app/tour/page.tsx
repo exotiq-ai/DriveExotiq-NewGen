@@ -83,9 +83,26 @@ export default function TourPage() {
           />
 
           <div className="relative mx-auto w-full max-w-content px-6 pb-14 md:px-10 md:pb-20">
+            {/* Readability (owner 2026-07-20 PM): the mobile hangar render is
+                ~80% bright white wall and the copy climbs into it — the film's
+                feathered copy plate (deep variant) pools behind the text's
+                actual extent, so the copy reads without dimming the car or
+                the frame. Same edgeless system as the film. */}
+            <div className="relative w-fit max-w-full">
+              {/* Top-biased reach: the block's BOTTOM already sits on the wet-
+                  tarmac scrim, but its top lines climb into the white hangar
+                  wall — the pool leans up so the kicker and first headline
+                  line get the core, not the feather. */}
+              <div
+                aria-hidden="true"
+                className="copy-plate copy-plate-bright pointer-events-none absolute -inset-x-6 -bottom-6 -top-20 md:-inset-16"
+              />
+              <div className="relative">
             <div className="flex items-center gap-3">
               <span className="h-px w-8 bg-gulf" />
-              <span className="text-[13px] tracking-[0.04em] text-ink-2">
+              {/* Full ink + shadow (owner readability pass): ink-2 gray
+                  vanished over the white hangar wall on phones. */}
+              <span className="text-[13px] tracking-[0.04em] text-ink" style={{ textShadow: '0 1px 12px rgba(0,0,0,0.6)' }}>
                 {TOUR_HERO.kicker}
               </span>
             </div>
@@ -124,6 +141,8 @@ export default function TourPage() {
                   →
                 </span>
               </Link>
+            </div>
+              </div>
             </div>
           </div>
         </section>
