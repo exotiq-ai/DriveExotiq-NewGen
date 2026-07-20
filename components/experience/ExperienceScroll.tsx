@@ -223,19 +223,16 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
 
       {/* Chapter rail (Phase E): right-edge wayfinding — one tick per chapter
           at the chapter's first-beat anchor, a thin metal fill so the film's
-          total length is legible at a glance, the active chapter labeled.
-          Same laws as the act ticks: mount-gated (tick positions come from
-          the weight table, which SSR can't know) and remounted with
-          StageChrome on a table flip. The Gulf stays the hairline's — the
-          rail is line-2/metal only, flat marks, no glow. The vertical insets
-          keep the track clear of the header band and the viewport corners;
-          tick spacing is proportional inside it, same anchorVh/(total−1)
-          math as the hairline ticks. The active label sits on a whisper of
-          canvas so a right-aligned copy block transiting beneath it at
-          ~1180–1400px viewports can't make it illegible. Desktop-only, same
-          gate as the act ticks: hairline marks are poor touch targets and
-          the labels would clip at the edge — mobile wayfinding is the header
-          label + the Menu's chapter list. */}
+          total length is legible at a glance. INDICATORS ONLY (owner
+          2026-07-20 PM): no visible labels on the rail — chapter names live
+          in the native title tooltip, the aria-label, the mobile header
+          line, and the Menu's chapter list. Same laws as the act ticks:
+          mount-gated (tick positions come from the weight table, which SSR
+          can't know) and remounted with StageChrome on a table flip. The
+          Gulf stays the hairline's — the rail is line-2/metal only, flat
+          marks, no glow; tick spacing is proportional, same
+          anchorVh/(total−1) math as the hairline ticks. Desktop-only, same
+          gate as the act ticks. */}
       <nav aria-label="Film chapters" className="fixed bottom-16 right-0 top-24 z-[61] hidden w-16 sm:block">
         {mounted && (
           <>
@@ -252,20 +249,12 @@ function StageChrome({ progress, bands, jumpTo }: { progress: MotionValue<number
                   key={c.title}
                   type="button"
                   aria-label={`Jump to ${c.title}`}
+                  title={c.title}
                   aria-current={active || undefined}
                   onClick={() => jumpTo(c.first)}
                   className="group absolute right-0 flex h-6 w-16 -translate-y-1/2 cursor-pointer items-center justify-end"
                   style={{ top: `${(bands.anchorVh[c.first] / (bands.total - 1)) * 100}%` }}
                 >
-                  <span
-                    className={`pointer-events-none absolute right-10 whitespace-nowrap rounded-sm bg-canvas/60 px-1.5 py-0.5 text-[13px] leading-none transition-opacity duration-250 ease-de ${
-                      active
-                        ? 'text-metal opacity-100'
-                        : 'text-ink-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'
-                    }`}
-                  >
-                    {c.title}
-                  </span>
                   <span
                     className={`mr-4 block h-px transition-all duration-250 ease-de ${
                       active ? 'w-4 bg-metal' : 'w-2.5 bg-line-2 group-hover:bg-metal/70'
