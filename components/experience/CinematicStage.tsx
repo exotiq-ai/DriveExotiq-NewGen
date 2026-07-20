@@ -204,8 +204,13 @@ function Copy({ frame, index, progress, bands }: { frame: Frame; index?: number;
         <div className="relative w-fit max-w-full">
           <div
             aria-hidden="true"
+            // Painted larger than the visible pool (owner: NO visible edges) —
+            // the feather dies out well inside these bounds, so the dark core
+            // still hugs the text at ~50px while the falloff has room to
+            // vanish. Mobile x stays at the container pad (wider would poke
+            // past the viewport and reopen horizontal overflow).
             className={cn(
-              'copy-plate pointer-events-none absolute -inset-x-6 -inset-y-[50px] md:-inset-[50px]',
+              'copy-plate pointer-events-none absolute -inset-x-6 -inset-y-16 md:-inset-[88px]',
               brightPlate && 'copy-plate-bright',
             )}
           />
