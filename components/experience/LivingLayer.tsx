@@ -154,7 +154,7 @@ function LoopLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind: 
         muted
         playsInline
         loop
-        preload="auto"
+        preload={near ? 'auto' : 'metadata'}
         disableRemotePlayback
         onLoadedData={() => setReady(true)}
         onError={() => setReady(false)}
@@ -289,7 +289,7 @@ function PlayOnceLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { ki
         poster={poster}
         muted
         playsInline
-        preload="auto"
+        preload={near ? 'auto' : 'metadata'}
         disableRemotePlayback
         onLoadedData={() => setReady(true)}
         onError={() => setReady(false)}
@@ -411,7 +411,7 @@ function ScrubLayer({ cfg, near, p, focus }: { cfg: Extract<LivingMedia, { kind:
           poster={touchScrub ? (cfg.portraitPoster ?? cfg.poster) : cfg.poster}
           muted
           playsInline
-          preload="auto"
+          preload={near ? 'auto' : 'metadata'}
           disableRemotePlayback
           onLoadedData={() => setReady(true)}
           onSeeked={() => { seekGate.current = 0; }}
@@ -485,12 +485,23 @@ export default function LivingLayer({
   focus?: string;
 }) {
   const saveData = useSaveData();
-  if (saveData && cfg.kind !== 'wipe') return null; // wipe is still-only, always allowed
+  // Mount gate (mobile-smoothness pass 2026-07-20): video tiers render NOTHING
+  // on the server and the first client render. The SSR frame is the graded
+  // still by design (poster-first doctrine), and the src choice diverges by
+  // viewport (portrait vs desktop encodes) — SSR'ing one branch made React
+  // 418/423 hydration errors on phones, which threw away the entire server
+  // document and re-rendered it client-side. One effect-tick of delay is
+  // invisible behind the Fade-ready gate; the wipe tier stays SSR'd (its still
+  // srcs are identical on every viewport, and SB-19's instant reveal depends
+  // on it painting with the server HTML).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (cfg.kind === 'wipe') return <WipeLayer cfg={cfg} p={p} focus={focus} />;
+  if (!mounted || saveData) return null;
 
   switch (cfg.kind) {
     case 'loop': return <LoopLayer cfg={cfg} near={near} p={p} focus={focus} />;
     case 'play-once': return <PlayOnceLayer cfg={cfg} near={near} p={p} focus={focus} />;
     case 'scrub': return <ScrubLayer cfg={cfg} near={near} p={p} focus={focus} />;
-    case 'wipe': return <WipeLayer cfg={cfg} p={p} focus={focus} />;
   }
 }
