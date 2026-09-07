@@ -1,0 +1,40 @@
+name: TLS watch
+
+# Runs independently of Netlify and Cloudflare on purpose. The 2026-09-07
+# outage happened because the only system that knew renewals were failing was
+# Netlify, and its notification address was unset — so four weeks of failures
+# reached nobody. A check that lives inside the thing being checked is not a
+# check. GitHub emails the repo owner when a scheduled workflow fails.
+
+on:
+  schedule:
+    - cron: '17 13 * * *' # daily, 13:17 UTC — off the hour, to dodge cron pileups
+  workflow_dispatch: # so it can be run by hand after a cert change
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check certificates
+        run: node scripts/check-tls.mjs
+
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "::error::A Drive Exotiq certificate is expiring, expired, or does not match its hostname."
+          echo ""
+          echo "Most likely causes, in order:"
+          echo "  1. Cloudflare Universal SSL stopped renewing — check the zone's SSL/TLS tab."
+          echo "  2. A DNS record was flipped from Proxied to DNS-only, exposing the Netlify"
+          echo "     origin cert directly to visitors."
+          echo "  3. Netlify's Let's Encrypt renewal is failing again — check that no Netlify"
+          echo "     DNS zone exists for driveexotiq.com, since one forces a wildcard cert"
+          echo "     and wildcards can only validate over DNS-01."
+          echo ""
+          echo "Context: docs/runbooks/tls.md"
