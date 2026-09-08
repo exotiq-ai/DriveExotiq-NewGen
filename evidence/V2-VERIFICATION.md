@@ -21,7 +21,19 @@ This iteration builds on first-release commit `41e3e0a8616170378c2bdbbe8bf9392cf
 - Independent source review found no remaining blocking issue. Two film-review findings were addressed: pause on hidden document and equivalent visual scene description.
 - Desktop, mobile, tablet and short landscape compositions were inspected. Car holds, paired-car footage, founder imagery and the film viewer were reviewed directly; no viewport overflow was found in the executed checks.
 
-Full logs, JSON/HTML browser reports, source/timecode manifests, screenshots and performance results are retained outside the publish directory in `../evidence/v2/` and `../evidence/media/`. Deployed checks and the returned commit/deploy identifiers are recorded in the parent `BUILD-STATUS.md` after publication.
+Full logs, JSON/HTML browser reports, source/timecode manifests, screenshots and performance results are retained outside the publish directory in `../evidence/v2/` and `../evidence/media/`. The parent `BUILD-STATUS.md` and `../evidence/v2/VERIFICATION.md` contain the complete release record.
+
+## Published release
+
+- Application commit: `ccf50e0bd21e0a1f72229d6e9238b194fb678a9e`, pushed only to `codex/astra-awwwards`.
+- Preview: https://astra-review--driveexotiq-astra.netlify.app
+- Netlify site: `f499ad01-b775-4c7d-901f-98f879c83d94`; deploy: `6a9f81daa8f14078f5b3b076`. Deployment used the Next.js adapter and the existing preview alias.
+- Hosted HTTP checks: **20 passed**, including all four public-form preview contracts and blocked admin methods.
+- Hosted browser coverage: **all 113 executed cases passed across the full run and targeted recheck; 7 intentional skips**. This was not a clean uninterrupted full run: the complete run recorded 102 passes and 11 failures; its 11-case recheck passed with exit 0 in 26.1 seconds. Two failures explicitly reported `ERR_NETWORK_CHANGED`; inspected WebKit evidence showed incomplete bootstrap-script downloads. Host versus CDN cause is unproven.
+- A separate earlier canceled run revealed a non-polling film assertion reading the source about 3.5 ms before queued dialog cleanup completed. The assertion now waits for source/poster removal, paused playback and restored scrolling. **Nine repeated hosted checks passed**, three per browser profile, exit 0 in 57.8 seconds.
+- The final test/evidence update changes only this record, the plan and that timing assertion. It does not change deployed application code or assets. Main, the production domain and Claude's checkout remain untouched.
+
+The full run, targeted recheck, canceled diagnostics and repeated film checks are retained separately under `../evidence/v2/browser/`. `final-summary.json` maps the 11 rechecked cases to the full run and records evidence hashes. No earlier failed or canceled invocation is represented as a clean pass.
 
 ## Media and limits
 

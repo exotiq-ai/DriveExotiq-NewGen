@@ -47,7 +47,7 @@ The current Awwwards rubric weights design 40%, usability 30%, creativity 20% an
 - [x] **4. Connect the scenes.** Add a small homepage motion controller and chapter navigation. Enhance the hero exit, editorial typography and framed-to-wide road transition. Provide static fallbacks and usable anchor offsets. Avoid animating every element.
 - [x] **5. Add the film experience.** Add a lazy film viewer with native dialog/video controls, Escape/focus return, no background audio, no playback behind the closed modal, clear archive context and a good mobile layout. Enhance the existing road-loop source selection while preserving its tested failure latch.
 - [x] **6. Integrate and review.** Review the whole page at desktop, mobile and tablet sizes; check narrative repetition, pacing, contrast, legibility and motion restraint. Have an independent reviewer inspect behavioral changes and regressions. Fix material findings before release.
-- [ ] **7. Verify and publish.** Run production build/type/lint validation, provider unit tests, expanded browser checks and image/media inspection. Measure representative production pages with Lighthouse sequentially. Commit and push only after checks; deploy with the Netlify Next adapter, then run the HTTP and browser checks against the returned preview URL. Record the exact commit/deploy IDs, spending and remaining limitations.
+- [x] **7. Verify and publish.** Run production build/type/lint validation, provider unit tests, expanded browser checks and image/media inspection. Measure representative production pages with Lighthouse sequentially. Commit and push only after checks; deploy with the Netlify Next adapter, then run the HTTP and browser checks against the returned preview URL. Record the exact commit/deploy IDs, spending and remaining limitations.
 
 ## Acceptance evidence
 
@@ -61,6 +61,6 @@ The current Awwwards rubric weights design 40%, usability 30%, creativity 20% an
 
 ## Working record
 
-Implementation and verification evidence lives outside publish in `../evidence/v2/`; selected website media in `public/astra/`. The project-level `../BUILD-STATUS.md` records the current live release and progress on this pass. Tasks 1–6 are implemented and reviewed. Task 7 completes only after the new deployment passes its remote checks; the final release record is maintained outside this pre-deployment source checkpoint.
+Implementation and verification evidence lives outside publish in `../evidence/v2/`; selected website media in `public/astra/`. The project-level `../BUILD-STATUS.md` records the current live release and progress on this pass. All seven tasks are complete. Application commit `ccf50e0bd21e0a1f72229d6e9238b194fb678a9e` is live on Netlify deploy `6a9f81daa8f14078f5b3b076`. The full hosted run and targeted recheck cover all 113 executed cases, with seven intentional skips; nine repeated film-close checks also passed. See `evidence/V2-VERIFICATION.md` for the release result and its limits.
 
 Technical references: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Scroll-driven_animations/Timelines and https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/%40media/prefers-reduced-motion (checked 2026-09-08 UTC). Browser support is treated as progressive enhancement; readable content is the baseline.

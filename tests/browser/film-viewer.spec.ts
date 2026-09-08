@@ -24,10 +24,11 @@ test('the road film loads only on request, pauses background films, and releases
   await dialog.getByRole('button', { name: 'Close road film' }).click();
   await expect(dialog).not.toBeVisible();
   await expect(trigger).toBeFocused();
-  expect(await film.getAttribute('src')).toBeNull();
-  expect(await film.getAttribute('poster')).toBeNull();
-  expect(await film.evaluate((video: HTMLVideoElement) => video.paused)).toBe(true);
-  expect(await page.evaluate(() => document.body.style.overflow)).not.toBe('hidden');
+  // Native dialog close queues its event after hiding and restoring focus.
+  await expect.poll(() => film.evaluate((video: HTMLVideoElement) => ({
+    source: video.getAttribute('src'), poster: video.getAttribute('poster'),
+    paused: video.paused, scrollLocked: document.body.style.overflow === 'hidden',
+  }))).toEqual({ source: null, poster: null, paused: true, scrollLocked: false });
 });
 
 test('a failed road film provides a useful fallback and Escape restores focus', async ({ page }) => {
