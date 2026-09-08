@@ -17,15 +17,16 @@ export default function SmsConsentCheckboxes({
   const labelColor = variant === 'dark' ? 'text-ink-3' : 'text-gray-500';
 
   return (
-    <div className="space-y-3">
+    <fieldset className="astra-sms-consent min-w-0 space-y-4 border-0 p-0">
+      <legend className={`mb-4 text-sm font-medium ${textColor}`}>Optional text updates</legend>
       {/* Transactional SMS Consent */}
       <label className="flex items-start gap-3 cursor-pointer group">
         <input
           {...register('smsTransactionalConsent')}
           type="checkbox"
-          className={`mt-0.5 h-4 w-4 ${checkboxBg} rounded-sm flex-shrink-0 cursor-pointer accent-gulf`}
+          className={`mt-0.5 h-5 w-5 ${checkboxBg} rounded-sm flex-shrink-0 cursor-pointer accent-gulf`}
         />
-        <span className={`text-xs leading-relaxed ${textColor}`}>
+        <span className={`text-sm leading-relaxed ${textColor}`}>
           I consent to receive transactional text messages from{' '}
           <strong>Drive Exotiq</strong> at the phone number provided (e.g.,
           booking confirmations, reminders, account alerts). Message frequency
@@ -39,9 +40,9 @@ export default function SmsConsentCheckboxes({
         <input
           {...register('smsMarketingConsent')}
           type="checkbox"
-          className={`mt-0.5 h-4 w-4 ${checkboxBg} rounded-sm flex-shrink-0 cursor-pointer accent-gulf`}
+          className={`mt-0.5 h-5 w-5 ${checkboxBg} rounded-sm flex-shrink-0 cursor-pointer accent-gulf`}
         />
-        <span className={`text-xs leading-relaxed ${textColor}`}>
+        <span className={`text-sm leading-relaxed ${textColor}`}>
           I consent to receive marketing and promotional text messages from{' '}
           <strong>Drive Exotiq</strong> at the phone number provided. Message
           frequency may vary. Message &amp; data rates may apply. Reply HELP for
@@ -50,7 +51,7 @@ export default function SmsConsentCheckboxes({
       </label>
 
       {/* Policy links */}
-      <p className={`text-xs ${labelColor} pt-1`}>
+      <p className={`text-sm ${labelColor} pt-1`}>
         <Link href="/privacy" className={`underline ${linkColor}`}>
           Privacy Policy
         </Link>
@@ -63,6 +64,6 @@ export default function SmsConsentCheckboxes({
           SMS Policy
         </Link>
       </p>
-    </div>
+    </fieldset>
   );
 }

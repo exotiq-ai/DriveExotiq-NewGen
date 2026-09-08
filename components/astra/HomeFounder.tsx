@@ -17,17 +17,16 @@ export default function HomeFounder() {
                 src="/astra/gregory-open-door.webp"
                 alt="Gregory standing at the open driver door of his Audi S8 in the desert"
                 fill
-                sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1680px) 65vw, 1040px"
+                sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 900px) 90vw, (max-width: 1680px) 65vw, 1040px"
               />
             </div>
-            <figcaption><span>Gregory and his Audi S8.</span><span>Tortilla Flats / From the archive</span></figcaption>
+            <figcaption>Gregory with his S8 · Tortilla Flats · From the archive</figcaption>
           </figure>
           <div className="astra-founder-note">
             <p className="astra-eyebrow">Founder. Owner. Driver.</p>
             <h3>Gregory.</h3>
             <p className="astra-founder-intro">The quiet sedan is his.<br />So is the reason we’re here.</p>
-            <p>His own 2017 Audi S8, with a custom tune and a Milltek exhaust. A car built around what happens behind the wheel.</p>
-            <p>That’s the idea behind Drive Exotiq: cars are meant to be driven. And a good road is better with people who feel the same.</p>
+            <p>His own 2017 Audi S8, with a custom tune and a Milltek exhaust. Built for getting out on a good road, with people who feel the same.</p>
             <Link className="astra-text-link" href="/blog/the-car-sleeper-thesis">The story of the S8 <span aria-hidden="true">↗</span></Link>
           </div>
         </div>

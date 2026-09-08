@@ -60,7 +60,7 @@ export default function HomeFilm() {
         <div className="home-film-top"><div><p className="astra-eyebrow">Drive Exotiq / A road film</p><h2 id={`${id}-title`}>A little further <em>out.</em></h2></div><button type="button" className="home-film-close" aria-label="Close road film" onClick={() => dialog.current?.close()}>×</button></div>
         <video ref={film} className="home-full-film" controls playsInline preload="none" aria-label="Drive Exotiq: original driving footage from Colorado" aria-describedby={`${id}-description`} onError={() => { if (opened.current) setFailed(true); }} />
         <p id={`${id}-description`} className="sr-only">A mountain lake opens the film. A close view of a Ferrari badge leads to an Audi R8 and Ferrari 458 parked together. A driver presses the ignition and takes the wheel. The cars follow open roads through the mountains, return to the lakeside, and disappear into a final aerial view of the road.</p>
-        {failed ? <p className="home-film-error" role="alert">The film couldn’t load. <Link href="/tour">Explore the roadbook</Link> or close the film and try again.</p> : <p className="home-film-note">The S8. The R8. The 458. Roads worth remembering.<span>Original footage / Colorado</span></p>}
+        {failed ? <p className="home-film-error" role="alert">The film couldn’t load. <Link href="/tour">Explore the roadbook</Link> or close the film and try again.</p> : <p className="home-film-note"><span className="home-film-note-copy">The S8. The R8. The 458. Roads worth remembering.</span><span className="home-film-source">Original footage · Colorado</span></p>}
       </div>
     </dialog>
   </>;

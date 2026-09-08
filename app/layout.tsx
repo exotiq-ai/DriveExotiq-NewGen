@@ -8,6 +8,7 @@ import "./astra-pages.css";
 import "./astra-garage.css";
 import "./astra-story.css";
 import "./astra-motion.css";
+import "./astra-mobile-journeys.css";
 import AnalyticsListener from "@/components/AnalyticsListener";
 import CookieConsent from "@/components/CookieConsent";
 import { isPreview } from "@/lib/preview";

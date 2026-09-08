@@ -74,7 +74,7 @@ export default function ApplicationForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="astra-application-form space-y-6">
       <PreviewNotice />
       {/* Honeypot */}
       <input
@@ -104,18 +104,6 @@ export default function ApplicationForm({
             </option>
           ))}
         </Select>
-        {/* Sponsor off-ramp (deck §7.3) — the select no longer carries a
-            sponsor lane, so intent gets a visible door to the real form. */}
-        <p className="mt-3 text-[13px] leading-relaxed text-ink-3">
-          Looking to partner with us?{' '}
-          <Link
-            href="/sponsor"
-            className="text-ink underline underline-offset-2 transition-colors duration-250 hover:text-gulf"
-          >
-            Start here
-          </Link>
-          .
-        </p>
       </div>
 
       {/* Full name */}
@@ -228,6 +216,10 @@ export default function ApplicationForm({
       </div>
 
       {/* Terms */}
+      <p className="astra-application-partner text-[13px] leading-relaxed text-ink-3">
+        Looking to partner with us?{' '}
+        <Link href="/sponsor" className="text-ink underline underline-offset-2 transition-colors duration-250 hover:text-gulf">Start here</Link>.
+      </p>
       <div className="flex items-start gap-3">
         <input
           {...register('agreedToTerms')}

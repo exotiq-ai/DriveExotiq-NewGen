@@ -35,7 +35,7 @@ export default function HomeExperience() {
           <div className="home-section-label"><p className="astra-eyebrow">01 / The common ground</p><span>It starts with a car. It becomes something else.</span></div>
           <div className="home-manifesto-grid">
             <h2 id="community-heading">Good cars.<br /><em>Better company.</em></h2>
-            <div className="home-manifesto-copy"><span className="home-small-mark" aria-hidden="true">↗</span><p>The early alarm. The first turn out of town. The coffee that gets cold because the conversation is too good.</p><p>That’s what we’re here for. Drive Exotiq brings together people who believe the best part of a great car is getting out and driving it.</p><Link className="astra-text-link" href="/drives">Find your people <Arrow /></Link></div>
+            <div className="home-manifesto-copy"><span className="home-small-mark" aria-hidden="true">↗</span><p>Early starts. Open roads. Coffee that gets cold because the conversation is too good.</p><p className="home-manifesto-context">That’s what we’re here for. Drive Exotiq brings together people who believe the best part of a great car is getting out and driving it.</p><Link className="astra-text-link" href="/drives">Find your people <Arrow /></Link></div>
           </div>
           <div className="home-manifesto-foot"><span>Sunrise drives</span><span>Cars & coffee</span><span>A shared obsession</span></div>
         </div>
@@ -43,17 +43,17 @@ export default function HomeExperience() {
       <section id="the-garage" className="home-garage" aria-labelledby="garage-heading">
         <div className="home-garage-heading astra-wrap"><div><p className="astra-eyebrow">02 / Objects of affection</p><h2 id="garage-heading">Pick your <em>pulse.</em></h2></div><p>Different personalities.<br />One shared language.</p></div>
         <HomeGarage />
-        <div className="home-garage-foot astra-wrap"><p><span className="home-status-dot" />The next chapter: exotic car rentals.<span className="home-coming-soon">Marketplace coming soon.</span></p><Link href="/marketplace" className="astra-text-link">Discover exotiq.rent <Arrow diagonal /></Link></div>
+        <div className="home-garage-foot astra-wrap"><p><span className="home-status-dot" /><span className="home-rent-intro">The next chapter: exotic car rentals.</span><span className="home-coming-soon"><span className="home-rent-wide">Marketplace coming soon.</span><span className="home-rent-compact">Exotiq.rent — coming soon.</span></span></p><Link href="/marketplace" className="astra-text-link">Discover exotiq.rent <Arrow diagonal /></Link></div>
       </section>
       <div className="home-road-shell">
       <section id="the-road" className="home-road" aria-labelledby="road-heading">
         <Image src="/astra/s8-alpine-drive.webp" alt="Gregory’s Audi S8 on a sunlit alpine road" fill sizes="100vw" />
         <HomeLoop /><div className="home-road-shade" />
         <div className="home-road-content astra-wrap"><p className="astra-eyebrow">03 / Leave the ordinary behind.</p><h2 id="road-heading">Less scrolling.<br /><em>More switchbacks.</em></h2><div className="home-road-actions"><Link href="/drives" className="astra-button">Come for a drive <Arrow diagonal /></Link><HomeFilm /></div></div>
-        <p className="home-road-caption">Out here, the drive is the whole point.<span>FROM OUR OWN CAMERA ROLL / AUDI S8</span></p>
+        <p className="home-road-caption"><span className="home-road-caption-thought">Out here, the drive is the whole point.</span><span className="home-road-caption-source">Original footage · Colorado</span></p>
       </section>
       <section className="home-road-coda" aria-labelledby="shared-road-heading"><div className="astra-wrap home-road-coda-grid">
-        <figure><div className="home-pair-media"><Image src="/astra/telluride-pair.webp" alt="Audi R8 and Ferrari 458 together beneath the autumn aspens in Telluride" fill sizes="(max-width: 767px) calc(100vw - 48px), 58vw" /><HomeLoop variant="pair" /></div><figcaption><span>The R8. The 458. A moment worth keeping.</span><span>Telluride, Colorado / From the archive</span></figcaption></figure>
+        <figure><div className="home-pair-media"><Image src="/astra/telluride-pair.webp" alt="Audi R8 and Ferrari 458 together beneath the autumn aspens in Telluride" fill sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 900px) 90vw, 58vw" /><HomeLoop variant="pair" /></div><figcaption>R8 &amp; 458 · Telluride, Colorado · From the archive</figcaption></figure>
         <div className="home-road-coda-copy"><p className="astra-eyebrow">The best part isn’t parked.</p><h2 id="shared-road-heading">Some roads<br />are better<br /><em>shared.</em></h2><p>A different car. A familiar obsession. The kind of company that turns a drive into a story you’re still telling over coffee.</p><Link className="astra-text-link" href="/drives">Meet us on the road <Arrow /></Link></div>
       </div></section>
       </div>

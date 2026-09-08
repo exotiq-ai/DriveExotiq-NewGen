@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 const steps = [
-  ['Make an introduction.', 'Tell us your name, your city, and what brings you here. A real person reads every request.'],
-  ['Look out for your invite.', 'When a drive fits your city, your invitation brings the confirmed date, route, and meet point.'],
-  ['Take the morning back.', 'A sunrise drive. Coffee after. Time with people who understand why you came.'],
+  ['Introduce yourself.', 'Tell us your name, city and why you’d like to join.'],
+  ['Get the details.', 'When a drive fits your city, your invite brings the confirmed date, route and meet point.'],
+  ['Join the drive.', 'Meet the group for a drive and coffee.'],
 ];
 
 export default function HomeInvitation() {

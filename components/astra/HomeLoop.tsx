@@ -53,7 +53,8 @@ export default function HomeLoop({ variant = 'road' }: { variant?: 'hero' | 'roa
       setPlaying(false);
       setAvailable(false);
     }} />
-    {available && <button className={`home-film-control home-${variant}-control`} type="button" aria-label={`${playing ? 'Pause' : 'Play'} film: ${variant === 'hero' ? 'garage' : variant === 'pair' ? 'Telluride' : 'road'}`} onClick={() => {
+    {/* Reserve the compact hero control space before hydration and when motion is disabled. */}
+    {(available || variant === 'hero') && <button aria-hidden={!available || undefined} disabled={!available} style={!available ? { visibility: 'hidden' } : undefined} className={`home-film-control home-${variant}-control`} type="button" aria-label={`${playing ? 'Pause' : 'Play'} film: ${variant === 'hero' ? 'garage' : variant === 'pair' ? 'Telluride' : 'road'}`} onClick={() => {
       const video = ref.current;
       if (!video) return;
       if (playing) { userPaused.current = true; video.pause(); }

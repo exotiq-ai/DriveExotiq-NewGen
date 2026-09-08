@@ -51,7 +51,7 @@ export default function HomeGarage() {
           <span className="home-tab-number">0{index + 1}</span><span>{item.make}<span className="home-tab-model"> {item.model}</span></span><span className="home-tab-indicator" aria-hidden="true">↗</span>
         </button>)}
       </div>
-      <div id="garage-panel" role="tabpanel" tabIndex={0} aria-labelledby={`garage-tab-${selected}`} className={`home-car-panel home-car-${selected}`}>
+      <div id="garage-panel" role="tabpanel" tabIndex={0} aria-labelledby={`garage-tab-${selected}`} data-image-failed={failed.includes(selected)} className={`home-car-panel home-car-${selected}`}>
         <div className="garage-study-images" aria-hidden="true">
           {CARS.map((item, index) => <div key={item.name} data-car-layer={index} className={`garage-study-layer${selected === index ? ' is-selected' : ''}${failed.includes(index) ? ' has-failed' : ''}`}>
             {(present.includes(index) || selected === index) && !failed.includes(index) && <Image src={item.image} alt="" fill sizes="100vw" unoptimized onError={() => imageFailed(index)} />}
@@ -61,7 +61,7 @@ export default function HomeGarage() {
         <div className="garage-study-topline astra-wrap"><p className="astra-eyebrow">{car.study}</p><span className="garage-study-counter"><span>0{selected + 1}</span><span aria-hidden="true">/</span>03</span></div>
         <div className="home-car-details astra-wrap">
           <div className="home-car-title"><p className="astra-eyebrow">{car.make}</p><h3>{car.model}</h3><p className="home-car-character">{car.character}</p></div>
-          <div className="home-car-spec"><p>{car.copy}</p><dl><div><dt>At its heart</dt><dd>{car.engine}</dd></div><div><dt>In a word</dt><dd>{car.spirit}</dd></div></dl></div>
+          <div className="home-car-spec"><p>{car.copy}</p><dl><div><dt><span className="garage-engine-editorial">At its heart</span><span className="garage-engine-compact">Engine</span></dt><dd>{car.engine}</dd></div><div><dt>In a word</dt><dd>{car.spirit}</dd></div></dl></div>
         </div>
         <span className="garage-study-caption">Three machines. Three ways to feel alive.</span>
         <span className="garage-study-scroll" aria-hidden="true">{cinematic ? 'Keep scrolling' : 'Choose your study'} <span>{cinematic ? '↓' : '↑'}</span></span>
