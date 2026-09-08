@@ -1,0 +1,46 @@
+/* Three camera studies, progressively enhanced within native document scroll. */
+.garage-study{position:relative;--garage-progress:0;background:#0a0e0d}
+.garage-study-stage{position:relative;background:#0a0e0d}
+.garage-study .home-garage-tabs{position:relative;z-index:4;background:#0c0e0f}
+.garage-study .home-garage-tabs button{min-height:78px;font-size:13px}
+.garage-study .home-garage-tabs button[aria-selected=true]{border-top-color:#6cbde6}
+.garage-study .home-car-panel{position:relative;height:730px;isolation:isolate;overflow:clip;background:radial-gradient(ellipse at 65% 42%,#2a2921 0%,#101613 45%,#090d0c 80%)}
+.garage-study-images{position:absolute;inset:0;z-index:-3;overflow:hidden}
+.garage-study-layer{position:absolute;inset:0;opacity:0;transform:none;pointer-events:none}
+.garage-study-layer.is-selected{opacity:1}
+.garage-study-layer img{object-fit:cover;object-position:50% 48%;width:100%;height:100%}
+.garage-study-layer.has-failed{opacity:0!important}
+.garage-study .home-car-panel::after{z-index:-1;background:linear-gradient(180deg,#08100d50 0%,transparent 20%,transparent 42%,#090e0ddb 87%,#0b0f0e 100%),linear-gradient(90deg,#090e0d22,transparent 70%)}
+.garage-study-light{position:absolute;pointer-events:none;inset:0;z-index:-2;background:linear-gradient(118deg,transparent 40%,#d9b37809 52%,transparent 66%)}
+.garage-study-topline{position:absolute;top:29px;inset-inline:0;display:flex;justify-content:space-between;align-items:center;gap:24px}
+.garage-study-topline>.astra-eyebrow{font-size:9px;letter-spacing:.14em;color:#d2d1c8}
+.garage-study-counter{display:flex;gap:14px;align-items:center;font-size:10px;letter-spacing:.08em;color:#9da59d}.garage-study-counter>span:first-child{color:#6cbde6}.garage-study-counter>span:nth-child(2){color:#65716b}
+.garage-study .home-car-details{position:relative;padding-top:100px;padding-bottom:83px;gap:50px;align-items:flex-end}
+.garage-study .home-car-title h3{font-size:clamp(92px,9.2vw,158px);line-height:.98;letter-spacing:-.075em;margin-top:15px}
+.garage-study .home-car-title>.astra-eyebrow{font-size:10px;letter-spacing:.18em;color:#d3d5cf}
+.garage-study .home-car-character{font-size:clamp(22px,2vw,30px);margin-top:17px!important;color:#dad9d1}
+.garage-study .home-car-spec{width:290px;padding-bottom:7px}.garage-study .home-car-spec>p{font-size:13px;line-height:1.8}.garage-study .home-car-spec dl{margin-top:26px;padding-top:18px}.garage-study .home-car-spec dt{color:#a3aaa4}.garage-study .home-car-spec dd{color:#e2e3dc}
+.garage-study-caption{position:absolute;bottom:25px;left:clamp(24px,4.2vw,80px);font-size:9px;letter-spacing:.035em;color:#a7b0a7}
+.garage-study-scroll{position:absolute;bottom:21px;right:clamp(24px,4.2vw,80px);display:flex;align-items:center;gap:22px;font-size:9px;letter-spacing:.04em;color:#b8c1b8}.garage-study-scroll>span{font-size:20px;color:#6cbde6}
+.garage-study-progress{height:2px;background:#f0ede618;overflow:hidden}.garage-study-progress>span{display:block;width:100%;height:100%;background:#6cbde6;transform:scaleX(var(--garage-progress));transform-origin:left center}
+.garage-study:not([data-cinematic=true]) .garage-study-progress>span{transform:scaleX(.33333)}.garage-study[data-selected="1"]:not([data-cinematic=true]) .garage-study-progress>span{transform:translateX(33.333%) scaleX(.33333)}.garage-study[data-selected="2"]:not([data-cinematic=true]) .garage-study-progress>span{transform:translateX(66.666%) scaleX(.33333)}
+@media(min-width:1101px) and (min-height:720px) and (pointer:fine){
+ .garage-study[data-cinematic=true]{height:320svh}
+ .garage-study[data-cinematic=true] .garage-study-stage{position:sticky;top:88px;height:calc(100svh - 88px);display:flex;flex-direction:column}
+ .garage-study[data-cinematic=true] .home-garage-tabs{flex:0 0 78px;width:100%}
+ .garage-study[data-cinematic=true] .home-car-panel{height:auto;flex:1;min-height:0}
+ .garage-study[data-cinematic=true] .garage-study-progress{flex:0 0 2px}
+ .garage-study[data-cinematic=true] .garage-study-layer{will-change:transform,opacity}
+}
+@media(max-width:1100px){
+ .garage-study .home-car-panel{height:640px}.garage-study .home-car-title h3{font-size:clamp(76px,10vw,105px)}.garage-study .home-car-details{gap:30px;padding-bottom:79px}.garage-study .home-car-spec{width:255px}.garage-study .home-car-character{font-size:22px}
+}
+@media(max-width:767px){
+ .garage-study .home-garage-tabs button{font-size:12px;min-height:77px}.garage-study .home-car-panel{height:640px}.garage-study-topline{top:24px}.garage-study-topline>.astra-eyebrow{font-size:8px;letter-spacing:.06em;max-width:215px}.garage-study-counter{font-size:9px;gap:9px}
+ .garage-study-images{bottom:130px}.garage-study-layer img{object-position:46% 42%}.garage-study .home-car-panel::after{background:linear-gradient(180deg,#0a0f0c77,transparent 20%,transparent 38%,#090e0ddd 61%,#0a0f0d 83%)}
+ .garage-study .home-car-details{padding-top:270px;padding-bottom:78px;gap:25px;flex-direction:column;align-items:flex-start;justify-content:flex-end}.garage-study .home-car-title h3{font-size:clamp(58px,14.3vw,89px);margin-top:9px;letter-spacing:-.065em}.garage-study .home-car-title>.astra-eyebrow{font-size:9px}.garage-study .home-car-character{font-size:20px;margin-top:11px!important}
+ .garage-study .home-car-spec{width:100%;padding:0}.garage-study .home-car-spec>p{font-size:12px;line-height:1.6;max-width:300px}.garage-study .home-car-spec dl{margin-top:19px;padding-top:13px}.garage-study .home-car-spec dt{font-size:8px}.garage-study .home-car-spec dd{font-size:10px}
+ .garage-study-caption{font-size:8px;bottom:29px;max-width:210px}.garage-study-scroll{font-size:0;gap:0;bottom:23px}.garage-study-scroll>span{font-size:20px}
+}
+@media(max-height:719px) and (min-width:768px){.garage-study .home-car-panel{height:580px}.garage-study .home-car-title h3{font-size:90px}}
+@media(prefers-reduced-motion:reduce){.garage-study[data-cinematic=true]{height:auto}.garage-study[data-cinematic=true] .garage-study-stage{position:relative;height:auto}.garage-study[data-cinematic=true] .home-car-panel{height:730px;flex:none}.garage-study-layer{transform:none!important;transition:none!important;animation:none!important;will-change:auto!important}}

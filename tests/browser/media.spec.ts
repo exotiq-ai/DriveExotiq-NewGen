@@ -3,6 +3,7 @@ import { test, expect } from 'playwright/test';
 for (const film of [
   { section: '.home-hero', video: '.home-hero-video', poster: '.home-hero-image', name: 'garage' },
   { section: '.home-road', video: '.home-road-video', poster: '.home-road > img', name: 'road' },
+  { section: '.home-pair-media', video: '.home-pair-video', poster: '.home-pair-media > img', name: 'Telluride' },
 ]) {
   test(`${film.name} film restores its poster after a playback error`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'no-preference' });

@@ -1,17 +1,39 @@
 'use client';
+
 import Image from 'next/image';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
-const CARS = [
-  { make: 'McLaren', model: '720S', name: 'McLaren 720S', image: '/astra/car-mclaren.webp', alt: 'Sculpted silver McLaren 720S, front three-quarter view', character: 'Sculpted by the air.', engine: 'Twin-turbo V8', spirit: 'Supercar', copy: 'Every curve has a purpose. Every open road is an invitation.' },
-  { make: 'Porsche', model: '911 GT3 RS', name: 'Porsche 911 GT3 RS', image: '/astra/car-porsche.webp', alt: 'Porsche 911 GT3 RS viewed from the rear, its wing outlined by warm light', character: 'Every corner, a conversation.', engine: 'Naturally aspirated flat-six', spirit: 'Precision', copy: 'A singular obsession with the way a car feels in your hands.' },
-  { make: 'Ferrari', model: '458 Italia', name: 'Ferrari 458 Italia', image: '/astra/ferrari-badge-detail.webp', alt: 'Detail of the prancing horse badge on the real Ferrari 458 in Telluride', character: 'Some things need no translation.', engine: 'Naturally aspirated V8', spirit: 'Emotion', copy: 'The prancing horse. The unmistakable voice. The reason you take the long way.' },
-];
+import { GARAGE_CARS as CARS } from './garage-data';
+import useGarageProgress from './useGarageProgress';
+
 export default function HomeGarage() {
   const [selected, setSelected] = useState(0);
-  const [ready, setReady] = useState(false);
-  useEffect(() => { setReady(true); }, []);
+  const [failed, setFailed] = useState<number[]>([]);
+  const [present, setPresent] = useState<number[]>([0]);
+  const root = useRef<HTMLDivElement>(null);
+  const restoreAfterFailure = useRef(false);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const { ready, cinematic, near, select } = useGarageProgress(root, setSelected, failed.length > 0);
   const car = CARS[selected];
+
+  useEffect(() => {
+    if (cinematic && near) setPresent([0, 1, 2]);
+    else setPresent(previous => previous.includes(selected) ? previous : [...previous, selected]);
+  }, [cinematic, near, selected]);
+
+  useEffect(() => {
+    if (!cinematic && restoreAfterFailure.current && root.current) {
+      restoreAfterFailure.current = false;
+      // Preserve the visible chapter when an error removes its extended height.
+      window.scrollTo({ top: root.current.getBoundingClientRect().top + window.scrollY - 88, behavior: 'instant' });
+    }
+  }, [cinematic]);
+
+  function imageFailed(index: number) {
+    const bounds = root.current?.getBoundingClientRect();
+    if (cinematic && bounds && bounds.top <= 88 && bounds.bottom > 88) restoreAfterFailure.current = true;
+    setFailed(previous => previous.includes(index) ? previous : [...previous, index]);
+  }
+
   function navigate(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     let next = index;
     if (event.key === 'ArrowRight') next = (index + 1) % CARS.length;
@@ -19,20 +41,32 @@ export default function HomeGarage() {
     else if (event.key === 'Home') next = 0;
     else if (event.key === 'End') next = CARS.length - 1;
     else return;
-    event.preventDefault(); setSelected(next); tabs.current[next]?.focus();
+    event.preventDefault(); select(next); tabs.current[next]?.focus({ preventScroll: true });
   }
-  return <div className="home-garage-browser">
-    <div className="home-garage-tabs astra-wrap" role="tablist" aria-label="Explore the garage">
-      {CARS.map((item, index) => <button key={item.name} ref={node => { tabs.current[index] = node; }} type="button" role="tab" disabled={!ready} id={`garage-tab-${index}`} aria-controls="garage-panel" aria-selected={selected === index} tabIndex={selected === index ? 0 : -1} onKeyDown={event => navigate(event, index)} onClick={() => setSelected(index)}>
-        <span className="home-tab-number">0{index + 1}</span><span>{item.make}<span className="home-tab-model"> {item.model}</span></span><span className="home-tab-indicator" aria-hidden="true">↗</span>
-      </button>)}
-    </div>
-    <div id="garage-panel" role="tabpanel" tabIndex={0} aria-labelledby={`garage-tab-${selected}`} className={`home-car-panel home-car-${selected}`}>
-      <div className="home-car-photo" key={car.image}><Image src={car.image} alt={car.alt} fill sizes="100vw" unoptimized /></div>
-      <div className="home-car-details astra-wrap">
-        <div className="home-car-title"><p className="astra-eyebrow">{car.make}</p><h3>{car.model}</h3><p className="home-car-character">{car.character}</p></div>
-        <div className="home-car-spec"><p>{car.copy}</p><dl><div><dt>At its heart</dt><dd>{car.engine}</dd></div><div><dt>In a word</dt><dd>{car.spirit}</dd></div></dl></div>
+
+  return <div ref={root} className="home-garage-browser garage-study" data-cinematic={cinematic} data-selected={selected}>
+    <div className="garage-study-stage">
+      <div className="home-garage-tabs astra-wrap" role="tablist" aria-label="Explore the garage">
+        {CARS.map((item, index) => <button key={item.name} ref={node => { tabs.current[index] = node; }} type="button" role="tab" disabled={!ready} id={`garage-tab-${index}`} aria-controls="garage-panel" aria-selected={selected === index} tabIndex={selected === index ? 0 : -1} onKeyDown={event => navigate(event, index)} onClick={() => select(index)}>
+          <span className="home-tab-number">0{index + 1}</span><span>{item.make}<span className="home-tab-model"> {item.model}</span></span><span className="home-tab-indicator" aria-hidden="true">↗</span>
+        </button>)}
       </div>
+      <div id="garage-panel" role="tabpanel" tabIndex={0} aria-labelledby={`garage-tab-${selected}`} className={`home-car-panel home-car-${selected}`}>
+        <div className="garage-study-images" aria-hidden="true">
+          {CARS.map((item, index) => <div key={item.name} data-car-layer={index} className={`garage-study-layer${selected === index ? ' is-selected' : ''}${failed.includes(index) ? ' has-failed' : ''}`}>
+            {(present.includes(index) || selected === index) && !failed.includes(index) && <Image src={item.image} alt="" fill sizes="100vw" unoptimized onError={() => imageFailed(index)} />}
+          </div>)}
+        </div>
+        <div className="garage-study-light" aria-hidden="true" />
+        <div className="garage-study-topline astra-wrap"><p className="astra-eyebrow">{car.study}</p><span className="garage-study-counter"><span>0{selected + 1}</span><span aria-hidden="true">/</span>03</span></div>
+        <div className="home-car-details astra-wrap">
+          <div className="home-car-title"><p className="astra-eyebrow">{car.make}</p><h3>{car.model}</h3><p className="home-car-character">{car.character}</p></div>
+          <div className="home-car-spec"><p>{car.copy}</p><dl><div><dt>At its heart</dt><dd>{car.engine}</dd></div><div><dt>In a word</dt><dd>{car.spirit}</dd></div></dl></div>
+        </div>
+        <span className="garage-study-caption">Three machines. Three ways to feel alive.</span>
+        <span className="garage-study-scroll" aria-hidden="true">{cinematic ? 'Keep scrolling' : 'Choose your study'} <span>{cinematic ? '↓' : '↑'}</span></span>
+      </div>
+      <div className="garage-study-progress" aria-hidden="true"><span /></div>
     </div>
   </div>;
 }

@@ -5,6 +5,10 @@ import Footer from '@/components/layout/Footer';
 import { getAllPosts } from '@/lib/blog';
 import HomeGarage from './HomeGarage';
 import HomeLoop from './HomeLoop';
+import HomeMotion from './HomeMotion';
+import HomeFilm from './HomeFilm';
+import HomeFounder from './HomeFounder';
+import HomeInvitation from './HomeInvitation';
 
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" className={diagonal ? 'home-arrow-diagonal' : undefined}><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.4" /></svg>;
@@ -15,7 +19,8 @@ export default function HomeExperience() {
   return <>
     <Header />
     <main id="main-content" className="home-experience">
-      <section className="home-hero" aria-labelledby="home-title">
+      <HomeMotion />
+      <section id="the-feeling" className="home-hero" aria-labelledby="home-title">
         <picture><source media="(max-width: 767px)" srcSet="/astra/hero-garage-mobile.webp" /><Image className="home-hero-image" src="/astra/hero-garage.webp" alt="Silver McLaren 720S in an architectural garage, a shaft of daylight falling across the concrete" fill loading="eager" fetchPriority="high" sizes="100vw" unoptimized /></picture>
         <HomeLoop variant="hero" />
         <div className="home-hero-shade" />
@@ -35,29 +40,29 @@ export default function HomeExperience() {
           <div className="home-manifesto-foot"><span>Sunrise drives</span><span>Cars & coffee</span><span>A shared obsession</span></div>
         </div>
       </section>
-      <section className="home-road" aria-labelledby="road-heading">
-        <Image src="/astra/s8-alpine-drive.webp" alt="Gregory’s Audi S8 on a sunlit alpine road" fill sizes="100vw" />
-        <HomeLoop /><div className="home-road-shade" />
-        <div className="home-road-content astra-wrap"><p className="astra-eyebrow">Leave the ordinary behind.</p><h2 id="road-heading">Less scrolling.<br /><em>More switchbacks.</em></h2><Link href="/drives" className="astra-button">Come for a drive <Arrow diagonal /></Link></div>
-        <p className="home-road-caption">Out here, the drive is the whole point.<span>FROM OUR OWN CAMERA ROLL / AUDI S8</span></p>
-      </section>
-      <section className="home-garage" aria-labelledby="garage-heading">
+      <section id="the-garage" className="home-garage" aria-labelledby="garage-heading">
         <div className="home-garage-heading astra-wrap"><div><p className="astra-eyebrow">02 / Objects of affection</p><h2 id="garage-heading">Pick your <em>pulse.</em></h2></div><p>Different personalities.<br />One shared language.</p></div>
         <HomeGarage />
         <div className="home-garage-foot astra-wrap"><p><span className="home-status-dot" />The next chapter: exotic car rentals.<span className="home-coming-soon">Marketplace coming soon.</span></p><Link href="/marketplace" className="astra-text-link">Discover exotiq.rent <Arrow diagonal /></Link></div>
       </section>
-      <section className="home-roadbook home-light" aria-labelledby="roadbook-heading">
-        <div className="astra-wrap">
-          <div className="home-section-label"><p className="astra-eyebrow">03 / A road well travelled</p><span>Denver → Miami. Journey completed.</span></div>
-          <div className="home-roadbook-heading"><h2 id="roadbook-heading">The long way<br /><em>was the right way.</em></h2><div><p>One Audi S8. A road from Denver to Miami. A reminder that the stories you keep are usually the ones you went out to find.</p><Link href="/tour" className="astra-text-link">Open the roadbook <Arrow /></Link></div></div>
-          <div className="home-roadbook-images"><figure className="home-desert-photo"><Image src="/astra/s8-desert-vista.webp" alt="The Audi S8 overlooking the desert at Tortilla Flats in golden light" width={1920} height={1200} sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1680px) 73vw, 1170px" /><figcaption><span>A pause worth taking.</span><span>Tortilla Flats / From the archive</span></figcaption></figure><figure className="home-founder-photo"><Image src="/astra/gregory-portrait.webp" alt="Gregory beside his Audi S8 in the desert" width={900} height={1126} sizes="(max-width: 767px) 105px, (max-width: 1680px) 20vw, 316px" /><figcaption>Gregory<br /><span>Founder. Driver. Usually both.</span></figcaption></figure></div>
-        </div>
+      <div className="home-road-shell">
+      <section id="the-road" className="home-road" aria-labelledby="road-heading">
+        <Image src="/astra/s8-alpine-drive.webp" alt="Gregory’s Audi S8 on a sunlit alpine road" fill sizes="100vw" />
+        <HomeLoop /><div className="home-road-shade" />
+        <div className="home-road-content astra-wrap"><p className="astra-eyebrow">03 / Leave the ordinary behind.</p><h2 id="road-heading">Less scrolling.<br /><em>More switchbacks.</em></h2><div className="home-road-actions"><Link href="/drives" className="astra-button">Come for a drive <Arrow diagonal /></Link><HomeFilm /></div></div>
+        <p className="home-road-caption">Out here, the drive is the whole point.<span>FROM OUR OWN CAMERA ROLL / AUDI S8</span></p>
       </section>
-      <section className="home-journal home-light" aria-labelledby="journal-heading"><div className="astra-wrap">
-        <div className="home-journal-heading"><div><p className="astra-eyebrow">04 / Between drives</p><h2 id="journal-heading">Worth a <em>read.</em></h2></div><Link href="/blog" className="astra-text-link">All stories <Arrow /></Link></div>
-        <div className="home-journal-grid">{selections.map((post, index) => <Link className="home-story" key={post.slug} href={`/blog/${post.slug}`}><div className="home-story-image"><Image src={index === 0 ? '/astra/s8-rear-golden.webp' : '/astra/r8-ferrari-telluride.webp'} alt={index === 0 ? 'Audi S8 in late desert light' : 'Audi R8 and Ferrari 458 beneath autumn aspens in Telluride'} fill sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1680px) 48vw, 772px" /><span className="home-story-open"><Arrow diagonal /></span></div><div className="home-story-meta"><span>{post.category}</span><span>{post.readTime}</span></div><h3>{post.title}</h3></Link>)}</div>
+      <section className="home-road-coda" aria-labelledby="shared-road-heading"><div className="astra-wrap home-road-coda-grid">
+        <figure><div className="home-pair-media"><Image src="/astra/telluride-pair.webp" alt="Audi R8 and Ferrari 458 together beneath the autumn aspens in Telluride" fill sizes="(max-width: 767px) calc(100vw - 48px), 58vw" /><HomeLoop variant="pair" /></div><figcaption><span>The R8. The 458. A moment worth keeping.</span><span>Telluride, Colorado / From the archive</span></figcaption></figure>
+        <div className="home-road-coda-copy"><p className="astra-eyebrow">The best part isn’t parked.</p><h2 id="shared-road-heading">Some roads<br />are better<br /><em>shared.</em></h2><p>A different car. A familiar obsession. The kind of company that turns a drive into a story you’re still telling over coffee.</p><Link className="astra-text-link" href="/drives">Meet us on the road <Arrow /></Link></div>
       </div></section>
-      <section className="home-invitation" aria-labelledby="invitation-heading"><div className="astra-wrap"><div className="home-section-label"><p className="astra-eyebrow">The next good story starts outside.</p><span>YOU IN?</span></div><h2 id="invitation-heading">See you<br /><em>out there.</em><span className="home-invitation-arrow" aria-hidden="true">↗</span></h2><div className="home-invitation-bottom"><p>Good roads. Early starts. Your kind of people.<br />Get the invitation to what comes next.</p><Link className="astra-button" href="/apply?interest=drives">Get on the list <Arrow diagonal /></Link></div></div></section>
+      </div>
+      <HomeFounder />
+      <section className="home-journal home-journal-compact home-light" aria-labelledby="journal-heading"><div className="astra-wrap">
+        <div className="home-journal-heading"><div><p className="astra-eyebrow">Between drives / The journal</p><h2 id="journal-heading">Worth a <em>read.</em></h2></div><Link href="/blog" className="astra-text-link">All stories <Arrow /></Link></div>
+        <div className="home-journal-grid">{selections.map((post, index) => <Link className="home-story" key={post.slug} href={`/blog/${post.slug}`}><span className="home-story-number">0{index + 1}</span><div><div className="home-story-meta"><span>{post.category}</span><span>{post.readTime}</span></div><h3>{post.title}</h3></div><Arrow diagonal /></Link>)}</div>
+      </div></section>
+      <HomeInvitation />
     </main>
     <Footer />
   </>;
