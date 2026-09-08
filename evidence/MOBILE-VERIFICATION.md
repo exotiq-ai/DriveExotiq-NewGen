@@ -1,6 +1,6 @@
 # Astra mobile release verification
 
-Implemented on the isolated `codex/astra-awwwards` branch, 8 September 2026. The approved specification is [ASTRA-MOBILE-PLAN.md](../ASTRA-MOBILE-PLAN.md). No new dependencies, media or generative-service spending were needed.
+Live at [Astra review](https://astra-review--driveexotiq-astra.netlify.app), 8 September 2026. Implemented on the isolated `codex/astra-awwwards` branch. The approved specification is [ASTRA-MOBILE-PLAN.md](../ASTRA-MOBILE-PLAN.md). No new dependencies, media or generative-service spending were needed.
 
 ## Result
 
@@ -37,6 +37,12 @@ Sequential Lighthouse 13.4.1 measurements on the local production server:
 
 Both reports have no run warnings. The application request list contains no desktop hero artwork. Homepage performance retains the earlier V2 local score of 96; small timing differences are normal lab variation. These are local lab checks, not hosted or field performance/ conversion measurements. SEO scores are 69/54 respectively; this isolated preview deliberately blocks indexing. Forms do not save data or send emails/texts.
 
-Hosted publication and verification are the remaining release step.
+Application commit: `c8ef233f1e14d91bc28294d38de7cccd581cbf9d`, pushed and verified against the feature branch. Netlify project: `driveexotiq-astra`, site ID `f499ad01-b775-4c7d-901f-98f879c83d94`, deploy ID `6a9f9938b292509f96cbc5f1`. Publication used the Next.js adapter and the explicit `astra-review` alias.
+
+Hosted verification completed cleanly: **116 browser cases passed, 7 intentional skips, no unexpected/flaky results or runner errors**, exit 0 in 4.6 minutes. **20 hosted HTTP checks passed**, including noindex/crawler blocking, preview-only form responses and blocked admin methods. The hosted mobile matrix and fresh-entry image test passed.
+
+Live visual inspection confirmed the 320px name field at y=453–506px, readable Porsche selection, two expanded FAQs and working cookie preferences. Production screenshots cover seven compact viewport sizes with no measured document overflow. Local development/browser sessions and the production server were closed after verification.
+
+The final verification-only commit updates this record and the completed plan; deployed application code and assets remain identical to the application commit above.
 
 Detailed task-local evidence is preserved outside the application checkout at `../evidence/mobile-release/`, including layout notes, browser reports, original failures, network probes and build logs. Screenshots are under `output/playwright/mobile-release/`. Previous V2 evidence remains intact.

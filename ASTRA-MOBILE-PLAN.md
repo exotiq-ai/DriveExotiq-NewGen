@@ -10,7 +10,7 @@
 
 **Spec:** The observed findings, content decisions, type system, viewport rules and acceptance criteria in this document are the design specification.
 
-**Status:** Implementation and local verification complete, 8 September 2026. Final build passed; 116 browser cases passed with 7 intentional skips. Mobile Lighthouse: home 96 performance / 100 accessibility, apply 97 / 100. Preview publication and hosted verification are next.
+**Status:** Complete and live, 8 September 2026. Application commit `c8ef233f1e14d91bc28294d38de7cccd581cbf9d`, published to [Astra review](https://astra-review--driveexotiq-astra.netlify.app), deploy `6a9f9938b292509f96cbc5f1`. Local and hosted browser suites each passed 116 cases with 7 intentional skips and clean exits; local/hosted HTTP checks each passed 20. Mobile local Lighthouse: home 96 performance / 100 accessibility; apply 97 / 100. See [MOBILE-VERIFICATION.md](evidence/MOBILE-VERIFICATION.md) for evidence and testing limits.
 
 ## What the audit found
 
@@ -182,7 +182,7 @@ node --test tests/preview-services.test.mjs tests/preview-production.test.mjs
 Use the mobile remote config with one worker after deployment, retaining separately named reports. Add a targeted layout regression only if the changes introduce a behavior not already exercised; do not create dozens of tests that merely repeat CSS values.
 
 - [x] Remeasure homepage and application mobile performance on a production build, sequentially. Preserve the V2 home baseline of local 96 performance / 100 accessibility as context, not a promised identical score. Confirm no hidden-image download or extra animation workload was introduced.
-- [ ] Commit/push the isolated Astra branch after verification, deploy the existing `astra-review` alias on site `f499ad01-b775-4c7d-901f-98f879c83d94`, then verify the hosted page/form/media behavior. Record failures/rechecks separately, as in V2; do not call an interrupted run a clean pass.
+- [x] Commit/push the isolated Astra branch after verification, deploy the existing `astra-review` alias on site `f499ad01-b775-4c7d-901f-98f879c83d94`, then verify the hosted page/form/media behavior. Record failures/rechecks separately, as in V2; do not call an interrupted run a clean pass.
 
 ## Acceptance and limits
 
