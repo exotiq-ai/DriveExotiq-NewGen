@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
+import "./astra.css";
+import "./astra-home.css";
+import "./astra-pages.css";
 import AnalyticsListener from "@/components/AnalyticsListener";
 import CookieConsent from "@/components/CookieConsent";
-import SmoothScroll from "@/components/providers/SmoothScroll";
+import { isPreview } from "@/lib/preview";
 
 // Drive Exotiq type system (self-hosted, no build-time network fetch):
 // Bricolage Grotesque (display) · Schibsted Grotesk (UI/body) · Spectral (serif voice).
@@ -24,14 +27,13 @@ const serif = localFont({
   src: [
     { path: "./fonts/spectral-400.woff2", weight: "400", style: "normal" },
     { path: "./fonts/spectral-400-italic.woff2", weight: "400", style: "italic" },
-    { path: "./fonts/spectral-500.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/spectral-500-italic.woff2", weight: "500", style: "italic" },
   ],
   variable: "--font-serif",
   display: "swap",
+  preload: true,
 });
 
-const SITE_URL = "https://driveexotiq.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://driveexotiq.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -40,7 +42,7 @@ export const metadata: Metadata = {
     template: "%s · Drive Exotiq",
   },
   description:
-    "The community front door to the exotiq.rent exotic-car marketplace. Invite-only sunrise drives, the Denver→Miami tour, and what's coming.",
+    "Good cars. Better company. Discover sunrise drives, stories from the road, and the next chapter of the exotiq.rent exotic-car marketplace.",
   keywords: [
     "exotic cars",
     "supercar community",
@@ -61,9 +63,9 @@ export const metadata: Metadata = {
   // 2026-07-06). The homepage sets canonical "/" in app/page.tsx; every other
   // indexable page declares its own.
   robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    index: !isPreview,
+    follow: !isPreview,
+    googleBot: { index: !isPreview, follow: !isPreview, "max-image-preview": "large" },
   },
   icons: {
     icon: [
@@ -80,16 +82,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Drive Exotiq: Built for People Who Drive the Car",
     description:
-      "The community front door to the exotiq.rent exotic-car marketplace. Monthly sunrise drives, the Denver→Miami tour, and what's coming next.",
+      "Good cars. Better company. Sunrise drives, real road stories, and a community built around the journey.",
     url: SITE_URL,
     siteName: "Drive Exotiq",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
+        url: "/astra/hero-garage.webp",
+        width: 1672,
+        height: 941,
         alt: "Drive Exotiq: Exotic Cars That Actually Get Driven",
       },
     ],
@@ -98,8 +100,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Drive Exotiq: Built for People Who Drive the Car",
     description:
-      "The community front door to the exotiq.rent exotic-car marketplace. Invite-only sunrise drives and the Denver→Miami tour.",
-    images: ["/og-image.jpg"],
+      "Good cars. Better company. Sunrise drives, real road stories, and a community built around the journey.",
+    images: ["/astra/hero-garage.webp"],
     creator: "@driveexotiq",
     site: "@driveexotiq",
   },
@@ -144,7 +146,7 @@ export default function RootLayout({
             AND custom events (CTA / Film Depth / Signup via lib/analytics.ts)
             fired before the script loads; outboundLinks kept from the old
             script.outbound-links.js setup. Goals live in the dashboard. */}
-        {process.env.NODE_ENV === 'production' && (
+        {process.env.NODE_ENV === 'production' && !isPreview && (
           <>
             <Script id="plausible-shim" strategy="beforeInteractive">
               {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init({outboundLinks:true})`}
@@ -157,7 +159,7 @@ export default function RootLayout({
           </>
         )}
         <AnalyticsListener />
-        <SmoothScroll>{children}</SmoothScroll>
+        {children}
         <CookieConsent />
       </body>
     </html>

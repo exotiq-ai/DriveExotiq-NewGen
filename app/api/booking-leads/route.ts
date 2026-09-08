@@ -1,3 +1,4 @@
+import { isPreview } from '@/lib/preview';
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { bookingLeadSchema } from '@/lib/validations';
@@ -14,6 +15,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Invalid form data', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
+      );
+    }
+
+    // Validate the preview exercise, without storing a record or contacting providers.
+    if (isPreview) {
+      return NextResponse.json(
+        { success: true, preview: true, lead: null },
+        { status: 201 }
       );
     }
 

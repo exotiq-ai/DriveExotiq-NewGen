@@ -44,19 +44,19 @@ That is the trick. Most fast cars make you choose between comfort and violence. 
 
 The disguise is not new. In 1988 Audi took a big, upright sedan, the 200 quattro, into American Trans-Am racing and won the championship in its first season. The next year it built something stranger: the 90 quattro IMSA GTO, a car that kept the outline of a road-going four-door and hid a 720-horsepower all-wheel-drive silhouette racer under the sheetmetal. It debuted on the streets of Miami, and once it sorted itself out it won seven of the season's races.
 
-Notice the number. Seven hundred and twenty horsepower, under four doors, thirty-seven years ago. Gregory's S8 makes almost exactly that at the wheels today, and the tour it leads happens to end in Miami. He did not plan the symmetry. He just recognized it.
+Notice the number. Seven hundred and twenty horsepower, under four doors, thirty-seven years ago. Gregory's S8 makes almost exactly that at the wheels today, and the Denver-to-Miami journey shares that connection. He did not plan the symmetry. He just recognized it.
 
 Audi has understood for forty years that four doors and a calm body are not a compromise. They are cover. The S8 is the current, road-legal chapter of that same idea, and putting it at the front of the fleet is our way of saying we know exactly which chapter we are in.
 
-## The one season the disguise comes off
+## The road beyond the garage
 
-For the 2026 tour, the S8 wears a livery — heritage racing colors, Denver to Miami, ten markets, about five thousand miles. It is the same move the IMSA cars made: four doors, real speed, a name on the side. The build above is what carries that name through ten cities, and the crowds at every stop are the people who read build sheets the way this post just wrote one. The wrap is still open. [See the wrap opportunity.](/sponsor)
+The Denver-to-Miami journey is complete. The S8 remains at the center of the idea: four doors, real capability, and a reason to take the long way. [Explore the roadbook.](/tour)
 
 ## The drive is the product
 
 Here is the part that matters. We are not in the badge business. A badge is a claim someone else engineered for you and stamped on the hood. A drive is something you actually did, on a real road, at a real hour, with the light coming up over the front range. One of those you can buy. The other one you have to go and earn.
 
-The S8 makes that argument better than any exotic could, precisely because nobody expects it to. When the fastest thing on the road also looks like the calmest, you stop driving for the street and start driving for yourself. The attention was never the point. The road was the point. Five thousand miles of it, and a car composed enough to cross a continent without ever asking a soul to look.
+The S8 makes that argument better than any exotic could, precisely because nobody expects it to. When the fastest thing on the road also looks like the calmest, you stop driving for the street and start driving for yourself. The attention was never the point. The road was the point. A car composed enough for the long way, without ever asking a soul to look.
 
 That is why the sleeper leads. The McLarens are the fantasy. The S8 is the thesis.
 

@@ -1,16 +1,17 @@
 # Drive Exotiq
 
-> Drive Exotiq is the community front door to the exotiq.rent exotic-car marketplace.
+> Good cars. Better company. A driving community and the front door to the upcoming exotiq.rent marketplace.
 
-An Exotiq Inc. brand. Built for the people who actually drive the car.
+This Astra build is an independent design preview. Preview forms validate input without saving information or sending messages. Rentals are not available to book here.
 
-What we do: exotic car rentals (coming soon) via exotiq.rent — McLaren, Porsche, Lamborghini, Ferrari, Rolls-Royce, Aston Martin, G-Wagon. Curated, invite-only sunrise drives on the last Sunday of every month, each ending in a curated Cars & Coffee. Event and brand partnerships, including the 2026 Denver→Miami tour — one car, ten markets, about 5,000 miles — currently seeking a wrap sponsor.
-
-Ecosystem: Drive Exotiq (community) → exotiq.rent (marketplace) → exotiq.ai (intelligence).
+Drive Exotiq brings together owners and enthusiasts for small sunrise drives and Cars & Coffee. The proposed rhythm is the last Sunday of the month; confirmed dates, routes and meet points are shared through invitations. The Denver–Miami journey and wrap are completed. The roadbook uses verified endpoints and clearly captioned archive photographs; it does not assert unverified mileage, dates or intermediate stops. Brand and event partnership inquiries have their own form.
 
 ## Pages
 
-- [Drive Exotiq](https://driveexotiq.com/): the cinematic scroll film home — the fleet, the drives, and the tour
-- [Get on the list](https://driveexotiq.com/apply): waitlist for the marketplace, drives, and Cars & Coffee
-- [Sponsor the wrap](https://driveexotiq.com/sponsor): tour wrap sponsorship and event partnerships
-- [The tour](https://driveexotiq.com/tour): the 2026 Denver→Miami tour
+- [Home](/): the road is calling
+- [The drives](/drives): invitation process and frequently asked questions
+- [The roadbook](/tour): completed journey and archive
+- [The garage](/marketplace): upcoming exotiq.rent marketplace
+- [The journal](/blog): stories from the road
+- [Get on the list](/apply?interest=drives): driving community invitation
+- [Partnerships](/sponsor): introduce your brand

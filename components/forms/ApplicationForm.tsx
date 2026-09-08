@@ -13,11 +13,12 @@ import SmsConsentCheckboxes from '@/components/forms/SmsConsentCheckboxes';
 import { applicationSchema, ApplicationFormData } from '@/lib/validations';
 import { APPLY_INTEREST_OPTIONS, Interest } from '@/lib/interest';
 import { track } from '@/lib/analytics';
+import PreviewNotice from '@/components/astra/PreviewNotice';
 
 const labelClass = 'block text-[13px] tracking-[0.04em] text-ink-2 mb-2';
 
 export default function ApplicationForm({
-  defaultInterest = 'access',
+  defaultInterest = 'drives',
 }: {
   defaultInterest?: Interest;
 }) {
@@ -74,6 +75,7 @@ export default function ApplicationForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <PreviewNotice />
       {/* Honeypot */}
       <input
         ref={honeypotRef}
@@ -105,7 +107,7 @@ export default function ApplicationForm({
         {/* Sponsor off-ramp (deck §7.3) — the select no longer carries a
             sponsor lane, so intent gets a visible door to the real form. */}
         <p className="mt-3 text-[13px] leading-relaxed text-ink-3">
-          Sponsoring the wrap?{' '}
+          Looking to partner with us?{' '}
           <Link
             href="/sponsor"
             className="text-ink underline underline-offset-2 transition-colors duration-250 hover:text-gulf"

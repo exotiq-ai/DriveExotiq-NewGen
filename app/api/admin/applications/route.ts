@@ -1,3 +1,4 @@
+import { isPreview } from '@/lib/preview';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { sendStatusUpdateEmails } from '@/lib/email-send';
@@ -20,6 +21,10 @@ function checkAuth(request: NextRequest) {
 
 // GET all applications
 export async function GET(request: NextRequest) {
+  if (isPreview) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   if (!checkAuth(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -45,6 +50,10 @@ export async function GET(request: NextRequest) {
 
 // PATCH update application status
 export async function PATCH(request: NextRequest) {
+  if (isPreview) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   if (!checkAuth(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

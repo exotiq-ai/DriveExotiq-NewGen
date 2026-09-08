@@ -1,3 +1,4 @@
+import { isPreview } from '@/lib/preview';
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { waitlistSchema } from '@/lib/validations';
@@ -11,7 +12,7 @@ export async function POST(request: Request) {
 
     // Honeypot — silently drop bots (fake success).
     if (typeof body?.website === 'string' && body.website.trim() !== '') {
-      return NextResponse.json({ success: true }, { status: 201 });
+      return NextResponse.json({ success: true, ...(isPreview ? { preview: true } : {}) }, { status: 201 });
     }
 
     const parsed = waitlistSchema.safeParse(body);
@@ -21,6 +22,14 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    // Validate the preview exercise, without storing a record or contacting providers.
+    if (isPreview) {
+      return NextResponse.json(
+        { success: true, preview: true, waitlist: null },
+        { status: 201 }
+      );
+    }
+
     const data = parsed.data;
 
     const ipAddress =

@@ -13,7 +13,7 @@ export default function NotFound() {
   return (
     <>
       <Header />
-      <main id="main" className="flex min-h-screen flex-col items-center justify-center bg-canvas px-6 text-center">
+      <main id="main-content" className="flex min-h-screen flex-col items-center justify-center bg-canvas px-6 text-center">
         <Emblem className="mb-8 h-7 w-auto text-line-2" />
         <p className="idx mb-4 text-xl">404</p>
         <h1 className="mb-4 font-display text-[clamp(2rem,5vw,3rem)] font-bold tracking-tight-exotiq text-ink">

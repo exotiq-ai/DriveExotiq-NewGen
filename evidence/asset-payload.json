@@ -1,0 +1,70 @@
+{
+  "selected_assets": [
+    {
+      "file": "public/astra/car-mclaren.webp",
+      "bytes": 72176
+    },
+    {
+      "file": "public/astra/car-porsche.webp",
+      "bytes": 36422
+    },
+    {
+      "file": "public/astra/ferrari-badge-detail.webp",
+      "bytes": 69220
+    },
+    {
+      "file": "public/astra/ferrari-r8-lakeside.webp",
+      "bytes": 299160
+    },
+    {
+      "file": "public/astra/gregory-portrait.webp",
+      "bytes": 80932
+    },
+    {
+      "file": "public/astra/hero-garage-loop.mp4",
+      "bytes": 3751813
+    },
+    {
+      "file": "public/astra/hero-garage-mobile-loop.mp4",
+      "bytes": 1537222
+    },
+    {
+      "file": "public/astra/hero-garage-mobile.webp",
+      "bytes": 43256
+    },
+    {
+      "file": "public/astra/hero-garage.webp",
+      "bytes": 50960
+    },
+    {
+      "file": "public/astra/r8-ferrari-telluride.webp",
+      "bytes": 231504
+    },
+    {
+      "file": "public/astra/r8-rain-detail.webp",
+      "bytes": 291430
+    },
+    {
+      "file": "public/astra/s8-alpine-drive.webp",
+      "bytes": 282664
+    },
+    {
+      "file": "public/astra/s8-alpine-loop-mobile.mp4",
+      "bytes": 1310003
+    },
+    {
+      "file": "public/astra/s8-alpine-loop.mp4",
+      "bytes": 3961354
+    },
+    {
+      "file": "public/astra/s8-desert-vista.webp",
+      "bytes": 666758
+    },
+    {
+      "file": "public/astra/s8-rear-golden.webp",
+      "bytes": 460248
+    }
+  ],
+  "selected_total_bytes": 13145122,
+  "public_total_bytes": 13774027
+}

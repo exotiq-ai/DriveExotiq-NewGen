@@ -7,6 +7,8 @@ import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { waitlistSchema, WaitlistFormData } from '@/lib/validations';
 import { track } from '@/lib/analytics';
+import { isPreview } from '@/lib/preview';
+import PreviewNotice from '@/components/astra/PreviewNotice';
 
 const labelClass = 'block text-[13px] tracking-[0.04em] text-ink-2 mb-2';
 
@@ -50,10 +52,10 @@ export default function WaitlistForm() {
       <div className="border border-line rounded-sm bg-surface px-6 py-8">
         <div className="flex items-center gap-3">
           <span className="h-px w-8 bg-gulf" />
-          <span className="text-[13px] tracking-[0.04em] text-ink-2">On the list</span>
+          <span className="text-[13px] tracking-[0.04em] text-ink-2">{isPreview ? 'Preview complete' : 'On the list'}</span>
         </div>
         <p className="mt-4 max-w-[40ch] text-[15px] leading-relaxed text-ink-2">
-          You&rsquo;re on the list. We&rsquo;ll reach out before anyone else gets the keys.
+          {isPreview ? 'Your form passed validation. No information was saved and no email was sent.' : 'You’re on the list. We’ll reach out before anyone else gets the keys.'}
         </p>
       </div>
     );
@@ -61,6 +63,7 @@ export default function WaitlistForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <PreviewNotice />
       {/* Honeypot */}
       <input
         ref={honeypotRef}

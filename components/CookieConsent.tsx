@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { isPreview } from '@/lib/preview';
 import {
   hasConsented,
   acceptAll,
@@ -55,7 +56,7 @@ export default function CookieConsent() {
   const slim = onFilm && isMobile;
 
   useEffect(() => {
-    if (hasConsented()) return;
+    if (isPreview || hasConsented()) return;
     if (!onFilm) {
       const timer = setTimeout(() => setVisible(true), 1200);
       return () => clearTimeout(timer);

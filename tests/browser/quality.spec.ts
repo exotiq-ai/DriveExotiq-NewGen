@@ -1,0 +1,70 @@
+import { test, expect } from 'playwright/test';
+
+for (const route of ['/', '/drives', '/tour', '/marketplace', '/sponsor', '/blog', '/blog/the-car-sleeper-thesis', '/blog/tour-denver', '/blog/tour-miami', '/apply', '/privacy', '/terms', '/cookies', '/sms', '/dmca']) {
+  test(`page integrity ${route}`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    const response = await page.goto(route);
+    expect(response?.status()).toBe(200);
+    expect(response?.headers()['x-robots-tag']).toContain('noindex');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+    await expect(page.locator('#main-content')).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+    for (const img of await page.locator('main img').all()) {
+      await img.scrollIntoViewIfNeeded();
+      await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+    }
+    expect(errors).toEqual([]);
+    expect(await page.locator('script[src*="plausible"]').count()).toBe(0);
+  });
+}
+
+test('film failures retain the poster and invitation', async ({ page }) => {
+  await page.route('**/*.mp4', route => route.abort());
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.locator('.home-hero-image')).toBeVisible();
+  await expect(page.locator('.home-hero-video')).not.toHaveClass(/is-playing/);
+  await page.getByRole('link', { name: 'Get on the list', exact: true }).first().click();
+  await expect(page).toHaveURL(/apply\?interest=drives/);
+});
+
+test('Save-Data avoids fetching optional films', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'connection', { value: { saveData: true, addEventListener() {}, removeEventListener() {} }, configurable: true }));
+  const movies: string[] = [];
+  page.on('request', request => { if (request.url().endsWith('.mp4')) movies.push(request.url()); });
+  await page.goto('/');
+  await page.locator('.home-road').scrollIntoViewIfNeeded();
+  await expect(page.getByRole('heading', { name: /More switchbacks/ })).toBeVisible();
+  expect(await page.locator('video').evaluateAll(videos => videos.every(video => !video.getAttribute('src')))).toBe(true);
+  expect(movies).toEqual([]);
+});
+
+test('legacy routes retain their intended destinations', async ({ request }) => {
+  const redirects = [['/experience','/'],['/community','/drives'],['/cities','/tour'],['/events','/drives'],['/how-it-works','/marketplace'],['/booking','/marketplace'],['/booking/phoenix','/marketplace'],['/apply?interest=tour','/sponsor?interest=tour']];
+  for (const [from,to] of redirects) {
+    const response = await request.get(from, { maxRedirects: 0 });
+    expect([307,308]).toContain(response.status());
+    expect(response.headers().location).toBe(to);
+  }
+  expect((await request.get('/this-road-does-not-exist')).status()).toBe(404);
+});
+
+test('narrow, tablet and landscape layouts remain usable', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop');
+  for (const viewport of [{width:360,height:800},{width:430,height:932},{width:768,height:1024},{width:1024,height:768},{width:844,height:390}]) {
+    await page.setViewportSize(viewport);
+    for (const route of ['/', '/apply', '/drives']) {
+      await page.goto(route);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${route} at ${viewport.width}`).toBe(true);
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    }
+    if (viewport.width <= 900) {
+      await page.getByRole('button', { name: 'Open navigation' }).click();
+      const dialog = page.getByRole('dialog', { name: 'Site navigation' });
+      await expect(dialog).toBeVisible();
+      await dialog.getByRole('link', { name: /Partnerships/ }).click();
+      await expect(page).toHaveURL(/\/sponsor$/);
+    }
+  }
+});

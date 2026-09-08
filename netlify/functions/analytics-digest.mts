@@ -120,6 +120,11 @@ async function siteDigest(site: string): Promise<string> {
 }
 
 export default async () => {
+  // Scheduled functions run outside Next; inspect the same explicit flag here.
+  if (process.env.NEXT_PUBLIC_SITE_MODE === 'preview') {
+    return new Response('skipped: preview', { status: 200 });
+  }
+
   const sites = (process.env.PLAUSIBLE_SITES || 'driveexotiq.com').split(',').map((s) => s.trim()).filter(Boolean);
   const to = process.env.ADMIN_EMAIL || 'hello@exotiq.ai';
   const from = process.env.FROM_EMAIL || 'Drive Exotiq <hello@mail.driveexotiq.com>';

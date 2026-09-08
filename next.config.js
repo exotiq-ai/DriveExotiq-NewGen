@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: __dirname,
   images: {
     remotePatterns: [
       {
@@ -8,13 +9,12 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-    formats: ['image/avif', 'image/webp'],
+    // WebP keeps cold image transforms fast and predictable for this photo set.
+    formats: ['image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
   },
   compress: true,
   poweredByHeader: false,
-  // Enable SWC minification
-  swcMinify: true,
   // Optimize fonts
   reactStrictMode: true,
   async redirects() {

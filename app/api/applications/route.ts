@@ -1,3 +1,4 @@
+import { isPreview } from '@/lib/preview';
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { applicationSchema } from '@/lib/validations';
@@ -12,7 +13,7 @@ export async function POST(request: Request) {
     // Honeypot: a real user never fills the hidden `website` field. Silently
     // accept (so bots don't learn) but do nothing — no insert, no email.
     if (typeof body?.website === 'string' && body.website.trim() !== '') {
-      return NextResponse.json({ success: true }, { status: 201 });
+      return NextResponse.json({ success: true, ...(isPreview ? { preview: true } : {}) }, { status: 201 });
     }
 
     const parsed = applicationSchema.safeParse(body);
@@ -20,6 +21,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Invalid form data', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
+      );
+    }
+
+    // Validate the preview exercise, without storing a record or contacting providers.
+    if (isPreview) {
+      return NextResponse.json(
+        { success: true, preview: true, application: null },
+        { status: 201 }
       );
     }
 

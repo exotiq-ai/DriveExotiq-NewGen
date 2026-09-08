@@ -1,6 +1,8 @@
 'use client';
 
 import { track } from '@/lib/analytics';
+import { isPreview } from '@/lib/preview';
+import PreviewNotice from '@/components/astra/PreviewNotice';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -66,13 +68,13 @@ export default function SponsorInquiryForm({
       <div className="border border-line rounded-sm bg-surface px-6 py-10 md:px-8">
         <div className="flex items-center gap-3">
           <span className="h-px w-8 bg-gulf" />
-          <span className="text-[13px] tracking-[0.04em] text-ink-2">Received</span>
+          <span className="text-[13px] tracking-[0.04em] text-ink-2">{isPreview ? 'Preview complete' : 'Received'}</span>
         </div>
         <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight-exotiq text-ink">
-          Got it.
+          {isPreview ? 'Looking good.' : 'Got it.'}
         </h3>
         <p className="mt-3 max-w-[42ch] text-[15px] leading-relaxed text-ink-2">
-          We&rsquo;ll be in touch within a couple of days. Keep an eye on your inbox.
+          {isPreview ? 'Your form passed validation. No information was saved and no email was sent.' : 'Thanks for introducing your brand. We’ll be in touch to explore the fit.'}
         </p>
       </div>
     );
@@ -80,6 +82,7 @@ export default function SponsorInquiryForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <PreviewNotice />
       {/* Honeypot — hidden from humans; bots that fill it are silently dropped server-side. */}
       <input
         ref={honeypotRef}

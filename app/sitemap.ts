@@ -1,3 +1,4 @@
+import { isPreview } from '@/lib/preview';
 import type { MetadataRoute } from 'next';
 import { getPostSlugs } from '@/lib/blog';
 
@@ -24,6 +25,8 @@ const ROUTES: Array<{ path: string; priority: number; changeFrequency: MetadataR
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  if (isPreview) return [];
+
   const now = new Date();
   const routes = ROUTES.map(({ path, priority, changeFrequency }) => ({
     url: `${BASE}${path}`,

@@ -1,99 +1,23 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { getAllPosts } from '@/lib/blog';
 
 export const metadata: Metadata = {
-  title: 'Stories · the drives, the tour, and the cars',
-  description:
-    'Stories from Drive Exotiq: the sunrise drives, the Denver→Miami tour, the cars, and the community front door to exotiq.rent.',
+  title: 'The Journal · Notes from the road and the garage',
+  description: 'The Drive Exotiq journal. Stories about the cars, the roads, the places, and the people who make the drive worth taking.',
   alternates: { canonical: '/blog' },
 };
-
 export default function BlogIndex() {
   const posts = getAllPosts();
-  const categories = Array.from(new Set(posts.map((p) => p.category)));
-
-  return (
-    <>
-      <Header />
-      <main id="main" className="bg-canvas">
-        {/* Header */}
-        <section className="mx-auto max-w-content px-6 pb-12 pt-32 md:px-10 md:pb-16 md:pt-40">
-          <div className="flex items-center gap-3">
-            <span className="h-px w-8 bg-gulf" />
-            <span className="text-[13px] tracking-[0.04em] text-ink-2">Stories</span>
-          </div>
-
-          <h1 className="mt-6 max-w-[18ch] font-display text-[clamp(2.4rem,6vw,4.5rem)] font-semibold leading-[0.98] tracking-tightest text-ink">
-            Notes from the road and the garage.
-          </h1>
-
-          <p className="mt-7 max-w-[56ch] text-[clamp(1rem,1.6vw,1.2rem)] leading-snug text-ink-2">
-            The drives, the tour, the cars, and the people who keep showing up. Plus what&rsquo;s
-            coming with exotiq.rent. Drive Exotiq, in long form.
-          </p>
-
-          {categories.length > 0 && (
-            <div className="mt-8 flex flex-wrap gap-2">
-              {categories.map((c) => (
-                <span
-                  key={c}
-                  className="rounded-sm border border-line px-3 py-1.5 text-[13px] text-ink-2"
-                >
-                  {c}
-                </span>
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Posts */}
-        <section className="mx-auto max-w-content px-6 pb-section md:px-10">
-          {posts.length === 0 ? (
-            <div className="border-t border-line pt-12">
-              <p className="max-w-[44ch] font-serif text-[clamp(1.15rem,2vw,1.5rem)] italic leading-snug text-ink-3">
-                The first stories are being written. Get on the list and you&rsquo;ll be among
-                the first to read them.
-              </p>
-              <Link
-                href="/apply"
-                className="mt-8 inline-flex min-h-[52px] items-center justify-center rounded-sm bg-gulf px-7 py-3.5 text-[17px] font-semibold text-on-gulf transition-colors duration-250 ease-de hover:bg-gulf-2"
-              >
-                Get on the list
-              </Link>
-            </div>
-          ) : (
-            <ul className="grid gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-2">
-              {posts.map((post) => (
-                <li key={post.slug} className="bg-canvas">
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="group flex h-full flex-col px-6 py-8 md:px-8 md:py-10"
-                  >
-                    <span className="text-[12px] tracking-[0.08em] text-ink-3">
-                      {post.category} · {post.readTime}
-                    </span>
-                    <h2 className="mt-3 font-display text-[clamp(1.3rem,2.4vw,1.7rem)] font-semibold leading-snug tracking-tight-exotiq text-ink">
-                      {post.title}
-                    </h2>
-                    {post.dek && (
-                      <p className="mt-3 max-w-[48ch] text-[15px] leading-relaxed text-ink-2">
-                        {post.dek}
-                      </p>
-                    )}
-                    <span className="mt-auto pt-6 text-[14px] text-ink-2 transition-colors group-hover:text-gulf">
-                      Read the story →
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </main>
-      <Footer />
-    </>
-  );
+  const featured = posts.find(post => post.slug === 'the-car-sleeper-thesis') || posts[0];
+  const remaining = posts.filter(post => post.slug !== featured?.slug);
+  return <><Header /><main id="main-content" className="ed-page">
+    <section className="ed-wrap ed-journal-hero"><p className="ed-kicker">Drive Exotiq / Field notes</p><h1 className="ed-journal-title">The Journal.</h1><div className="ed-journal-deck"><p className="ed-lead">Notes from the road.<br />Thoughts from the garage.</p><p className="ed-story-meta">Cars / Places / People</p></div></section>
+    <div className="ed-wrap">{featured ? <article className="ed-feature-story"><Link href={`/blog/${featured.slug}`} className="ed-photo ed-feature-photo" aria-label={`Read ${featured.title}`}><Image src="/astra/s8-desert-vista.webp" alt="Audi S8 at a sunlit desert overlook" fill priority fetchPriority="high" sizes="(max-width: 680px) 100vw, 55vw" /></Link><div><p className="ed-story-meta">Featured story / {featured.category} / {featured.readTime}</p><h2 className="ed-heading"><Link href={`/blog/${featured.slug}`}>{featured.title}</Link></h2><p className="ed-body">{featured.dek}</p><Link href={`/blog/${featured.slug}`} className="ed-link">Read the story <span aria-hidden="true">↗</span></Link></div></article> : <div className="ed-section"><p className="ed-lead">The first stories are taking shape. Join the invitation list to stay close.</p><Link className="ed-link" href="/apply?interest=drives">Request your invite <span aria-hidden="true">↗</span></Link></div>}</div>
+    {remaining.length > 0 && <section className="ed-paper ed-section"><div className="ed-wrap"><div className="ed-section-top"><p className="ed-kicker">Keep reading</p><span className="ed-section-number">The places behind the drive</span></div><div>{remaining.map((post,i)=><article key={post.slug}><Link className="ed-story-row" href={`/blog/${post.slug}`}><span className="ed-section-number">0{i+2}</span><div><p className="ed-story-meta">{post.category} / {post.readTime}</p><h2>{post.title}</h2></div><p className="ed-body">{post.dek}</p><span aria-hidden="true">↗</span></Link></article>)}</div></div></section>}
+    <section className="ed-close"><div className="ed-wrap"><h2 className="ed-heading">A story is better<br /><em>when you’re in it.</em></h2><Link href="/apply?interest=drives" className="ed-button">Request your invite <span aria-hidden="true">↗</span></Link></div></section>
+  </main><Footer /></>;
 }

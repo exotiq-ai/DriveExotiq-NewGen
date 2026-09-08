@@ -1,3 +1,4 @@
+import { isPreview } from '@/lib/preview';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
@@ -50,6 +51,10 @@ function parseInstagramUrl(url: string) {
 
 // GET all Instagram posts
 export async function GET(request: NextRequest) {
+  if (isPreview) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   if (!checkAuth(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -76,6 +81,10 @@ export async function GET(request: NextRequest) {
 
 // POST create new Instagram post
 export async function POST(request: NextRequest) {
+  if (isPreview) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   if (!checkAuth(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -122,6 +131,10 @@ export async function POST(request: NextRequest) {
 
 // PATCH update Instagram post
 export async function PATCH(request: NextRequest) {
+  if (isPreview) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   if (!checkAuth(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -164,6 +177,10 @@ export async function PATCH(request: NextRequest) {
 
 // DELETE Instagram post
 export async function DELETE(request: NextRequest) {
+  if (isPreview) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   if (!checkAuth(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

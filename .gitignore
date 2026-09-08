@@ -61,3 +61,9 @@ supabase/.branches/
 
 # Local render cache / clip candidates (owner-review material, not deploy assets)
 renders/
+
+# Local browser captures and generated evidence; reports stay in Git.
+.playwright-cli/
+output/
+evidence/**/*.png
+evidence/**/*.zip

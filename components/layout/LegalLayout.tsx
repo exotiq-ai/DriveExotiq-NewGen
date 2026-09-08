@@ -30,7 +30,7 @@ export default function LegalLayout({
   return (
     <>
       <Header />
-      <main id="main" className="bg-canvas">
+      <main id="main-content" className="bg-canvas">
         <article className="mx-auto max-w-3xl px-6 pb-section pt-32 md:pt-40">
           {/* Document header */}
           <p className="text-[12px] tracking-[0.04em] text-ink-3">{entity}</p>

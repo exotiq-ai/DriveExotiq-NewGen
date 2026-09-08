@@ -1,3 +1,4 @@
+import { isPreview } from '@/lib/preview';
 import type { MetadataRoute } from 'next';
 
 const BASE = 'https://driveexotiq.com';
@@ -5,6 +6,8 @@ const BASE = 'https://driveexotiq.com';
 // AI answer-engine + search crawlers are explicitly welcomed on public content
 // (this is the AEO play — be citable). /admin and /api are kept out of the index.
 export default function robots(): MetadataRoute.Robots {
+  if (isPreview) return { rules: { userAgent: '*', disallow: '/' } };
+
   const aiBots = [
     'GPTBot',
     'OAI-SearchBot',
