@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
-import LegalLayout from '@/components/layout/LegalLayout';
+import type { Metadata } from "next";
+import LegalLayout from "@/components/layout/LegalLayout";
 
 export const metadata: Metadata = {
-  alternates: { canonical: '/privacy' },
-  title: 'Privacy Policy',
+  alternates: { canonical: "/privacy" },
+  title: "Privacy Policy",
   description:
-    'How Drive Exotiq collects, uses, and protects your information.',
+    "How Drive Exotiq collects, uses, and protects your information.",
 };
 
 export default function PrivacyPage() {
@@ -13,52 +13,62 @@ export default function PrivacyPage() {
     <LegalLayout
       title="Privacy Policy"
       subtitle="How Drive Exotiq Collects, Uses, and Protects Your Information"
+      lastUpdated="September 8, 2026"
     >
       <p>
-        Exotiq Inc., doing business as Drive Exotiq (&ldquo;Drive
-        Exotiq,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or
-        &ldquo;our&rdquo;), is committed to protecting your privacy. This
-        explains how we handle your information on driveexotiq.com.
+        Exotiq Inc., doing business as Drive Exotiq (&ldquo;Drive Exotiq,&rdquo;
+        &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), is committed
+        to protecting your privacy. This explains how we handle your information
+        on driveexotiq.com.
       </p>
 
       <h2>Article I: Information We Collect</h2>
 
       <h3>Information You Provide</h3>
       <p>
-        Name, email, phone, date of birth, driver&rsquo;s license information,
-        payment information (via Stripe), vehicle preferences, communications,
-        and reviews.
+        Our application, waitlist and partnership inquiry forms collect the
+        contact details, city, interests, introduction, company information and
+        consent choices you provide. The current public site does not collect
+        driver&rsquo;s licenses or payment details and does not offer renter
+        accounts or booking checkout.
       </p>
 
       <h3>Automatic Collection</h3>
       <p>
-        IP address, browser/device info, pages viewed, search queries,
-        approximate location, and cookie data.
+        Technical information can include IP address, browser/device information
+        and pages viewed. We also store your cookie choices in browser local
+        storage. Cookieless Plausible reporting provides aggregate site
+        statistics on the production site. When configured, Cloudflare Web
+        Analytics separately reports aggregate page-load performance and Core
+        Web Vitals on the public production domain, without analytics cookies
+        or session replay.
+      </p>
+
+      <p>
+        With analytics consent, PostHog helps us understand page navigation,
+        clicks, form completion, heatmaps and masked session replay. Form inputs
+        and page text are masked; our analytics events exclude names, email
+        addresses, phone numbers and free-text responses. PostHog uses an
+        in-memory identifier for this visit. Change your choice through Cookie
+        Settings in the footer.
       </p>
 
       <h3>SMS Consent Data</h3>
       <p>
-        Phone number, consent preferences, timestamp, IP address at consent,
-        consent language version, and opt-out history. Retained at least 5 years
-        (TCPA).
+        Our forms record your phone number and consent choices, and record a
+        timestamp and IP address when SMS consent is provided.
       </p>
 
       <h2>Article II: How We Use Your Information</h2>
       <p>
-        To: process bookings; connect you with Operators; process payments; send
-        confirmations and reminders; provide Rari concierge services; verify
-        identity; respond to support requests; and send SMS (only with your
-        consent). We never use your phone number beyond what you consented to.
+        To review applications, manage waitlist interest, respond to partnership
+        and support inquiries, and send related confirmations and follow-up.
+        SMS consent is optional and recorded separately for transactional and
+        marketing messages. We never use your phone number beyond what you
+        consented to.
       </p>
 
       <h2>Article III: How We Share Your Information</h2>
-
-      <h3>With Operators</h3>
-      <p>
-        When you book, the Operator receives your name, email, phone,
-        driver&rsquo;s license info, and booking details. Operator handling is
-        per their privacy policy.
-      </p>
 
       <h3>Service Providers</h3>
       <table>
@@ -71,24 +81,24 @@ export default function PrivacyPage() {
         </thead>
         <tbody>
           <tr>
-            <td>Stripe</td>
-            <td>Payments</td>
-            <td>Transaction data</td>
+            <td>Cloudflare Web Analytics</td>
+            <td>Cookieless page-load and performance reporting</td>
+            <td>Page and browser information, performance timing metrics</td>
+          </tr>
+          <tr>
+            <td>PostHog</td>
+            <td>Consented visitor analytics, heatmaps and masked replay</td>
+            <td>Interaction events, device information and masked page activity</td>
           </tr>
           <tr>
             <td>Supabase</td>
             <td>Database</td>
-            <td>Platform data (encrypted)</td>
-          </tr>
-          <tr>
-            <td>ElevenLabs</td>
-            <td>AI voice (Rari)</td>
-            <td>Text inputs</td>
+            <td>Submitted applications, waitlist entries and inquiries</td>
           </tr>
           <tr>
             <td>Resend</td>
             <td>Email</td>
-            <td>Email address</td>
+            <td>Contact details and submission information used in notifications</td>
           </tr>
           <tr>
             <td>GoHighLevel</td>
@@ -105,6 +115,10 @@ export default function PrivacyPage() {
 
       <h3>SMS Consent</h3>
       <p>
+        The SMS delivery providers listed above apply to SMS messaging; the
+        current website forms record consent choices.
+      </p>
+      <p>
         We do not sell, rent, or share your SMS consent or phone number for
         third-party marketing. Shared only with GoHighLevel/Twilio for delivery,
         or as required by law.
@@ -115,40 +129,31 @@ export default function PrivacyPage() {
 
       <h2>Article IV: Data Security</h2>
       <p>
-        Encryption at rest and in transit (TLS 1.2+), Stripe PCI DSS compliance,
-        access controls, regular assessments. No system is 100% secure.
+        Access controls and encrypted connections help protect submitted
+        information. No system is 100% secure.
       </p>
 
       <h2>Article V: Data Retention</h2>
       <ul>
-        <li>Active account data: duration of account.</li>
-        <li>Booking/transaction records: 7 years.</li>
         <li>SMS consent records: at least 5 years.</li>
-        <li>Rari conversation logs: 30 days.</li>
-        <li>
-          Account deletion: within 30 days of request (subject to legal holds).
-        </li>
       </ul>
 
       <h2>Article VI: Your Rights</h2>
       <p>
         <strong>All users:</strong> access, correct, delete your data, opt out
-        of marketing and SMS.{' '}
-        <strong>California (CCPA/CPRA):</strong> right to know, delete, opt out
-        of sale (we don&rsquo;t sell), correct, limit sensitive data use.{' '}
-        <strong>Colorado, Virginia, Connecticut:</strong> similar state-specific
-        rights. Contact{' '}
+        of marketing and SMS. <strong>California (CCPA/CPRA):</strong> right to
+        know, delete, opt out of sale (we don&rsquo;t sell), correct, limit
+        sensitive data use. <strong>Colorado, Virginia, Connecticut:</strong>{" "}
+        similar state-specific rights. Contact{" "}
         <a href="mailto:privacy@driveexotiq.com">privacy@driveexotiq.com</a>.
       </p>
 
       <h2>Article VII: Children&rsquo;s Privacy</h2>
-      <p>
-        Not intended for anyone under 18. Renter accounts require age 21+.
-      </p>
+      <p>Not intended for anyone under 18.</p>
 
       <h2>Contact</h2>
       <p>
-        <strong>Email:</strong>{' '}
+        <strong>Email:</strong>{" "}
         <a href="mailto:privacy@driveexotiq.com">privacy@driveexotiq.com</a>
       </p>
       <p>

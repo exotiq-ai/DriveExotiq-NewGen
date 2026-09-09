@@ -1,10 +1,10 @@
-import { isPreview } from '@/lib/preview';
-import { NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase-admin';
-import { applicationSchema } from '@/lib/validations';
-import { sendNewApplicationEmails } from '@/lib/email-send';
+import { isFormPreview } from "@/lib/preview";
+import { NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { applicationSchema } from "@/lib/validations";
+import { sendNewApplicationEmails } from "@/lib/email-send";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
@@ -12,35 +12,41 @@ export async function POST(request: Request) {
 
     // Honeypot: a real user never fills the hidden `website` field. Silently
     // accept (so bots don't learn) but do nothing — no insert, no email.
-    if (typeof body?.website === 'string' && body.website.trim() !== '') {
-      return NextResponse.json({ success: true, ...(isPreview ? { preview: true } : {}) }, { status: 201 });
+    if (typeof body?.website === "string" && body.website.trim() !== "") {
+      return NextResponse.json(
+        { success: true, ...(isFormPreview ? { preview: true } : {}) },
+        { status: 201 },
+      );
     }
 
     const parsed = applicationSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Invalid form data', details: parsed.error.flatten().fieldErrors },
-        { status: 400 }
+        {
+          error: "Invalid form data",
+          details: parsed.error.flatten().fieldErrors,
+        },
+        { status: 400 },
       );
     }
 
     // Validate the preview exercise, without storing a record or contacting providers.
-    if (isPreview) {
+    if (isFormPreview) {
       return NextResponse.json(
         { success: true, preview: true, application: null },
-        { status: 201 }
+        { status: 201 },
       );
     }
 
     const data = parsed.data;
 
-    const forwardedFor = request.headers.get('x-forwarded-for');
-    const ipAddress = forwardedFor?.split(',')[0]?.trim() || null;
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const ipAddress = forwardedFor?.split(",")[0]?.trim() || null;
 
     const supabase = getSupabaseAdmin();
 
     const { data: insertedData, error } = await supabase
-      .from('de_applications')
+      .from("de_applications")
       .insert([
         {
           full_name: data.fullName,
@@ -53,22 +59,24 @@ export async function POST(request: Request) {
           invite_code: data.inviteCode || null,
           sms_transactional_consent: data.smsTransactionalConsent || false,
           sms_marketing_consent: data.smsMarketingConsent || false,
-          consent_timestamp: (data.smsTransactionalConsent || data.smsMarketingConsent)
-            ? new Date().toISOString()
-            : null,
-          consent_ip: (data.smsTransactionalConsent || data.smsMarketingConsent)
-            ? ipAddress
-            : null,
+          consent_timestamp:
+            data.smsTransactionalConsent || data.smsMarketingConsent
+              ? new Date().toISOString()
+              : null,
+          consent_ip:
+            data.smsTransactionalConsent || data.smsMarketingConsent
+              ? ipAddress
+              : null,
         },
       ])
-      .select('id, full_name, email, created_at')
+      .select("id, full_name, email, created_at")
       .single();
 
     if (error) {
-      console.error('Supabase insert error:', error);
+      console.error("Supabase insert error:", error);
       return NextResponse.json(
-        { error: 'Failed to save application' },
-        { status: 500 }
+        { error: "Failed to save application" },
+        { status: 500 },
       );
     }
 
@@ -87,13 +95,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { success: true, application: insertedData },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
-    console.error('Application API error:', error);
+    console.error("Application API error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

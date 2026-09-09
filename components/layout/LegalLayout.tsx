@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import Link from "next/link";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 interface LegalLayoutProps {
   children: React.ReactNode;
@@ -12,20 +12,20 @@ interface LegalLayoutProps {
 }
 
 const LEGAL_NAV_LINKS = [
-  { href: '/terms', label: 'Terms of Service' },
-  { href: '/privacy', label: 'Privacy Policy' },
-  { href: '/cookies', label: 'Cookie Policy' },
-  { href: '/sms', label: 'SMS Policy' },
-  { href: '/dmca', label: 'DMCA' },
+  { href: "/terms", label: "Terms of Service" },
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/cookies", label: "Cookie Policy" },
+  { href: "/sms", label: "SMS Policy" },
+  { href: "/dmca", label: "DMCA" },
 ];
 
 export default function LegalLayout({
   children,
-  entity = 'Exotiq Inc. dba Drive Exotiq, a Delaware C-Corporation',
+  entity = "Exotiq Inc. dba Drive Exotiq, a Delaware C-Corporation",
   title,
   subtitle,
-  effectiveDate = 'January 1, 2026',
-  lastUpdated = 'March 2026',
+  effectiveDate = "January 1, 2026",
+  lastUpdated = "March 2026",
 }: LegalLayoutProps) {
   return (
     <>
@@ -59,7 +59,11 @@ export default function LegalLayout({
             className="mt-16 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-8 text-[14px] text-ink-2"
           >
             {LEGAL_NAV_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="transition-colors hover:text-gulf">
+              <Link
+                key={link.href}
+                href={link.href}
+                className="transition-colors hover:text-gulf"
+              >
                 {link.label}
               </Link>
             ))}

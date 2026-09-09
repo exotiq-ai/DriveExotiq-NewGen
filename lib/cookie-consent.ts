@@ -13,7 +13,9 @@ export function getConsentPreferences(): CookiePreferences | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return null;
-    return JSON.parse(stored) as CookiePreferences;
+    const prefs = JSON.parse(stored);
+    if (!prefs || typeof prefs.functional !== 'boolean' || typeof prefs.analytics !== 'boolean' || typeof prefs.timestamp !== 'string') return null;
+    return prefs as CookiePreferences;
   } catch {
     return null;
   }
@@ -44,4 +46,10 @@ export function hasConsented(): boolean {
 export function clearConsent(): void {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(STORAGE_KEY);
+  window.dispatchEvent(new CustomEvent('cookie-consent-changed', { detail: null }));
+}
+
+/** Configured preview builds need the same consent opportunity as production. */
+export function shouldPromptConsent(preview: boolean, analyticsEnabled: boolean, consented: boolean) {
+  return !consented && (!preview || analyticsEnabled);
 }

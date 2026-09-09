@@ -1,43 +1,69 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { track } from '@/lib/analytics';
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { track, syncAnalytics, stopAnalytics } from "@/lib/analytics";
 
-/**
- * Site-wide analytics wiring, zero markup. Two jobs:
- *
- * 1. CTA clicks by delegation: any anchor into the conversion funnels
- *    (/apply, /sponsor, /marketplace, /tour, /drives) fires a `CTA` event with
- *    the href + its visible label. Delegation means no per-component edits and
- *    new CTAs are tracked automatically.
- *
- * 2. Film depth on the homepage: fires `Film Depth` once per load at each
- *    scroll quartile (25/50/75/100). With ~34 viewports of film, quartiles map
- *    roughly onto the acts — enough to see where visitors fall out.
- *
- * Plausible is cookieless and the events carry no personal data, so none of
- * this is gated behind the cookie banner.
- */
+/** Consent-aware PostHog lifecycle, safe CTA delegation and actual page depth. */
 export default function AnalyticsListener() {
   const pathname = usePathname();
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let idle: number | undefined;
+    const sync = () => { void syncAnalytics(); };
+    const afterLoad = () => {
+      if ("requestIdleCallback" in window) {
+        idle = window.requestIdleCallback(() => { void syncAnalytics(true); }, { timeout: 3000 });
+      } else {
+        timer = setTimeout(() => { void syncAnalytics(true); }, 1000);
+      }
+    };
+    window.addEventListener("cookie-consent-changed", sync);
+    window.addEventListener("storage", sync);
+    if (document.readyState === "complete") afterLoad();
+    else window.addEventListener("load", afterLoad, { once: true });
+    return () => {
+      window.removeEventListener("cookie-consent-changed", sync);
+      window.removeEventListener("storage", sync);
+      window.removeEventListener("load", afterLoad);
+      if (timer !== undefined) clearTimeout(timer);
+      if (idle !== undefined) window.cancelIdleCallback(idle);
+      stopAnalytics();
+    };
+  }, []);
+
+  useEffect(() => { void syncAnalytics(); }, [pathname]);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const t = e.target;
       if (!(t instanceof Element)) return;
-      const a = t.closest('a[href]');
+      const a = t.closest("a[href]");
       if (!a) return;
-      const href = a.getAttribute('href') || '';
-      if (!/^\/(apply|sponsor|marketplace|tour|drives)(\?|$|\/)/.test(href)) return;
-      track('CTA', { href, label: (a.textContent || '').trim().slice(0, 60) });
+      const href = a.getAttribute("href") || "";
+      const externalActions: Record<string, string> = {
+        "https://www.instagram.com/driveexotiq": "instagram",
+        "https://www.youtube.com/@driveexotiq": "youtube",
+        "#the-community": "community",
+      };
+      if (externalActions[href]) {
+        track("CTA", { action: externalActions[href] });
+        return;
+      }
+      if (!/^\/(apply|sponsor|marketplace|tour|drives)(\?|$|\/)/.test(href))
+        return;
+      track("CTA", { href });
     };
-    document.addEventListener('click', onClick, { capture: true, passive: true });
-    return () => document.removeEventListener('click', onClick, { capture: true });
+    document.addEventListener("click", onClick, {
+      capture: true,
+      passive: true,
+    });
+    return () =>
+      document.removeEventListener("click", onClick, { capture: true });
   }, []);
 
   useEffect(() => {
-    if (pathname !== '/') return;
     const fired = new Set<number>();
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -46,13 +72,14 @@ export default function AnalyticsListener() {
       for (const q of [25, 50, 75, 100]) {
         if (pct >= q && !fired.has(q)) {
           fired.add(q);
-          track('Film Depth', { depth: q });
+          // Keep the existing Plausible homepage goal name during migration.
+          track(pathname === "/" ? "Film Depth" : "Page Depth", { depth: q });
         }
       }
-      if (fired.size === 4) window.removeEventListener('scroll', onScroll);
+      if (fired.size === 4) window.removeEventListener("scroll", onScroll);
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
 
   return null;

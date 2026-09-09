@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
-import LegalLayout from '@/components/layout/LegalLayout';
+import type { Metadata } from "next";
+import LegalLayout from "@/components/layout/LegalLayout";
 
 export const metadata: Metadata = {
-  alternates: { canonical: '/dmca' },
-  title: 'DMCA & Copyright Policy',
+  alternates: { canonical: "/dmca" },
+  title: "DMCA & Copyright Policy",
   description:
-    'Digital Millennium Copyright Act notice and takedown procedures.',
+    "Digital Millennium Copyright Act notice and takedown procedures.",
 };
 
 export default function DmcaPage() {
@@ -26,7 +26,7 @@ export default function DmcaPage() {
         <strong>Name:</strong> [DMCA Designated Agent]
       </p>
       <p>
-        <strong>Email:</strong>{' '}
+        <strong>Email:</strong>{" "}
         <a href="mailto:dmca@exotiq.ai">dmca@exotiq.ai</a>
       </p>
       <p>
@@ -43,8 +43,7 @@ export default function DmcaPage() {
         information is accurate.
       </p>
       <p>
-        Send notices to{' '}
-        <a href="mailto:dmca@exotiq.ai">dmca@exotiq.ai</a>.
+        Send notices to <a href="mailto:dmca@exotiq.ai">dmca@exotiq.ai</a>.
       </p>
 
       <h2>Article III: Response to Valid Notices</h2>
@@ -77,7 +76,7 @@ export default function DmcaPage() {
 
       <h2>Contact</h2>
       <p>
-        <strong>Email:</strong>{' '}
+        <strong>Email:</strong>{" "}
         <a href="mailto:dmca@exotiq.ai">dmca@exotiq.ai</a>
       </p>
       <p>

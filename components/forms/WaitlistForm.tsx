@@ -1,22 +1,23 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRef, useState } from 'react';
-import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
-import { waitlistSchema, WaitlistFormData } from '@/lib/validations';
-import { track } from '@/lib/analytics';
-import { isPreview } from '@/lib/preview';
-import PreviewNotice from '@/components/astra/PreviewNotice';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef, useState } from "react";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import { waitlistSchema, WaitlistFormData } from "@/lib/validations";
+import { track } from "@/lib/analytics";
+import { formSubmissionStatus, isFormPreview } from "@/lib/preview";
+import PreviewNotice from "@/components/forms/PreviewNotice";
 
-const labelClass = 'block text-[13px] tracking-[0.04em] text-ink-2 mb-2';
+const labelClass = "block text-[13px] tracking-[0.04em] text-ink-2 mb-2";
 
 export default function WaitlistForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const honeypotRef = useRef<HTMLInputElement>(null);
+  const started = useRef(false);
 
   const {
     register,
@@ -28,19 +29,24 @@ export default function WaitlistForm() {
     setIsSubmitting(true);
     setSubmitError(false);
     try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, website: honeypotRef.current?.value || '' }),
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          website: honeypotRef.current?.value || "",
+        }),
       });
       if (!res.ok) {
+        track("Submission Failure", { form: "waitlist", status: "server" });
         setSubmitError(true);
         return;
       }
-      track('Signup', { form: 'waitlist' });
+      track("Signup", { form: "waitlist", status: formSubmissionStatus });
       setSubmitted(true);
     } catch (err) {
-      console.error('Error joining waitlist:', err);
+      console.error("Error joining waitlist:", err);
+      track("Submission Failure", { form: "waitlist", status: "network" });
       setSubmitError(true);
     } finally {
       setIsSubmitting(false);
@@ -52,17 +58,25 @@ export default function WaitlistForm() {
       <div className="border border-line rounded-sm bg-surface px-6 py-8">
         <div className="flex items-center gap-3">
           <span className="h-px w-8 bg-gulf" />
-          <span className="text-[13px] tracking-[0.04em] text-ink-2">{isPreview ? 'Preview complete' : 'On the list'}</span>
+          <span className="text-[13px] tracking-[0.04em] text-ink-2">
+            {isFormPreview ? "Preview complete" : "On the list"}
+          </span>
         </div>
         <p className="mt-4 max-w-[40ch] text-[15px] leading-relaxed text-ink-2">
-          {isPreview ? 'Your form passed validation. No information was saved and no email was sent.' : 'You’re on the list. We’ll reach out before anyone else gets the keys.'}
+          {isFormPreview
+            ? "Your form passed validation. No information was saved and no email was sent."
+            : "You’re on the list. We’ll reach out before anyone else gets the keys."}
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form
+      onSubmit={handleSubmit(onSubmit, () => track("Validation Error", { form: "waitlist", category: "validation" }))}
+      onFocusCapture={() => { if (!started.current) { started.current = true; track("Form Start", { form: "waitlist" }); } }}
+      className="space-y-5"
+    >
       <PreviewNotice />
       {/* Honeypot */}
       <input
@@ -80,7 +94,7 @@ export default function WaitlistForm() {
           Email address
         </label>
         <Input
-          {...register('email')}
+          {...register("email")}
           id="wl-email"
           type="email"
           inputMode="email"
@@ -96,7 +110,7 @@ export default function WaitlistForm() {
             City <span className="text-ink-3">(optional)</span>
           </label>
           <Input
-            {...register('city')}
+            {...register("city")}
             id="wl-city"
             type="text"
             placeholder="Denver, Miami…"
@@ -109,7 +123,7 @@ export default function WaitlistForm() {
             What would you drive? <span className="text-ink-3">(optional)</span>
           </label>
           <Input
-            {...register('desiredCar')}
+            {...register("desiredCar")}
             id="wl-car"
             type="text"
             placeholder="A weekend in an S8"
@@ -126,7 +140,7 @@ export default function WaitlistForm() {
           className="w-full sm:w-auto"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Sending…' : 'Join the waitlist'}
+          {isSubmitting ? "Sending…" : "Join the waitlist"}
         </Button>
         {submitError && (
           <p className="mt-3 text-sm text-papaya" role="alert">

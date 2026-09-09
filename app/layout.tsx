@@ -2,14 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
-import "./astra.css";
-import "./astra-home.css";
-import "./astra-pages.css";
-import "./astra-garage.css";
-import "./astra-story.css";
-import "./astra-motion.css";
-import "./astra-mobile-journeys.css";
+import "./styles/site.css";
 import AnalyticsListener from "@/components/AnalyticsListener";
+import CloudflareAnalytics from "@/components/CloudflareAnalytics";
 import CookieConsent from "@/components/CookieConsent";
 import { isPreview } from "@/lib/preview";
 
@@ -30,7 +25,11 @@ const sans = localFont({
 const serif = localFont({
   src: [
     { path: "./fonts/spectral-400.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/spectral-400-italic.woff2", weight: "400", style: "italic" },
+    {
+      path: "./fonts/spectral-400-italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
   ],
   variable: "--font-serif",
   display: "swap",
@@ -69,7 +68,11 @@ export const metadata: Metadata = {
   robots: {
     index: !isPreview,
     follow: !isPreview,
-    googleBot: { index: !isPreview, follow: !isPreview, "max-image-preview": "large" },
+    googleBot: {
+      index: !isPreview,
+      follow: !isPreview,
+      "max-image-preview": "large",
+    },
   },
   icons: {
     icon: [
@@ -77,10 +80,20 @@ export const metadata: Metadata = {
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
     other: [
-      { rel: "android-chrome", url: "/android-chrome-192x192.png", sizes: "192x192" },
-      { rel: "android-chrome", url: "/android-chrome-512x512.png", sizes: "512x512" },
+      {
+        rel: "android-chrome",
+        url: "/android-chrome-192x192.png",
+        sizes: "192x192",
+      },
+      {
+        rel: "android-chrome",
+        url: "/android-chrome-512x512.png",
+        sizes: "512x512",
+      },
     ],
   },
   openGraph: {
@@ -93,9 +106,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/astra/hero-garage.webp",
-        width: 1672,
-        height: 941,
+        url: "/media/v2/hero-og.jpg",
+        width: 1200,
+        height: 630,
         alt: "Drive Exotiq: Exotic Cars That Actually Get Driven",
       },
     ],
@@ -105,7 +118,7 @@ export const metadata: Metadata = {
     title: "Drive Exotiq: Built for People Who Drive the Car",
     description:
       "Good cars. Better company. Sunrise drives, real road stories, and a community built around the journey.",
-    images: ["/astra/hero-garage.webp"],
+    images: ["/media/v2/hero-og.jpg"],
     creator: "@driveexotiq",
     site: "@driveexotiq",
   },
@@ -116,17 +129,18 @@ export const metadata: Metadata = {
 // in the Twitter card metadata above) — add socials here as Gregory supplies
 // them; never ship an empty array.
 const ORG_JSON_LD = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Drive Exotiq',
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Drive Exotiq",
   url: SITE_URL,
   logo: `${SITE_URL}/android-chrome-512x512.png`,
-  description: 'Drive Exotiq is the community front door to the exotiq.rent exotic-car marketplace.',
-  parentOrganization: { '@type': 'Organization', name: 'Exotiq Inc.' },
+  description:
+    "Drive Exotiq is the community front door to the upcoming exotiq.rent exotic-car marketplace.",
+  parentOrganization: { "@type": "Organization", name: "Exotiq Inc." },
   sameAs: [
-    'https://x.com/driveexotiq',
-    'https://www.instagram.com/driveexotiq',
-    'https://www.youtube.com/@driveexotiq',
+    "https://x.com/driveexotiq",
+    "https://www.instagram.com/driveexotiq",
+    "https://www.youtube.com/@driveexotiq",
   ],
 };
 
@@ -141,7 +155,10 @@ export default function RootLayout({
       className={`${display.variable} ${sans.variable} ${serif.variable}`}
     >
       <body className="font-sans bg-canvas text-ink antialiased">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }}
+        />
         {/* Plausible — privacy-first, cookieless (no consent gate). Prod only so
             local/preview traffic never pollutes stats. This is the account's
             site-keyed tracker from the dashboard (2026-07-07 signup) — the
@@ -150,7 +167,7 @@ export default function RootLayout({
             AND custom events (CTA / Film Depth / Signup via lib/analytics.ts)
             fired before the script loads; outboundLinks kept from the old
             script.outbound-links.js setup. Goals live in the dashboard. */}
-        {process.env.NODE_ENV === 'production' && !isPreview && (
+        {process.env.NODE_ENV === "production" && !isPreview && (
           <>
             <Script id="plausible-shim" strategy="beforeInteractive">
               {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init({outboundLinks:true})`}
@@ -162,6 +179,7 @@ export default function RootLayout({
             />
           </>
         )}
+        <CloudflareAnalytics />
         <AnalyticsListener />
         {children}
         <CookieConsent />

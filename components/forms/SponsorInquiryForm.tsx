@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { track } from '@/lib/analytics';
-import { isPreview } from '@/lib/preview';
-import PreviewNotice from '@/components/astra/PreviewNotice';
+import { track } from "@/lib/analytics";
+import { formSubmissionStatus, isFormPreview } from "@/lib/preview";
+import PreviewNotice from "@/components/forms/PreviewNotice";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRef, useState } from 'react';
-import Input from '@/components/ui/Input';
-import Select from '@/components/ui/Select';
-import Textarea from '@/components/ui/Textarea';
-import Button from '@/components/ui/Button';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef, useState } from "react";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
+import Textarea from "@/components/ui/Textarea";
+import Button from "@/components/ui/Button";
 import {
   sponsorInquirySchema,
   SponsorInquiryData,
   SPONSOR_TIER_OPTIONS,
   SPONSOR_BUDGET_OPTIONS,
   SponsorTier,
-} from '@/lib/sponsor';
+} from "@/lib/sponsor";
 
-const labelClass = 'block text-[13px] tracking-[0.04em] text-ink-2 mb-2';
+const labelClass = "block text-[13px] tracking-[0.04em] text-ink-2 mb-2";
 
 export default function SponsorInquiryForm({
-  defaultInterest = 'not-sure',
+  defaultInterest = "not-sure",
 }: {
   defaultInterest?: SponsorTier;
 }) {
@@ -30,6 +30,7 @@ export default function SponsorInquiryForm({
   const [submitError, setSubmitError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const honeypotRef = useRef<HTMLInputElement>(null);
+  const started = useRef(false);
 
   const {
     register,
@@ -44,19 +45,24 @@ export default function SponsorInquiryForm({
     setIsSubmitting(true);
     setSubmitError(false);
     try {
-      const res = await fetch('/api/sponsor-inquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, website: honeypotRef.current?.value || '' }),
+      const res = await fetch("/api/sponsor-inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          website: honeypotRef.current?.value || "",
+        }),
       });
       if (!res.ok) {
+        track("Submission Failure", { form: "sponsor", status: "server" });
         setSubmitError(true);
         return;
       }
-      track('Signup', { form: 'sponsor', tier: data.interest });
+      track("Signup", { form: "sponsor", tier: data.interest, status: formSubmissionStatus });
       setSubmitted(true);
     } catch (err) {
-      console.error('Error submitting sponsor inquiry:', err);
+      console.error("Error submitting sponsor inquiry:", err);
+      track("Submission Failure", { form: "sponsor", status: "network" });
       setSubmitError(true);
     } finally {
       setIsSubmitting(false);
@@ -68,20 +74,28 @@ export default function SponsorInquiryForm({
       <div className="border border-line rounded-sm bg-surface px-6 py-10 md:px-8">
         <div className="flex items-center gap-3">
           <span className="h-px w-8 bg-gulf" />
-          <span className="text-[13px] tracking-[0.04em] text-ink-2">{isPreview ? 'Preview complete' : 'Received'}</span>
+          <span className="text-[13px] tracking-[0.04em] text-ink-2">
+            {isFormPreview ? "Preview complete" : "Received"}
+          </span>
         </div>
         <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight-exotiq text-ink">
-          {isPreview ? 'Looking good.' : 'Got it.'}
+          {isFormPreview ? "Looking good." : "Got it."}
         </h3>
         <p className="mt-3 max-w-[42ch] text-[15px] leading-relaxed text-ink-2">
-          {isPreview ? 'Your form passed validation. No information was saved and no email was sent.' : 'Thanks for introducing your brand. We’ll be in touch to explore the fit.'}
+          {isFormPreview
+            ? "Your form passed validation. No information was saved and no email was sent."
+            : "Thanks for introducing your brand. We’ll be in touch to explore the fit."}
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit, () => track("Validation Error", { form: "sponsor", category: "validation" }))}
+      onFocusCapture={() => { if (!started.current) { started.current = true; track("Form Start", { form: "sponsor" }); } }}
+      className="space-y-6"
+    >
       <PreviewNotice />
       {/* Honeypot — hidden from humans; bots that fill it are silently dropped server-side. */}
       <input
@@ -100,7 +114,7 @@ export default function SponsorInquiryForm({
             Your name
           </label>
           <Input
-            {...register('name')}
+            {...register("name")}
             id="sp-name"
             type="text"
             placeholder="First and last"
@@ -113,7 +127,7 @@ export default function SponsorInquiryForm({
             Company
           </label>
           <Input
-            {...register('company')}
+            {...register("company")}
             id="sp-company"
             type="text"
             placeholder="Brand or company"
@@ -129,7 +143,7 @@ export default function SponsorInquiryForm({
             Email address
           </label>
           <Input
-            {...register('email')}
+            {...register("email")}
             id="sp-email"
             type="email"
             inputMode="email"
@@ -143,7 +157,7 @@ export default function SponsorInquiryForm({
             Phone <span className="text-ink-3">(optional)</span>
           </label>
           <Input
-            {...register('phone')}
+            {...register("phone")}
             id="sp-phone"
             type="tel"
             inputMode="tel"
@@ -160,7 +174,7 @@ export default function SponsorInquiryForm({
             Sponsorship interest
           </label>
           <Select
-            {...register('interest')}
+            {...register("interest")}
             id="sp-interest"
             defaultValue={defaultInterest}
             error={errors.interest?.message}
@@ -176,7 +190,7 @@ export default function SponsorInquiryForm({
           <label htmlFor="sp-budget" className={labelClass}>
             Budget range <span className="text-ink-3">(optional)</span>
           </label>
-          <Select {...register('budget')} id="sp-budget" defaultValue="">
+          <Select {...register("budget")} id="sp-budget" defaultValue="">
             <option value="">Select a range</option>
             {SPONSOR_BUDGET_OPTIONS.map((b) => (
               <option key={b} value={b}>
@@ -192,7 +206,7 @@ export default function SponsorInquiryForm({
           Anything else? <span className="text-ink-3">(optional)</span>
         </label>
         <Textarea
-          {...register('message')}
+          {...register("message")}
           id="sp-message"
           rows={4}
           maxLength={1000}
@@ -209,7 +223,7 @@ export default function SponsorInquiryForm({
           className="w-full sm:w-auto"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Sending…' : 'Start a sponsorship conversation'}
+          {isSubmitting ? "Sending…" : "Start a sponsorship conversation"}
         </Button>
         {submitError && (
           <p className="mt-3 text-sm text-papaya" role="alert">

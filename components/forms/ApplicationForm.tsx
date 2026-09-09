@@ -1,40 +1,42 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
-import Select from '@/components/ui/Select';
-import Textarea from '@/components/ui/Textarea';
-import SmsConsentCheckboxes from '@/components/forms/SmsConsentCheckboxes';
-import { applicationSchema, ApplicationFormData } from '@/lib/validations';
-import { APPLY_INTEREST_OPTIONS, Interest } from '@/lib/interest';
-import { track } from '@/lib/analytics';
-import PreviewNotice from '@/components/astra/PreviewNotice';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
+import Textarea from "@/components/ui/Textarea";
+import SmsConsentCheckboxes from "@/components/forms/SmsConsentCheckboxes";
+import { applicationSchema, ApplicationFormData } from "@/lib/validations";
+import { APPLY_INTEREST_OPTIONS, Interest } from "@/lib/interest";
+import { track } from "@/lib/analytics";
+import PreviewNotice from "@/components/forms/PreviewNotice";
+import { formSubmissionStatus } from "@/lib/preview";
 
-const labelClass = 'block text-[13px] tracking-[0.04em] text-ink-2 mb-2';
+const labelClass = "block text-[13px] tracking-[0.04em] text-ink-2 mb-2";
 
 export default function ApplicationForm({
-  defaultInterest = 'drives',
+  defaultInterest = "drives",
 }: {
   defaultInterest?: Interest;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const honeypotRef = useRef<HTMLInputElement>(null);
+  const started = useRef(false);
   const router = useRouter();
 
   // Belt-and-suspenders (deck §5.3): the controlled select must never hold a
   // value with no matching <option> (e.g. a sponsor tier that slipped past the
   // ApplyPage redirect guard). Fall back to 'access'.
   const safeInterest: Interest = APPLY_INTEREST_OPTIONS.some(
-    (o) => o.value === defaultInterest
+    (o) => o.value === defaultInterest,
   )
     ? defaultInterest
-    : 'access';
+    : "access";
 
   const {
     register,
@@ -50,23 +52,28 @@ export default function ApplicationForm({
     setSubmitError(false);
 
     try {
-      const res = await fetch('/api/applications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, website: honeypotRef.current?.value || '' }),
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          website: honeypotRef.current?.value || "",
+        }),
       });
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        console.error('Application API error:', err);
+        console.error("Application API error:", err);
+        track("Submission Failure", { form: "apply", status: "server" });
         setSubmitError(true);
         return;
       }
 
-      track('Signup', { form: 'apply', interest: data.interest });
+      track("Signup", { form: "apply", interest: data.interest, status: formSubmissionStatus });
       router.push(`/thank-you?interest=${encodeURIComponent(data.interest)}`);
     } catch (error) {
-      console.error('Error submitting application:', error);
+      console.error("Error submitting application:", error);
+      track("Submission Failure", { form: "apply", status: "network" });
       setSubmitError(true);
     } finally {
       setIsSubmitting(false);
@@ -74,7 +81,11 @@ export default function ApplicationForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="astra-application-form space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit, () => track("Validation Error", { form: "apply", category: "validation" }))}
+      onFocusCapture={() => { if (!started.current) { started.current = true; track("Form Start", { form: "apply" }); } }}
+      className="site-application-form space-y-6"
+    >
       <PreviewNotice />
       {/* Honeypot */}
       <input
@@ -93,7 +104,7 @@ export default function ApplicationForm({
           What brings you here?
         </label>
         <Select
-          {...register('interest')}
+          {...register("interest")}
           id="interest"
           defaultValue={safeInterest}
           error={errors.interest?.message}
@@ -112,7 +123,7 @@ export default function ApplicationForm({
           Full name
         </label>
         <Input
-          {...register('fullName')}
+          {...register("fullName")}
           type="text"
           id="fullName"
           placeholder="First and last"
@@ -127,7 +138,7 @@ export default function ApplicationForm({
           Email address
         </label>
         <Input
-          {...register('email')}
+          {...register("email")}
           type="email"
           id="email"
           inputMode="email"
@@ -143,7 +154,7 @@ export default function ApplicationForm({
           Phone
         </label>
         <Input
-          {...register('phone')}
+          {...register("phone")}
           type="tel"
           id="phone"
           inputMode="tel"
@@ -160,7 +171,7 @@ export default function ApplicationForm({
             Current city
           </label>
           <Input
-            {...register('currentCity')}
+            {...register("currentCity")}
             type="text"
             id="currentCity"
             placeholder="Where you're based"
@@ -173,7 +184,7 @@ export default function ApplicationForm({
             City you&rsquo;d drive in
           </label>
           <Input
-            {...register('cityOfInterest')}
+            {...register("cityOfInterest")}
             type="text"
             id="cityOfInterest"
             placeholder="Denver, Austin, Miami…"
@@ -189,7 +200,7 @@ export default function ApplicationForm({
           Tell us what you drive
         </label>
         <Textarea
-          {...register('briefIntro')}
+          {...register("briefIntro")}
           id="briefIntro"
           rows={4}
           maxLength={200}
@@ -207,7 +218,7 @@ export default function ApplicationForm({
           Invite code <span className="text-ink-3">(optional)</span>
         </label>
         <Input
-          {...register('inviteCode')}
+          {...register("inviteCode")}
           type="text"
           id="inviteCode"
           placeholder="If someone sent you"
@@ -216,33 +227,48 @@ export default function ApplicationForm({
       </div>
 
       {/* Terms */}
-      <p className="astra-application-partner text-[13px] leading-relaxed text-ink-3">
-        Looking to partner with us?{' '}
-        <Link href="/sponsor" className="text-ink underline underline-offset-2 transition-colors duration-250 hover:text-gulf">Start here</Link>.
+      <p className="site-application-partner text-[13px] leading-relaxed text-ink-3">
+        Looking to partner with us?{" "}
+        <Link
+          href="/sponsor"
+          className="text-ink underline underline-offset-2 transition-colors duration-250 hover:text-gulf"
+        >
+          Start here
+        </Link>
+        .
       </p>
       <div className="flex items-start gap-3">
         <input
-          {...register('agreedToTerms')}
+          {...register("agreedToTerms")}
           type="checkbox"
           id="agreedToTerms"
           aria-invalid={errors.agreedToTerms ? true : undefined}
-          aria-describedby={errors.agreedToTerms ? 'agreedToTerms-error' : undefined}
+          aria-describedby={
+            errors.agreedToTerms ? "agreedToTerms-error" : undefined
+          }
           className="mt-1 h-5 w-5 sm:h-4 sm:w-4 bg-surface border-line rounded-sm accent-gulf touch-manipulation flex-shrink-0"
         />
         <label htmlFor="agreedToTerms" className="text-sm text-ink-2">
-          I agree to the Drive Exotiq{' '}
+          I agree to the Drive Exotiq{" "}
           <Link href="/terms" className="text-gulf underline hover:text-gulf-2">
             Terms of Service
-          </Link>{' '}
-          and{' '}
-          <Link href="/privacy" className="text-gulf underline hover:text-gulf-2">
+          </Link>{" "}
+          and{" "}
+          <Link
+            href="/privacy"
+            className="text-gulf underline hover:text-gulf-2"
+          >
             Privacy Policy
           </Link>
           .
         </label>
       </div>
       {errors.agreedToTerms && (
-        <p id="agreedToTerms-error" role="alert" className="text-sm text-papaya -mt-2">
+        <p
+          id="agreedToTerms-error"
+          role="alert"
+          className="text-sm text-papaya -mt-2"
+        >
           {errors.agreedToTerms.message}
         </p>
       )}
@@ -259,7 +285,7 @@ export default function ApplicationForm({
           className="w-full"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Sending…' : 'Get on the list'}
+          {isSubmitting ? "Sending…" : "Get on the list"}
         </Button>
         {submitError && (
           <p className="mt-3 text-sm text-papaya" role="alert">

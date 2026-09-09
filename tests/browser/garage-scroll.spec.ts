@@ -16,20 +16,20 @@ test('desktop garage stays in view and its camera reverses with native scroll', 
   await atProgress(page, 0.12);
   await expect(page.getByRole('tabpanel')).toContainText('720S');
   await expect.poll(() => page.locator('[data-car-layer="0"] img').evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
-  await page.screenshot({ path: '../evidence/v2/garage/desktop-mclaren.png' });
+  await page.screenshot({ path: 'output/playwright/e2e/screenshots/desktop-mclaren.png' });
   const firstPose = await page.locator('[data-car-layer="0"]').evaluate(el => el.style.transform);
   await atProgress(page, 0.23);
   await expect.poll(() => page.locator('[data-car-layer="0"]').evaluate(el => el.style.transform)).not.toBe(firstPose);
   await atProgress(page, 0.5);
   await expect(page.getByRole('tabpanel')).toContainText('911 GT3 RS');
   await expect.poll(() => page.locator('[data-car-layer="1"] img').evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
-  await page.screenshot({ path: '../evidence/v2/garage/desktop-porsche.png' });
+  await page.screenshot({ path: 'output/playwright/e2e/screenshots/desktop-porsche.png' });
   const middlePose = await page.locator('[data-car-layer="1"]').evaluate(el => el.style.transform);
   expect(await page.locator('.garage-study-stage').evaluate(el => Math.abs(el.getBoundingClientRect().top - 88))).toBeLessThan(2);
   await atProgress(page, 0.88);
   await expect(page.getByRole('tabpanel')).toContainText('458 Italia');
   await expect.poll(() => page.locator('[data-car-layer="2"] img').evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
-  await page.screenshot({ path: '../evidence/v2/garage/desktop-ferrari.png' });
+  await page.screenshot({ path: 'output/playwright/e2e/screenshots/desktop-ferrari.png' });
   await atProgress(page, 0.5);
   await expect(page.getByRole('tabpanel')).toContainText('911 GT3 RS');
   await expect.poll(() => page.locator('[data-car-layer="1"]').evaluate(el => el.style.transform)).toBe(middlePose);
@@ -46,7 +46,7 @@ test('garage selection keeps keyboard focus and matches the scroll chapter', asy
   if (info.project.name.includes('mobile')) {
     await page.locator('.garage-study').evaluate(el => window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - 72, behavior: 'instant' }));
     await expect.poll(() => page.locator('[data-car-layer="1"] img').evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
-    await page.locator('.garage-study').screenshot({ path: `../evidence/v2/garage/${info.project.name}-porsche.png` });
+    await page.locator('.garage-study').screenshot({ path: `output/playwright/e2e/screenshots/${info.project.name}-porsche.png` });
     expect(await page.locator('.home-car-spec').evaluate(el => el.getBoundingClientRect().bottom <= el.closest('.home-car-panel')!.getBoundingClientRect().bottom)).toBe(true);
   }
   await porsche.focus();
@@ -75,7 +75,7 @@ for (const fallback of ['reduced motion', 'Save-Data', 'short viewport'] as cons
 }
 
 test('a failed car image leaves readable content without an empty pinned chapter', async ({ page }) => {
-  await page.route('**/astra/car-ferrari.webp', route => route.abort());
+  await page.route('**/media/car-ferrari.webp', route => route.abort());
   await page.goto('/');
   await page.getByRole('tab', { name: /Ferrari/ }).click();
   await expect(page.locator('.garage-study')).toHaveAttribute('data-cinematic', 'false');

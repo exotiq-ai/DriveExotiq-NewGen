@@ -8,41 +8,6 @@
   }
 
   /* Typography Scale - Optimized for Mobile */
-  .text-hero {
-    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight-exotiq leading-tight;
-  }
-
-  .text-h1 {
-    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-semibold tracking-tight-exotiq leading-tight;
-  }
-
-  .text-h2 {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-semibold leading-tight;
-  }
-
-  .text-h3 {
-    @apply text-xl sm:text-2xl md:text-3xl font-display font-semibold leading-snug;
-  }
-
-  .text-h4 {
-    @apply text-lg sm:text-xl md:text-2xl font-display font-semibold leading-snug;
-  }
-
-  .text-body-lg {
-    @apply text-base sm:text-lg md:text-xl font-sans leading-relaxed;
-  }
-
-  .text-body {
-    @apply text-base md:text-lg font-sans leading-relaxed;
-  }
-
-  .text-body-sm {
-    @apply text-sm md:text-base font-sans leading-relaxed;
-  }
-
-  .text-caption {
-    @apply text-xs sm:text-sm font-sans tracking-wide-exotiq uppercase;
-  }
 }
 
 @layer utilities {
@@ -56,10 +21,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-  }
-
-  .fade-in-up {
-    animation: fadeInUp 0.6s ease-out;
   }
 
   /* Smooth scrolling */
@@ -85,18 +46,8 @@
   }
 
   /* Button Hover States */
-  .btn-primary {
-    @apply transition-all duration-200 hover:shadow-lg hover:shadow-gulf-blue/30 hover:-translate-y-0.5;
-  }
-
-  .btn-secondary {
-    @apply transition-all duration-200 hover:border-performance-orange hover:text-performance-orange;
-  }
 
   /* Card Hover States */
-  .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-gulf-blue/10;
-  }
 
   /* Link Hover States */
   a {
@@ -120,14 +71,6 @@
   }
 
   /* Hide scrollbar for horizontal scroll containers */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
 
   /* (Removed dead 'Dfaalt' @font-face — files never existed; type now ships
      via next/font: Space Grotesk / Inter / JetBrains Mono, wired in layout.tsx) */
@@ -139,18 +82,18 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #6EC1E4;
+    background: #6ec1e4;
     cursor: pointer;
-    border: 2px solid #0B0B0F;
+    border: 2px solid #0b0b0f;
   }
 
   input[type="range"]::-moz-range-thumb {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #6EC1E4;
+    background: #6ec1e4;
     cursor: pointer;
-    border: 2px solid #0B0B0F;
+    border: 2px solid #0b0b0f;
   }
 
   input[type="range"] {
@@ -164,59 +107,70 @@
 
   /* Ken Burns hero zoom */
   @keyframes kenBurns {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.08); }
-  }
-
-  .animate-ken-burns {
-    animation: kenBurns 25s ease-out forwards;
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.08);
+    }
   }
 
   /* Heart bounce on favorite */
   @keyframes heartBounce {
-    0%, 100% { transform: scale(1); }
-    20% { transform: scale(1.35); }
-    40% { transform: scale(0.9); }
-    60% { transform: scale(1.15); }
-    80% { transform: scale(0.97); }
-  }
-
-  .animate-heart-bounce {
-    animation: heartBounce 0.5s ease-out;
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    20% {
+      transform: scale(1.35);
+    }
+    40% {
+      transform: scale(0.9);
+    }
+    60% {
+      transform: scale(1.15);
+    }
+    80% {
+      transform: scale(0.97);
+    }
   }
 
   /* Page fade in */
   @keyframes pageFadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .animate-page-in {
-    animation: pageFadeIn 0.35s ease-out;
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Typing dots indicator */
   @keyframes typingDot {
-    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-    30% { opacity: 1; transform: translateY(-4px); }
+    0%,
+    60%,
+    100% {
+      opacity: 0.3;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-4px);
+    }
   }
-
-  .typing-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #6EC1E4;
-    animation: typingDot 1.4s ease-in-out infinite;
-  }
-
-  .typing-dot:nth-child(2) { animation-delay: 0.15s; }
-  .typing-dot:nth-child(3) { animation-delay: 0.3s; }
 
   /* Slide up for sections */
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .animate-slide-up {
@@ -271,53 +225,15 @@
   }
 
   /* Stories (blog) prose — film-toned long-form reading */
-  .story-prose {
-    @apply text-ink-2;
-  }
-  .story-prose p {
-    @apply mb-6 text-[17px] leading-[1.7];
-  }
-  .story-prose h2 {
-    @apply mt-12 mb-4 font-display text-[clamp(1.5rem,3vw,2rem)] font-semibold tracking-tight-exotiq text-ink;
-  }
-  .story-prose h3 {
-    @apply mt-9 mb-3 font-display text-xl font-semibold tracking-tight-exotiq text-ink;
-  }
-  .story-prose a {
-    @apply text-gulf underline decoration-line-2 underline-offset-2 transition-colors hover:decoration-gulf;
-  }
-  .story-prose strong {
-    @apply font-semibold text-ink;
-  }
-  .story-prose em {
-    @apply font-serif italic;
-  }
-  .story-prose ul {
-    @apply mb-6 list-disc space-y-2 pl-6;
-  }
-  .story-prose ol {
-    @apply mb-6 list-decimal space-y-2 pl-6;
-  }
-  .story-prose li {
-    @apply text-[17px] leading-[1.7];
-  }
-  .story-prose blockquote {
-    @apply my-8 border-l-2 border-gulf pl-5 font-serif text-[clamp(1.15rem,2vw,1.4rem)] italic leading-snug text-ink;
-  }
-  .story-prose hr {
-    @apply my-10 border-line;
-  }
 
   /* Smooth gradient shine for skeleton loading */
   @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-
-  .animate-shimmer {
-    background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s ease-in-out infinite;
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
   }
 }
 
@@ -326,38 +242,56 @@
    Quiet, warm, hairline-depth. Gulf = actions only. Never glow.
    ============================================================ */
 :root {
-  --de-bg: #0B0B0C;        --de-bg-2: #101012;
-  --de-surface: #161618;   --de-surface-2: #1F1F23;
-  --de-line: #28282C;      --de-line-2: #3A3A40;
+  --de-bg: #0b0b0c;
+  --de-bg-2: #101012;
+  --de-surface: #161618;
+  --de-surface-2: #1f1f23;
+  --de-line: #28282c;
+  --de-line-2: #3a3a40;
   /* text-3 lifted #6F6D67 → #8A887F (UX audit 2026-07-20): the old value
      measured 3.8:1 on canvas — below AA for the body/caption sizes it ships
      at (worst: /tour's mobile timeline copy). ~4.6:1 now; still the dimmest
      voice on screen. */
-  --de-text: #F3F1EC;      --de-text-2: #ABA8A1;     --de-text-3: #8A887F;
-  --de-metal: #C9C6BD;
-  --de-gulf: #6CBDE6;      --de-gulf-2: #8ED0F0;     --de-gulf-soft: rgba(108,189,230,.12);
-  --de-on-gulf: #08222E;
-  --de-papaya: #FF5A1F;    --de-papaya-soft: rgba(255,90,31,.12);
+  --de-text: #f3f1ec;
+  --de-text-2: #aba8a1;
+  --de-text-3: #8a887f;
+  --de-metal: #c9c6bd;
+  --de-gulf: #6cbde6;
+  --de-gulf-2: #8ed0f0;
+  --de-gulf-soft: rgba(108, 189, 230, 0.12);
+  --de-on-gulf: #08222e;
+  --de-papaya: #ff5a1f;
+  --de-papaya-soft: rgba(255, 90, 31, 0.12);
   --de-centurion: #070708;
   /* Gold — the "jewelry" accent (variant B). Champagne, never neon. */
-  --de-gold: #C8A24E;      --de-gold-2: #E2C078;
+  --de-gold: #c8a24e;
+  --de-gold-2: #e2c078;
 
   /* jewel = the precious-accent slot. Metal by default; gold under [data-variant="gold"]. */
   --de-jewel: var(--de-metal);
   --de-jewel-2: var(--de-metal);
 
-  --de-radius: 2px;        --de-radius-md: 4px;
-  --de-maxw: 1180px;       --de-ease: cubic-bezier(.2,.7,.2,1);
+  --de-radius: 2px;
+  --de-radius-md: 4px;
+  --de-maxw: 1180px;
+  --de-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 [data-theme="light"] {
-  --de-bg: #F4F1EA;        --de-bg-2: #EBE7DD;
-  --de-surface: #FFFFFF;   --de-surface-2: #FAF8F3;
-  --de-line: #E3DED3;      --de-line-2: #CFC8BA;
-  --de-text: #171611;      --de-text-2: #5C594F;     --de-text-3: #8B8479;
-  --de-metal: #8A8579;
-  --de-gulf: #2C90C6;      --de-on-gulf: #FFFFFF;
-  --de-gold: #9C7B2E;      --de-gold-2: #C8A24E;
+  --de-bg: #f4f1ea;
+  --de-bg-2: #ebe7dd;
+  --de-surface: #ffffff;
+  --de-surface-2: #faf8f3;
+  --de-line: #e3ded3;
+  --de-line-2: #cfc8ba;
+  --de-text: #171611;
+  --de-text-2: #5c594f;
+  --de-text-3: #8b8479;
+  --de-metal: #8a8579;
+  --de-gulf: #2c90c6;
+  --de-on-gulf: #ffffff;
+  --de-gold: #9c7b2e;
+  --de-gold-2: #c8a24e;
 }
 
 /* Variant B — gold takes the jewelry slot (gulf stays the only action color). */
@@ -370,149 +304,26 @@
 .hairline {
   height: 1px;
   width: 100%;
-  background: linear-gradient(90deg, transparent, var(--de-jewel) 50%, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--de-jewel) 50%,
+    transparent
+  );
   opacity: 0.5;
-}
-
-/* Spectral italic index numerals ("01", "02") — the serif voice, never uppercase. */
-.idx {
-  font-family: var(--font-serif), Spectral, Georgia, serif;
-  font-style: italic;
-  color: var(--de-text-3);
-}
-
-/* Scroll-reveal — toggled to .is-visible by an IntersectionObserver client island. */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s var(--de-ease), transform 0.6s var(--de-ease);
-  will-change: opacity, transform;
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
 }
 
 /* Respect reduced motion everywhere — collapse to a quiet opacity fade, no parallax. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  html { scroll-behavior: auto; }
-  .reveal { transform: none; transition: opacity 0.2s ease; }
-}
-
-/* Weighted beat pacing (/experience): a beat's copy block is weight·100svh tall.
-   Two weight tables — scrub-capable viewports get the full weights; coarse
-   pointers get reduced ones (their scrub beats fall back to play-once video,
-   which can't fill a long band). The media query MUST stay in sync with
-   SCRUB_MQ in components/experience/bands.ts and useCanScrub in
-   LivingLayer.tsx. Heights live in CSS (not JS state) so SSR paints the right
-   column height with zero hydration shift. */
-.beat-h { height: calc(var(--wc, 1) * 100svh); }
-.beat-anchor { top: calc(var(--ac, 0) * 100svh); }
-@media (min-width: 1024px) and (pointer: fine) {
-  .beat-h { height: calc(var(--wf, 1) * 100svh); }
-  .beat-anchor { top: calc(var(--af, 0) * 100svh); }
-}
-
-/* The pin (final design push 2026-07-20): copy-bearing beats dock their copy
-   at --de-pin-top from the viewport top and HOLD there while the plate's
-   video plays on behind — the owner's "read while still scrolling" ask.
-   Geometry: a flow spacer of (copyAt·weight − 0.25)·100svh ahead of a sticky
-   auto-height child makes the dock engage EXACTLY at the beat's anchorVh, so
-   keyboard nav, act ticks, FilmMenu jumps, and the copy's scroll-linked
-   reveal all stay keyed to the existing anchor with zero band-math changes.
-   The reveal's exit (end − 0.15·unit) completes before the sticky child ever
-   un-pins for copy up to ~0.4 viewports tall — the release is a fade at the
-   dock, not a visible slide. Same fine/coarse var pattern as .beat-h. The
-   dock offset is ONE tunable: --de-pin-top ("top 75" read as 25svh —
-   owner-confirm item #8 in docs/redesign/12-FINAL-DESIGN-PUSH.md). */
-.beat-pin-spacer { height: calc(var(--pc, 0) * 100svh); }
-.beat-pin { position: sticky; top: var(--de-pin-top, 25svh); }
-@media (min-width: 1024px) and (pointer: fine) {
-  .beat-pin-spacer { height: calc(var(--pf, 0) * 100svh); }
-}
-
-/* Copy legibility over the film (/experience) — the copy PLATE (owner
-   2026-07-20): contrast lives around the text itself. A soft pool
-   shrink-wrapped to the copy block's actual extent with ~50px of reach
-   (CinematicStage renders it inside a w-fit wrapper, so it is dynamic to the
-   text's length), replacing the scene-wide radial scrims that vignetted the
-   whole frame and dragged the film darker than the print intends. The
-   ellipse radii track the padded box; corners fall to transparent — a light
-   pool, not a card. Rides the pin: it docks and travels with the text. */
-/* Owner revision 2026-07-20 PM: NO visible edges, ever — the pool is an
-   inverted feather. Two rules make it edgeless: (1) the alpha curve is a
-   smooth ease-out (many stops, no plateau) so there is no falloff ring; (2)
-   the element is painted LARGER than the visible pool (the oversized insets
-   in CinematicStage) and alpha effectively dies by ~88% of the radius, so
-   zero never coincides with any box edge or corner — the ellipse's 0-stop
-   sits inside the element and the corners are pure transparency. No radius:
-   there is no shape to round. */
-/* CRITICAL: radial radii percentages are relative to the FULL box dimension —
-   `100% 100%` paints an ellipse TWICE the element (alpha still ~0.33 at the
-   box edge → clipped → the hated card). `50% 50%` is the box-fitting ellipse:
-   zero alpha lands exactly at the edge midpoints, corners are transparent
-   from ~71% out, and the eased stops feather entirely inside the element. */
-.copy-plate {
-  background: radial-gradient(
-    50% 50% at 50% 50%,
-    rgba(11, 11, 12, 0.55) 0%,
-    rgba(11, 11, 12, 0.5) 30%,
-    rgba(11, 11, 12, 0.36) 55%,
-    rgba(11, 11, 12, 0.2) 72%,
-    rgba(11, 11, 12, 0.08) 85%,
-    rgba(11, 11, 12, 0.02) 94%,
-    rgba(11, 11, 12, 0) 100%
-  );
-}
-/* brightPlate beats (frames.ts): plates with no dark ground under the copy
-   get a deeper pool core — same feather, stronger middle. */
-.copy-plate-bright {
-  background: radial-gradient(
-    50% 50% at 50% 50%,
-    rgba(11, 11, 12, 0.72) 0%,
-    rgba(11, 11, 12, 0.65) 30%,
-    rgba(11, 11, 12, 0.48) 55%,
-    rgba(11, 11, 12, 0.27) 72%,
-    rgba(11, 11, 12, 0.11) 85%,
-    rgba(11, 11, 12, 0.03) 94%,
-    rgba(11, 11, 12, 0) 100%
-  );
-}
-/* Type + contrast pass (2026-07-06, owner-approved): the film's copy support
-   tier measured under-legible on desktop, so the legibility floor rises
-   everywhere — the soft text-shadow now rides every viewport (it was
-   mobile-only), and the Spectral index numerals lift off ink-3 (they measured
-   as the dimmest text on screen). Brighter floor, not louder voice. */
-.copy-block {
-  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.5);
-}
-/* Buttons and links set their own solid grounds (Gulf CTA, ghost buttons) —
-   a glow behind dark-on-gulf label text reads as a smudge (review fix). */
-.copy-block a,
-.copy-block button {
-  text-shadow: none;
-}
-.copy-block .idx {
-  color: var(--de-metal);
-}
-@media (max-width: 1023px), (pointer: coarse) {
-  /* Centered multi-line body copy is hard to track on narrow portrait crops —
-     body text always reads left on mobile. Headlines, jewels, and kickers
-     keep the beat's alignment (the flex column still centers the block). */
-  .copy-block .copy-body {
-    text-align: left;
+  html {
+    scroll-behavior: auto;
   }
 }
-
-/* Lenis smooth scroll */
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: hidden; }
-

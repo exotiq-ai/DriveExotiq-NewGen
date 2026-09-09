@@ -1,8 +1,10 @@
-import { Metadata } from 'next';
+import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard - Drive Exotiq',
-  description: 'Manage Drive Exotiq applications',
+  title: "Admin Dashboard - Drive Exotiq",
+  description: "Manage Drive Exotiq applications",
+  robots: { index: false, follow: false },
 };
 
 export default function AdminLayout({
@@ -16,15 +18,17 @@ export default function AdminLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-pure-white">Drive Exotiq</h1>
+              <h1 className="text-2xl font-bold text-pure-white">
+                Drive Exotiq
+              </h1>
               <p className="text-sm text-metallic-silver">Admin Dashboard</p>
             </div>
-            <a
+            <Link
               href="/"
               className="text-gulf-blue hover:text-gulf-blue/80 text-sm font-medium transition-colors"
             >
               ← Back to Site
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -34,8 +38,3 @@ export default function AdminLayout({
     </div>
   );
 }
-
-
-
-
-

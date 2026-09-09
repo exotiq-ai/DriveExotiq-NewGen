@@ -1,8 +1,38 @@
-// Plausible custom-event helper. The script tag lives in app/layout.tsx
-// (production only); this no-ops safely everywhere else, so call sites never
-// need their own guards.
+// Existing cookieless Plausible reporting is preserved. PostHog is separately
+// enabled only after analytics consent, configuration and initial-page work.
 
-import { isPreview } from './preview';
+import { isPreview } from '@/lib/preview';
+import { analyticsAdminPath, analyticsEvents, safeAnalyticsProps } from '@/lib/analytics-privacy';
+import { createAnalyticsRuntime, analyticsConfig } from '@/lib/analytics-runtime';
+import { getConsentPreferences } from '@/lib/cookie-consent';
+
+let ready = false;
+const config = analyticsConfig({
+  preview: isPreview,
+  production: process.env.NODE_ENV === 'production',
+  key: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+  previewKey: process.env.NEXT_PUBLIC_POSTHOG_PREVIEW_KEY,
+  region: process.env.NEXT_PUBLIC_POSTHOG_REGION,
+});
+export const analyticsEnabled = config !== null;
+const posthog = createAnalyticsRuntime(config, () => ({
+  ready,
+  consent: typeof window !== 'undefined' && getConsentPreferences()?.analytics === true,
+  pathname: typeof window === 'undefined' ? '/admin' : window.location.pathname,
+  origin: typeof window === 'undefined' ? '' : window.location.origin,
+  search: typeof window === 'undefined' ? '' : window.location.search,
+  referrer: typeof document === 'undefined' ? '' : document.referrer,
+}));
+
+export function syncAnalytics(initialWorkFinished = false) {
+  if (initialWorkFinished) ready = true;
+  return posthog.sync();
+}
+
+export function stopAnalytics() {
+  ready = false;
+  posthog.stop();
+}
 
 declare global {
   interface Window {
@@ -10,8 +40,10 @@ declare global {
   }
 }
 
-/** Fire a Plausible custom event (silently no-ops outside production). */
+/** Public call sites pass bounded event categories; unknown data is dropped. */
 export function track(event: string, props?: Record<string, string | number>) {
-  if (isPreview || typeof window === 'undefined') return;
-  window.plausible?.(event, props ? { props } : undefined);
+  if (typeof window === 'undefined' || analyticsAdminPath(window.location.pathname) || !analyticsEvents.has(event)) return;
+  const safe = safeAnalyticsProps(props);
+  if (!isPreview) window.plausible?.(event, props ? { props: safe } : undefined);
+  posthog.capture(event, safe);
 }

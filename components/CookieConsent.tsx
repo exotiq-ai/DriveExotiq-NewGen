@@ -1,16 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { isPreview } from '@/lib/preview';
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { analyticsEnabled } from "@/lib/analytics";
+import { isPreview } from "@/lib/preview";
 import {
   hasConsented,
+  shouldPromptConsent,
   acceptAll,
   rejectNonEssential,
   setConsentPreferences,
   getConsentPreferences,
-} from '@/lib/cookie-consent';
+} from "@/lib/cookie-consent";
 
 /**
  * Mobile presentation gate — same audience query as the film's coarse path
@@ -18,17 +20,17 @@ import {
  * the first client render already knows (SSR renders nothing here anyway —
  * `visible` only ever turns on client-side).
  */
-const MOBILE_MQ = '(max-width: 767px), (pointer: coarse)';
+const MOBILE_MQ = "(max-width: 767px), (pointer: coarse)";
 function useIsMobile() {
   const [mobile, setMobile] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(MOBILE_MQ).matches,
+    () => typeof window !== "undefined" && window.matchMedia(MOBILE_MQ).matches,
   );
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_MQ);
     const sync = () => setMobile(mq.matches);
     sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
   }, []);
   return mobile;
 }
@@ -50,13 +52,13 @@ export default function CookieConsent() {
   const pathname = usePathname();
   const isMobile = useIsMobile();
   // The film is the home page — hold the consent bar until scroll intent there.
-  const onFilm = pathname === '/';
+  const onFilm = pathname === "/";
   // Slim film bar: mobile viewports on the film only. Desktop film and every
   // other page keep the exact legacy card.
   const slim = onFilm && isMobile;
 
   useEffect(() => {
-    if (isPreview || hasConsented()) return;
+    if (!shouldPromptConsent(isPreview, analyticsEnabled, hasConsented())) return;
     if (!onFilm) {
       const timer = setTimeout(() => setVisible(true), 1200);
       return () => clearTimeout(timer);
@@ -72,11 +74,11 @@ export default function CookieConsent() {
         : window.innerHeight * 0.6;
       if (window.scrollY > threshold) {
         setVisible(true);
-        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener("scroll", onScroll);
       }
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [onFilm]);
 
   useEffect(() => {
@@ -89,8 +91,9 @@ export default function CookieConsent() {
       setExpanded(true);
       setVisible(true);
     };
-    window.addEventListener('open-cookie-settings', handleReopen);
-    return () => window.removeEventListener('open-cookie-settings', handleReopen);
+    window.addEventListener("open-cookie-settings", handleReopen);
+    return () =>
+      window.removeEventListener("open-cookie-settings", handleReopen);
   }, []);
 
   const dismiss = useCallback(() => {
@@ -98,21 +101,38 @@ export default function CookieConsent() {
     setExpanded(false);
   }, []);
 
-  const handleAcceptAll = () => { acceptAll(); dismiss(); };
-  const handleRejectAll = () => { rejectNonEssential(); dismiss(); };
-  const handleSavePreferences = () => { setConsentPreferences({ functional, analytics }); dismiss(); };
+  const handleAcceptAll = () => {
+    acceptAll();
+    dismiss();
+  };
+  const handleRejectAll = () => {
+    rejectNonEssential();
+    dismiss();
+  };
+  const handleSavePreferences = () => {
+    setConsentPreferences({ functional, analytics });
+    dismiss();
+  };
 
   if (!visible) return null;
 
-  const Toggle = ({ on, onClick, label }: { on: boolean; onClick: () => void; label: string }) => (
+  const Toggle = ({
+    on,
+    onClick,
+    label,
+  }: {
+    on: boolean;
+    onClick: () => void;
+    label: string;
+  }) => (
     <button
       onClick={onClick}
       aria-pressed={on}
       aria-label={label}
-      className={`relative h-4 w-9 rounded-sm border transition-colors ${on ? 'border-ink-3 bg-surface-2' : 'border-line-2 bg-transparent'}`}
+      className={`relative h-4 w-9 rounded-sm border transition-colors ${on ? "border-ink-3 bg-surface-2" : "border-line-2 bg-transparent"}`}
     >
       <span
-        className={`absolute top-0.5 h-2.5 w-3 rounded-sm transition-all ${on ? 'right-0.5 bg-ink' : 'left-0.5 bg-ink-3'}`}
+        className={`absolute top-0.5 h-2.5 w-3 rounded-sm transition-all ${on ? "right-0.5 bg-ink" : "left-0.5 bg-ink-3"}`}
       />
     </button>
   );
@@ -123,11 +143,13 @@ export default function CookieConsent() {
   // change consent parity, not just presentation. Slim opens upward, so the
   // hairline sits under the panel instead of over it.
   const preferences = expanded && (
-    <div className={`space-y-4 px-5 py-4 ${slim ? 'border-b' : 'border-t'} border-line`}>
+    <div
+      className={`space-y-4 px-5 py-4 ${slim ? "border-b" : "border-t"} border-line`}
+    >
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-ink">Strictly necessary</p>
-          <p className="text-xs text-ink-3">Session, security, payments.</p>
+          <p className="text-xs text-ink-3">Remembers your cookie choices.</p>
         </div>
         <span className="text-xs text-ink-3">Always on</span>
       </div>
@@ -135,17 +157,29 @@ export default function CookieConsent() {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-ink">Functional</p>
-          <p className="text-xs text-ink-3">Search preferences, recently viewed vehicles.</p>
+          <p className="text-xs text-ink-3">
+            No optional functional storage is currently used.
+          </p>
         </div>
-        <Toggle on={functional} onClick={() => setFunctional(!functional)} label="Functional cookies" />
+        <Toggle
+          on={functional}
+          onClick={() => setFunctional(!functional)}
+          label="Functional cookies"
+        />
       </div>
 
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-ink">Analytics</p>
-          <p className="text-xs text-ink-3">Page views, search analytics, performance.</p>
+          <p className="text-xs text-ink-3">
+            Page views, clicks, heatmaps and masked session replay.
+          </p>
         </div>
-        <Toggle on={analytics} onClick={() => setAnalytics(!analytics)} label="Analytics cookies" />
+        <Toggle
+          on={analytics}
+          onClick={() => setAnalytics(!analytics)}
+          label="Analytics cookies"
+        />
       </div>
 
       <div className="flex justify-end gap-2 pt-1">
@@ -172,7 +206,11 @@ export default function CookieConsent() {
     // /cookies disclosure link), compact Manage + Accept. ~58px tall — the
     // film keeps its bottom quarter.
     return (
-      <div role="dialog" aria-label="Cookie consent" className="fixed bottom-0 left-0 right-0 z-[9999] animate-slide-up">
+      <div
+        role="dialog"
+        aria-label="Cookie consent"
+        className="fixed bottom-0 left-0 right-0 z-[9999] animate-slide-up"
+      >
         <div className="mx-auto max-w-2xl px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
           <div className="overflow-hidden rounded-sm border border-line bg-surface">
             {preferences}
@@ -203,13 +241,20 @@ export default function CookieConsent() {
   }
 
   return (
-    <div role="dialog" aria-label="Cookie consent" className="fixed bottom-0 left-0 right-0 z-[9999] animate-slide-up">
+    <div
+      role="dialog"
+      aria-label="Cookie consent"
+      className="fixed bottom-0 left-0 right-0 z-[9999] animate-slide-up"
+    >
       <div className="mx-auto max-w-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <div className="overflow-hidden rounded-sm border border-line bg-surface">
           <div className="flex flex-col items-start gap-3 px-5 py-4 sm:flex-row sm:items-center">
             <p className="flex-1 text-sm leading-relaxed text-ink-2">
-              We use cookies to improve your experience.{' '}
-              <Link href="/cookies" className="text-ink underline decoration-line-2 underline-offset-2 transition-colors hover:decoration-ink-3">
+              We use cookies to improve your experience.{" "}
+              <Link
+                href="/cookies"
+                className="text-ink underline decoration-line-2 underline-offset-2 transition-colors hover:decoration-ink-3"
+              >
                 Learn more
               </Link>
             </p>

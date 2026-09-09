@@ -1,10 +1,10 @@
-import type { Metadata } from 'next';
-import LegalLayout from '@/components/layout/LegalLayout';
+import type { Metadata } from "next";
+import LegalLayout from "@/components/layout/LegalLayout";
 
 export const metadata: Metadata = {
-  alternates: { canonical: '/sms' },
-  title: 'SMS Consent & Disclosure',
-  description: 'TCPA and CTIA compliant SMS consent and disclosure policy.',
+  alternates: { canonical: "/sms" },
+  title: "SMS Consent & Disclosure",
+  description: "TCPA and CTIA compliant SMS consent and disclosure policy.",
 };
 
 export default function SmsPage() {
@@ -31,16 +31,16 @@ export default function SmsPage() {
 
       <h2>Article I: Two Separate SMS Programs</h2>
       <p>
-        Exotiq operates{' '}
-        <strong>two separate and independent SMS programs</strong>. Participation
-        in one does not enroll you in the other.
+        Exotiq operates{" "}
+        <strong>two separate and independent SMS programs</strong>.
+        Participation in one does not enroll you in the other.
       </p>
 
       <h3>Section 1.1. Transactional Messages</h3>
       <p>
-        Booking confirmations, payment receipts, vehicle pickup/return reminders,
-        fleet alerts, AI-generated operational alerts, security notifications,
-        and support communications.
+        Booking confirmations, payment receipts, vehicle pickup/return
+        reminders, fleet alerts, AI-generated operational alerts, security
+        notifications, and support communications.
       </p>
 
       <h3>Section 1.2. Marketing and Promotional Messages</h3>
@@ -90,9 +90,9 @@ export default function SmsPage() {
 
       <h2>Article IV: Opt-Out</h2>
       <p>
-        Reply <strong>STOP</strong> to any message. Or contact{' '}
-        <a href="mailto:support@exotiq.ai">support@exotiq.ai</a> (operators) /{' '}
-        <a href="mailto:support@driveexotiq.com">support@driveexotiq.com</a>{' '}
+        Reply <strong>STOP</strong> to any message. Or contact{" "}
+        <a href="mailto:support@exotiq.ai">support@exotiq.ai</a> (operators) /{" "}
+        <a href="mailto:support@driveexotiq.com">support@driveexotiq.com</a>{" "}
         (renters). Reply <strong>PROMO STOP</strong> to opt out of marketing
         only. Processed immediately via text, within 5 business days via other
         channels.
@@ -100,8 +100,8 @@ export default function SmsPage() {
 
       <h2>Article V: HELP</h2>
       <p>
-        Reply <strong>HELP</strong> to any message, or contact{' '}
-        <a href="mailto:support@exotiq.ai">support@exotiq.ai</a> /{' '}
+        Reply <strong>HELP</strong> to any message, or contact{" "}
+        <a href="mailto:support@exotiq.ai">support@exotiq.ai</a> /{" "}
         <a href="mailto:support@driveexotiq.com">support@driveexotiq.com</a>.
       </p>
 
@@ -140,24 +140,25 @@ export default function SmsPage() {
         Rari may generate text messages regarding bookings. Initial messages
         include: &ldquo;This message was sent by Rari, Drive Exotiq&rsquo;s AI
         concierge, on behalf of [Operator Name].&rdquo; Operators using Rari for
-        SMS are responsible for obtaining TCPA-compliant consent from recipients.
+        SMS are responsible for obtaining TCPA-compliant consent from
+        recipients.
       </p>
 
       <h2>Article IX: Consent Records</h2>
       <p>
-        We maintain consent records including date, time, method, IP address, and
-        consent language version. Retained for at least five (5) years per TCPA,
-        CTIA, and FCC requirements. We do not sell, rent, or share SMS consent
-        or phone numbers for third-party marketing.
+        We maintain consent records including date, time, method, IP address,
+        and consent language version. Retained for at least five (5) years per
+        TCPA, CTIA, and FCC requirements. We do not sell, rent, or share SMS
+        consent or phone numbers for third-party marketing.
       </p>
 
       <h2>Contact</h2>
       <p>
-        <strong>Operators:</strong>{' '}
+        <strong>Operators:</strong>{" "}
         <a href="mailto:support@exotiq.ai">support@exotiq.ai</a>
       </p>
       <p>
-        <strong>Renters:</strong>{' '}
+        <strong>Renters:</strong>{" "}
         <a href="mailto:support@driveexotiq.com">support@driveexotiq.com</a>
       </p>
       <p>

@@ -1,32 +1,28 @@
-import { isPreview } from '@/lib/preview';
-import type { MetadataRoute } from 'next';
+import { isPreview } from "@/lib/preview";
+import type { MetadataRoute } from "next";
 
-const BASE = 'https://driveexotiq.com';
+const BASE = "https://driveexotiq.com";
 
-// AI answer-engine + search crawlers are explicitly welcomed on public content
-// (this is the AEO play — be citable). /admin and /api are kept out of the index.
 export default function robots(): MetadataRoute.Robots {
-  if (isPreview) return { rules: { userAgent: '*', disallow: '/' } };
+  if (isPreview) return { rules: { userAgent: "*", disallow: "/" } };
 
-  const aiBots = [
-    'GPTBot',
-    'OAI-SearchBot',
-    'ChatGPT-User',
-    'ClaudeBot',
-    'anthropic-ai',
-    'PerplexityBot',
-    'Perplexity-User',
-    'Google-Extended',
-    'Applebot-Extended',
-    'Amazonbot',
-    'Bytespider',
-    'CCBot',
+  // Search and user-requested retrieval agents get the same public-only scope
+  // as ordinary search crawlers. Model-training agents are not special-cased.
+  const searchRetrievalBots = [
+    "OAI-SearchBot",
+    "ChatGPT-User",
+    "PerplexityBot",
+    "Perplexity-User",
   ];
+  const publicOnly = { allow: "/", disallow: ["/admin", "/api/"] };
 
   return {
     rules: [
-      { userAgent: '*', allow: '/', disallow: ['/admin', '/api/'] },
-      ...aiBots.map((userAgent) => ({ userAgent, allow: '/' })),
+      { userAgent: "*", ...publicOnly },
+      ...searchRetrievalBots.map((userAgent) => ({
+        userAgent,
+        ...publicOnly,
+      })),
     ],
     sitemap: `${BASE}/sitemap.xml`,
     host: BASE,

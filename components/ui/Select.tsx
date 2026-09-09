@@ -1,5 +1,5 @@
-import { SelectHTMLAttributes, forwardRef } from 'react';
-import { cn } from '@/lib/utils';
+import { SelectHTMLAttributes, forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   error?: string;
@@ -12,9 +12,20 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
  * *:focus-visible outline (no local outline suppression).
  */
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, error, id, 'aria-describedby': ariaDescribedBy, children, ...props }, ref) => {
+  (
+    {
+      className,
+      error,
+      id,
+      "aria-describedby": ariaDescribedBy,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     const errorId = error && id ? `${id}-error` : undefined;
-    const describedBy = [ariaDescribedBy, errorId].filter(Boolean).join(' ') || undefined;
+    const describedBy =
+      [ariaDescribedBy, errorId].filter(Boolean).join(" ") || undefined;
     return (
       <div className="w-full">
         <div className="relative">
@@ -24,10 +35,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             aria-invalid={error ? true : undefined}
             aria-describedby={describedBy}
             className={cn(
-              'w-full appearance-none px-4 py-4 sm:py-3 pr-11 bg-surface text-ink border rounded-sm text-base min-h-[48px] touch-manipulation',
-              'focus:border-gulf transition-colors duration-250 ease-de',
-              error ? 'border-papaya' : 'border-line',
-              className
+              "w-full appearance-none px-4 py-4 sm:py-3 pr-11 bg-surface text-ink border rounded-sm text-base min-h-[48px] touch-manipulation",
+              "focus:border-gulf transition-colors duration-250 ease-de",
+              error ? "border-papaya" : "border-line",
+              className,
             )}
             {...props}
           >
@@ -41,7 +52,11 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             stroke="currentColor"
             strokeWidth={2}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 9l6 6 6-6"
+            />
           </svg>
         </div>
         {error && (
@@ -51,8 +66,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
-Select.displayName = 'Select';
+Select.displayName = "Select";
 export default Select;

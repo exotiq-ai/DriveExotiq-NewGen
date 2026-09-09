@@ -6,9 +6,23 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # Safe default for local/branch builds; production overrides explicitly below.
+  NEXT_PUBLIC_SITE_MODE = "preview"
+
+[context.production.environment]
+  NEXT_PUBLIC_SITE_MODE = "production"
+  NEXT_PUBLIC_SITE_URL = "https://driveexotiq.com"
+  NEXT_PUBLIC_FORM_MODE = "live"
+
+[context.deploy-preview.environment]
+  NEXT_PUBLIC_SITE_MODE = "preview"
+
+[context.branch-deploy.environment]
+  NEXT_PUBLIC_SITE_MODE = "preview"
+
+[context.astra-review.environment]
   NEXT_PUBLIC_SITE_MODE = "preview"
   NEXT_PUBLIC_SITE_URL = "https://astra-review--driveexotiq-astra.netlify.app"
-  # Only optimized, selected Astra media is published by this isolated build.
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -34,9 +48,19 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/astra/*"
+  for = "/media/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/media/v2/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/media/v3/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "*.js"
@@ -47,6 +71,4 @@
   for = "*.css"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-
 

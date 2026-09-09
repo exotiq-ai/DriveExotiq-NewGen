@@ -1,20 +1,20 @@
-import { isPreview } from '@/lib/preview';
-import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { isPreview } from "@/lib/preview";
+import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 // Force dynamic rendering to prevent build-time errors
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // Simple auth check
 function checkAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
+  const authHeader = request.headers.get("authorization");
   const expectedPassword = process.env.ADMIN_PASSWORD;
 
   if (!authHeader || !expectedPassword) {
     return false;
   }
 
-  const providedPassword = authHeader.replace('Bearer ', '');
+  const providedPassword = authHeader.replace("Bearer ", "");
   return providedPassword === expectedPassword;
 }
 
@@ -52,41 +52,44 @@ function parseInstagramUrl(url: string) {
 // GET all Instagram posts
 export async function GET(request: NextRequest) {
   if (isPreview) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   if (!checkAuth(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const supabaseAdmin = getSupabaseAdmin();
     const { data, error } = await supabaseAdmin
-      .from('de_instagram_posts')
-      .select('*')
-      .order('display_order', { ascending: false })
-      .order('created_at', { ascending: false });
+      .from("de_instagram_posts")
+      .select("*")
+      .order("display_order", { ascending: false })
+      .order("created_at", { ascending: false });
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error("Supabase error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ posts: data });
   } catch (error) {
-    console.error('Error fetching Instagram posts:', error);
-    return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
+    console.error("Error fetching Instagram posts:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch posts" },
+      { status: 500 },
+    );
   }
 }
 
 // POST create new Instagram post
 export async function POST(request: NextRequest) {
   if (isPreview) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   if (!checkAuth(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -94,19 +97,25 @@ export async function POST(request: NextRequest) {
     const { post_url, caption } = body;
 
     if (!post_url) {
-      return NextResponse.json({ error: 'Post URL is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Post URL is required" },
+        { status: 400 },
+      );
     }
 
     // Parse Instagram URL
     const { postId, embedUrl } = parseInstagramUrl(post_url);
 
     if (!postId) {
-      return NextResponse.json({ error: 'Invalid Instagram URL' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid Instagram URL" },
+        { status: 400 },
+      );
     }
 
     const supabaseAdmin = getSupabaseAdmin();
     const { data, error } = await supabaseAdmin
-      .from('de_instagram_posts')
+      .from("de_instagram_posts")
       .insert({
         post_url,
         image_url: embedUrl,
@@ -118,25 +127,28 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error("Supabase error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ post: data });
   } catch (error) {
-    console.error('Error creating Instagram post:', error);
-    return NextResponse.json({ error: 'Failed to create post' }, { status: 500 });
+    console.error("Error creating Instagram post:", error);
+    return NextResponse.json(
+      { error: "Failed to create post" },
+      { status: 500 },
+    );
   }
 }
 
 // PATCH update Instagram post
 export async function PATCH(request: NextRequest) {
   if (isPreview) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   if (!checkAuth(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -144,74 +156,82 @@ export async function PATCH(request: NextRequest) {
     const { id, is_active, display_order, caption } = body;
 
     if (!id) {
-      return NextResponse.json({ error: 'Post ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Post ID is required" },
+        { status: 400 },
+      );
     }
 
     const updates: any = {
       updated_at: new Date().toISOString(),
     };
 
-    if (typeof is_active !== 'undefined') updates.is_active = is_active;
-    if (typeof display_order !== 'undefined') updates.display_order = display_order;
-    if (typeof caption !== 'undefined') updates.caption = caption;
+    if (typeof is_active !== "undefined") updates.is_active = is_active;
+    if (typeof display_order !== "undefined")
+      updates.display_order = display_order;
+    if (typeof caption !== "undefined") updates.caption = caption;
 
     const supabaseAdmin = getSupabaseAdmin();
     const { data, error } = await supabaseAdmin
-      .from('de_instagram_posts')
+      .from("de_instagram_posts")
       .update(updates)
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error("Supabase error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ post: data });
   } catch (error) {
-    console.error('Error updating Instagram post:', error);
-    return NextResponse.json({ error: 'Failed to update post' }, { status: 500 });
+    console.error("Error updating Instagram post:", error);
+    return NextResponse.json(
+      { error: "Failed to update post" },
+      { status: 500 },
+    );
   }
 }
 
 // DELETE Instagram post
 export async function DELETE(request: NextRequest) {
   if (isPreview) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   if (!checkAuth(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json({ error: 'Post ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Post ID is required" },
+        { status: 400 },
+      );
     }
 
     const supabaseAdmin = getSupabaseAdmin();
     const { error } = await supabaseAdmin
-      .from('de_instagram_posts')
+      .from("de_instagram_posts")
       .delete()
-      .eq('id', id);
+      .eq("id", id);
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error("Supabase error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting Instagram post:', error);
-    return NextResponse.json({ error: 'Failed to delete post' }, { status: 500 });
+    console.error("Error deleting Instagram post:", error);
+    return NextResponse.json(
+      { error: "Failed to delete post" },
+      { status: 500 },
+    );
   }
 }
-
-
-
-
-

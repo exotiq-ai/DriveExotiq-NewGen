@@ -1,9 +1,9 @@
-import { isPreview } from '@/lib/preview';
-import { NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase-admin';
-import { bookingLeadSchema } from '@/lib/validations';
+import { isFormPreview } from "@/lib/preview";
+import { NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { bookingLeadSchema } from "@/lib/validations";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
@@ -13,25 +13,35 @@ export async function POST(request: Request) {
     const parsed = bookingLeadSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Invalid form data', details: parsed.error.flatten().fieldErrors },
-        { status: 400 }
+        {
+          error: "Invalid form data",
+          details: parsed.error.flatten().fieldErrors,
+        },
+        { status: 400 },
       );
     }
 
     // Validate the preview exercise, without storing a record or contacting providers.
-    if (isPreview) {
+    if (isFormPreview) {
       return NextResponse.json(
         { success: true, preview: true, lead: null },
-        { status: 201 }
+        { status: 201 },
       );
     }
 
-    const { firstName, lastName, email, phone, smsTransactionalConsent, smsMarketingConsent } = parsed.data;
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      smsTransactionalConsent,
+      smsMarketingConsent,
+    } = parsed.data;
 
-    const userAgent = request.headers.get('user-agent') || null;
-    const forwardedFor = request.headers.get('x-forwarded-for');
-    const ipAddress = forwardedFor?.split(',')[0]?.trim() || null;
-    const referer = request.headers.get('referer') || null;
+    const userAgent = request.headers.get("user-agent") || null;
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const ipAddress = forwardedFor?.split(",")[0]?.trim() || null;
+    const referer = request.headers.get("referer") || null;
 
     const utmSource = body.utm_source || null;
     const utmMedium = body.utm_medium || null;
@@ -42,15 +52,15 @@ export async function POST(request: Request) {
     const supabase = getSupabaseAdmin();
 
     const { data, error } = await supabase
-      .from('de_booking_leads')
+      .from("de_booking_leads")
       .insert([
         {
           first_name: firstName,
           last_name: lastName,
           email: email.toLowerCase().trim(),
           phone,
-          status: 'lead',
-          location: body.location || 'phoenix',
+          status: "lead",
+          location: body.location || "phoenix",
           fleet_slug: fleetSlug,
           source_page: body.source_page || referer,
           session_id: body.session_id || null,
@@ -62,34 +72,31 @@ export async function POST(request: Request) {
           referrer_url: referer,
           sms_transactional_consent: smsTransactionalConsent || false,
           sms_marketing_consent: smsMarketingConsent || false,
-          consent_timestamp: (smsTransactionalConsent || smsMarketingConsent)
-            ? new Date().toISOString()
-            : null,
-          consent_ip: (smsTransactionalConsent || smsMarketingConsent)
-            ? ipAddress
-            : null,
+          consent_timestamp:
+            smsTransactionalConsent || smsMarketingConsent
+              ? new Date().toISOString()
+              : null,
+          consent_ip:
+            smsTransactionalConsent || smsMarketingConsent ? ipAddress : null,
         },
       ])
-      .select('id, first_name, email, status')
+      .select("id, first_name, email, status")
       .single();
 
     if (error) {
-      console.error('Supabase insert error:', error);
+      console.error("Supabase insert error:", error);
       return NextResponse.json(
-        { error: 'Failed to save booking lead' },
-        { status: 500 }
+        { error: "Failed to save booking lead" },
+        { status: 500 },
       );
     }
 
-    return NextResponse.json(
-      { success: true, lead: data },
-      { status: 201 }
-    );
+    return NextResponse.json({ success: true, lead: data }, { status: 201 });
   } catch (error) {
-    console.error('Booking lead API error:', error);
+    console.error("Booking lead API error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

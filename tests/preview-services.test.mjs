@@ -21,6 +21,12 @@ after(() => {
   assert.deepEqual(outbound, [], 'Preview must never attempt provider network access');
 });
 
+test('default preview form status is explicitly non-converting', async () => {
+  const { isFormPreview, formSubmissionStatus } = await import('../lib/preview.ts');
+  assert.equal(isFormPreview, true);
+  assert.equal(formSubmissionStatus, 'preview');
+});
+
 const fixtures = [
   ['applications', 'application', {
     fullName: 'Preview Driver', email: 'preview@example.com', phone: '5555550100',

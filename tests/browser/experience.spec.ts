@@ -13,6 +13,9 @@ test('garage selection changes the visible car and keeps one tab selected', asyn
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.getByRole('tab', { name: /Porsche/ }).click();
   await expect(page.getByRole('tabpanel')).toContainText('911 GT3 RS');
+  const porsche = page.locator('[data-car="porsche"] img');
+  await expect(porsche).toHaveAttribute('src', /\/media\/v3\/porsche-oak-green\.webp/);
+  await expect.poll(() => porsche.evaluate((image) => getComputedStyle(image).objectFit)).toBe('contain');
   await expect(page.getByRole('tab', { selected: true })).toHaveCount(1);
   await page.getByRole('tab', { name: /Ferrari/ }).focus();
   await page.keyboard.press('Enter');

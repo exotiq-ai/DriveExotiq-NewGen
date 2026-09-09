@@ -1,10 +1,10 @@
-import { isPreview } from '@/lib/preview';
-import { NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase-admin';
-import { sponsorInquirySchema } from '@/lib/sponsor';
-import { sendSponsorEmails } from '@/lib/email-send';
+import { isFormPreview } from "@/lib/preview";
+import { NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { sponsorInquirySchema } from "@/lib/sponsor";
+import { sendSponsorEmails } from "@/lib/email-send";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
@@ -12,33 +12,39 @@ export async function POST(request: Request) {
 
     // Honeypot: a real user never fills the hidden `website` field. Silently
     // accept (so bots don't learn) but do nothing — no insert, no email.
-    if (typeof body?.website === 'string' && body.website.trim() !== '') {
-      return NextResponse.json({ success: true, ...(isPreview ? { preview: true } : {}) }, { status: 201 });
+    if (typeof body?.website === "string" && body.website.trim() !== "") {
+      return NextResponse.json(
+        { success: true, ...(isFormPreview ? { preview: true } : {}) },
+        { status: 201 },
+      );
     }
 
     const parsed = sponsorInquirySchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Invalid form data', details: parsed.error.flatten().fieldErrors },
-        { status: 400 }
+        {
+          error: "Invalid form data",
+          details: parsed.error.flatten().fieldErrors,
+        },
+        { status: 400 },
       );
     }
     // Validate the preview exercise, without storing a record or contacting providers.
-    if (isPreview) {
+    if (isFormPreview) {
       return NextResponse.json(
         { success: true, preview: true, inquiry: null },
-        { status: 201 }
+        { status: 201 },
       );
     }
 
     const data = parsed.data;
 
     const ipAddress =
-      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null;
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null;
 
     const supabase = getSupabaseAdmin();
     const { data: inserted, error } = await supabase
-      .from('de_sponsor_inquiries')
+      .from("de_sponsor_inquiries")
       .insert([
         {
           name: data.name,
@@ -51,12 +57,15 @@ export async function POST(request: Request) {
           consent_ip: ipAddress,
         },
       ])
-      .select('id, name, email, created_at')
+      .select("id, name, email, created_at")
       .single();
 
     if (error) {
-      console.error('Supabase sponsor insert error:', error);
-      return NextResponse.json({ error: 'Failed to save inquiry' }, { status: 500 });
+      console.error("Supabase sponsor insert error:", error);
+      return NextResponse.json(
+        { error: "Failed to save inquiry" },
+        { status: 500 },
+      );
     }
 
     // Inquirer confirmation + admin notice (lib/email-send: failures are
@@ -71,9 +80,15 @@ export async function POST(request: Request) {
       message: data.message || null,
     });
 
-    return NextResponse.json({ success: true, inquiry: inserted }, { status: 201 });
+    return NextResponse.json(
+      { success: true, inquiry: inserted },
+      { status: 201 },
+    );
   } catch (error) {
-    console.error('Sponsor inquiry API error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error("Sponsor inquiry API error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

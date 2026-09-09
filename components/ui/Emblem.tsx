@@ -7,7 +7,10 @@ interface EmblemProps {
  * The official Drive Exotiq emblem (the wing "D" mark). Inline SVG, fills with
  * currentColor. Do NOT redraw the mark — this path is the source of truth.
  */
-export default function Emblem({ className = '', title = 'Drive Exotiq' }: EmblemProps) {
+export default function Emblem({
+  className = "",
+  title = "Drive Exotiq",
+}: EmblemProps) {
   return (
     <svg
       className={className}
