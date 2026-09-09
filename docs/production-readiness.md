@@ -46,3 +46,18 @@ Deployment `6aa09834440120311ed4ba54` is live at https://astra-review--driveexot
 - Evidence: `output/playwright/launch/cloudflare-browser.json`, `cloudflare-rum-verified.json`, `posthog-settings-api.json`, `posthog-dashboard-api.json`, `posthog-ingestion-api.json` and `integrations-unit.log`.
 
 API integration review deploy: `6aa09fb8fe1b94260b7ab5cd`. Hosted homepage/policy checks passed: preview remains noindex, Cloudflare beacon absent, updated disclosures present. Production cutover remains unperformed.
+
+## Production launch — September 8, 2026
+
+The user authorized committing and launching the release. Release commit `c504ef1` was deployed using explicit `--prod --context production` to the existing `driveexotiq-newgen` site.
+
+- Live URL: https://driveexotiq.com
+- Production deploy: `6aa0a50544012081edd4baa0`
+- Rollback deploy: `6a628078af147a00085c1073`
+- Fresh unit suite: 73 passed. Netlify production build passed.
+- Live checks passed for all 15 public sitemap pages, production canonicals/indexability, robots search-crawler access, llms, new hero/Porsche assets and Cloudflare production bootstrap.
+- Nine hosted form interface journeys passed across desktop Chromium, Pixel Chromium and iPhone WebKit, with all form POSTs intercepted. No new leads or emails were created. An initial WebKit run reported two transient prefetch access errors during navigation; a complete rerun passed with zero page errors.
+- Cloudflare adds managed training-bot restrictions to robots.txt; Googlebot, Bingbot, OAI-SearchBot, ChatGPT-User and PerplexityBot retain homepage access.
+- Evidence: `output/playwright/launch/production-deploy.log`, `live-http.json`, `live-production-browser.json`, `live-browser.log`.
+
+Earlier statements above that production was unchanged describe prelaunch checkpoints. Physical-device certification, Search Console/Bing ownership submission, optional admin password setup, and confirmation of accumulated Cloudflare field data remain follow-up work.
