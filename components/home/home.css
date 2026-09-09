@@ -316,11 +316,22 @@
   line-height: 1.1;
   margin-top: 27px;
 }
-.home-garage-heading > p {
+.home-garage-intro {
+  max-width: 440px;
+  margin-left: 40px;
   color: #aaaead;
-  font-size: 14px;
-  line-height: 1.65;
-  padding-bottom: 8px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.home-garage-intro .home-garage-promise {
+  color: #f0ede6;
+  font-size: 21px;
+  margin-bottom: 12px;
+}
+.home-garage-intro .home-garage-wink {
+  margin-top: 14px;
+  color: #c4ad8b;
+  font-style: italic;
 }
 .home-garage-tabs {
   display: grid;
@@ -1247,9 +1258,23 @@
   width: 100%;
   height: 100%;
 }
+.garage-study-layer[data-car="porsche"] {
+  overflow: hidden;
+}
 .garage-study-layer[data-car="porsche"] img {
   object-fit: contain;
   object-position: 50% 50%;
+  transform: scale(1.16);
+  filter: contrast(1.06) saturate(1.08);
+}
+.garage-study-layer[data-car="porsche"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 72% 30%, #d5a56420, transparent 55%),
+    linear-gradient(0deg, #080c0c50, transparent 30%);
 }
 .garage-study-layer.has-failed {
   opacity: 0 !important;
@@ -2937,5 +2962,31 @@
   }
   .home-full-film {
     max-height: 58svh;
+  }
+}
+
+/* Keep the marketplace story visible alongside the compact car cards. */
+@media (max-width: 900px) {
+  .home-garage-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .home-garage-intro {
+    margin-left: 0;
+    max-width: 560px;
+    font-size: 14px;
+  }
+  .home-garage-intro .home-garage-promise {
+    font-size: 19px;
+  }
+  .garage-study .garage-study-layer[data-car="porsche"] img {
+    object-position: 50% 50%;
+    transform: scale(1.2);
+  }
+}
+@media (max-width: 767px) {
+  .garage-study .home-car-1 .garage-study-images {
+    aspect-ratio: 1.5;
   }
 }

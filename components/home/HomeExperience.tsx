@@ -161,28 +161,23 @@ export default function HomeExperience() {
                 Pick your <em>pulse.</em>
               </h2>
             </div>
-            <p>
-              Different personalities.
-              <br />
-              One shared language.
-            </p>
+            <div className="home-garage-intro">
+              <p className="home-garage-promise">Find your kind of extraordinary.</p>
+              <p>
+                From luxury cruisers to exotics and supercars, exotiq.rent is
+                being built to bring dozens of makes and models together from
+                carefully vetted rental agencies.
+              </p>
+              <p className="home-garage-wink">Your mom’s minivan can sit this one out.</p>
+            </div>
           </div>
           <HomeGarage />
           <div className="home-garage-foot site-wrap">
-            <p>
-              <span className="home-status-dot" />
-              <span className="home-rent-intro">
-                The next chapter: exotic car rentals.
-              </span>
-              <span className="home-coming-soon">
-                <span className="home-rent-wide">Marketplace coming soon.</span>
-                <span className="home-rent-compact">
-                  Exotiq.rent — coming soon.
-                </span>
-              </span>
+            <p className="home-garage-disclaimer">
+              Illustrative lineup. Launch vehicles, locations and availability will vary.
             </p>
             <Link href="/marketplace" className="site-text-link">
-              Discover exotiq.rent <Arrow diagonal />
+              Explore the upcoming marketplace <Arrow diagonal />
             </Link>
           </div>
         </section>

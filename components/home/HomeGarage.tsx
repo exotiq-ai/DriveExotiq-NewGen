@@ -174,7 +174,7 @@ export default function HomeGarage() {
             </div>
           </div>
           <span className="garage-study-caption">
-            Three machines. Three ways to feel alive.
+            A taste of what’s to come. Illustrative vehicles.
           </span>
           <span className="garage-study-scroll" aria-hidden="true">
             {cinematic ? "Keep scrolling" : "Choose your study"}{" "}
