@@ -8,7 +8,6 @@ process.env.NEXT_PUBLIC_SITE_MODE = 'preview';
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'invalid-preview-provider-url';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'preview-test-only';
 process.env.RESEND_API_KEY = 'preview-test-only';
-process.env.PLAUSIBLE_API_KEY = 'preview-test-only';
 process.env.ADMIN_PASSWORD = 'preview-test-only';
 const originalFetch = globalThis.fetch;
 const outbound = [];
@@ -84,13 +83,6 @@ test('preview robots excludes every crawler and advertises no production sitemap
 test('preview sitemap exposes no production URLs', async () => {
   const { default: sitemap } = await import('../app/sitemap.ts');
   assert.deepEqual(sitemap(), []);
-});
-
-test('scheduled digest skips analytics and email even with credentials configured', async () => {
-  const { default: digest } = await import('../netlify/functions/analytics-digest.mts');
-  const response = await digest();
-  assert.equal(response.status, 200);
-  assert.equal(await response.text(), 'skipped: preview');
 });
 
 test('preview middleware marks documents, API, metadata, assets, and errors noindex', async () => {

@@ -62,10 +62,9 @@ export default function CookiesPage() {
 
       <h3>Cookieless Aggregate Reporting</h3>
       <p>
-        Plausible provides aggregate site statistics separately from PostHog.
         When configured, Cloudflare Web Analytics reports aggregate page-load
-        performance and Core Web Vitals on the public production domain. These
-        services do not set analytics cookies and run separately from the
+        performance and Core Web Vitals on the public production domain. This
+        service does not set analytics cookies and runs separately from the
         PostHog consent choice. Cloudflare reporting does not provide session
         replay; automatic tracking of client-side page changes is disabled.
       </p>

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import "./globals.css";
 import "./styles/site.css";
 import AnalyticsListener from "@/components/AnalyticsListener";
@@ -159,26 +158,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }}
         />
-        {/* Plausible — privacy-first, cookieless (no consent gate). Prod only so
-            local/preview traffic never pollutes stats. This is the account's
-            site-keyed tracker from the dashboard (2026-07-07 signup) — the
-            pa-*.js URL is generated for driveexotiq.com, so no data-domain
-            attribute. The inline shim is Plausible's own: it queues pageviews
-            AND custom events (CTA / Film Depth / Signup via lib/analytics.ts)
-            fired before the script loads; outboundLinks kept from the old
-            script.outbound-links.js setup. Goals live in the dashboard. */}
-        {process.env.NODE_ENV === "production" && !isPreview && (
-          <>
-            <Script id="plausible-shim" strategy="beforeInteractive">
-              {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init({outboundLinks:true})`}
-            </Script>
-            <Script
-              async
-              src="https://plausible.io/js/pa-T2DyFOm6ZJ33t6XEg4dFa.js"
-              strategy="afterInteractive"
-            />
-          </>
-        )}
         <CloudflareAnalytics />
         <AnalyticsListener />
         {children}

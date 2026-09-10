@@ -37,9 +37,7 @@ export default function PrivacyPage() {
       <p>
         Technical information can include IP address, browser/device information
         and pages viewed. We also store your cookie choices in browser local
-        storage. Cookieless Plausible reporting provides aggregate site
-        statistics on the production site. When configured, Cloudflare Web
-        Analytics separately reports aggregate page-load performance and Core
+        storage. When configured, Cloudflare Web Analytics reports aggregate page-load performance and Core
         Web Vitals on the public production domain, without analytics cookies
         or session replay.
       </p>

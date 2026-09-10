@@ -74,7 +74,7 @@ export default function AnalyticsListener() {
       for (const q of [25, 50, 75, 100]) {
         if (pct >= q && !fired.has(q)) {
           fired.add(q);
-          // Keep the existing Plausible homepage goal name during migration.
+          // Preserve the homepage depth event used by the conversion dashboard.
           track(pathname === "/" ? "Film Depth" : "Page Depth", { depth: q });
         }
       }

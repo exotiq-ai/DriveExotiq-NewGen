@@ -1,5 +1,4 @@
-// Existing cookieless Plausible reporting is preserved. PostHog is separately
-// enabled only after analytics consent, configuration and initial-page work.
+// PostHog runs after analytics consent; Meta uses separate marketing consent.
 
 import { trackMetaLead } from '@/lib/meta-pixel';
 import { isPreview } from '@/lib/preview';
@@ -35,17 +34,10 @@ export function stopAnalytics() {
   posthog.stop();
 }
 
-declare global {
-  interface Window {
-    plausible?: (event: string, options?: { props?: Record<string, string | number> }) => void;
-  }
-}
-
 /** Public call sites pass bounded event categories; unknown data is dropped. */
 export function track(event: string, props?: Record<string, string | number>) {
   if (typeof window === 'undefined' || analyticsAdminPath(window.location.pathname) || !analyticsEvents.has(event)) return;
   const safe = safeAnalyticsProps(props);
-  if (!isPreview) window.plausible?.(event, props ? { props: safe } : undefined);
   posthog.capture(event, safe);
   if (event === "Signup") void trackMetaLead(safe);
 }
