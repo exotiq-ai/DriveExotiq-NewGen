@@ -47,7 +47,9 @@ export default function PrivacyPage() {
         clicks, form completion, heatmaps and masked session replay. Form inputs
         and page text are masked; our analytics events exclude names, email
         addresses, phone numbers and free-text responses. PostHog uses an
-        in-memory identifier for this visit. Change your choice through Cookie
+        in-memory identifier for this visit. Approved campaign labels help us
+        connect referral visits with completed forms; these labels stay in tab
+        storage for up to 30 minutes after analytics consent. Change your choice through Cookie
         Settings in the footer.
       </p>
 

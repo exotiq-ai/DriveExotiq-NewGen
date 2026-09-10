@@ -43,6 +43,12 @@ export default function CookiesPage() {
         integration does not set a persistent PostHog cookie. Cookie Settings
         lets you stop future PostHog capture.
       </p>
+      <p>
+        With analytics consent, approved campaign labels (such as Linktree and
+        profile_hub) are kept in this tab for up to 30 minutes to measure which
+        links lead to completed forms. This stores no visitor identifier or
+        form content, and is cleared when analytics consent is withdrawn.
+      </p>
       <table>
         <thead>
           <tr>
@@ -56,6 +62,11 @@ export default function CookiesPage() {
             <td>PostHog in-memory identifier</td>
             <td>Connects consented interactions within a visit</td>
             <td>Current page session; cleared on withdrawal</td>
+          </tr>
+          <tr>
+            <td>driveexotiq_campaign_v1 (session storage)</td>
+            <td>Approved source, medium, campaign and audience labels</td>
+            <td>Up to 30 minutes in this tab; cleared on withdrawal</td>
           </tr>
         </tbody>
       </table>

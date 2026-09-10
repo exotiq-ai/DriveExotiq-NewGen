@@ -109,6 +109,27 @@ test('acquisition uses fixed channel categories without transmitting raw UTMs or
   assert.equal(JSON.stringify(view).includes('person@example.com'), false);
 });
 
+test('Linktree campaign follows pageview, form start and stored success, but never bypasses consent', async () => {
+  const f = fixture();
+  f.state.pathname = '/';
+  f.state.search = '?utm_source=linktree&utm_medium=referral&utm_campaign=profile_hub&utm_content=drivers';
+  await f.runtime.sync(); assert.equal(f.calls.length, 0);
+  f.state.consent = true; await f.runtime.sync();
+  f.state.pathname = '/apply'; f.state.search = ''; await f.runtime.sync();
+  f.runtime.capture('Form Start', { form: 'apply' });
+  f.runtime.capture('Signup', { form: 'apply', status: 'stored' });
+  const events = f.calls.filter(c => c[0] === 'event').map(c => c[1]);
+  for (const e of events) {
+    assert.equal(e.properties.utm_source, 'linktree');
+    assert.equal(e.properties.utm_campaign, 'profile_hub');
+    assert.equal(e.properties.utm_content, 'drivers');
+    assert.equal(e.properties.acquisition_channel, 'referral');
+  }
+  f.state.consent = false; await f.runtime.sync();
+  f.state.consent = true; await f.runtime.sync();
+  assert.equal(f.calls.filter(c => c[0] === 'event').at(-1)[1].properties.utm_source, undefined);
+});
+
 test('malformed heatmap points cannot throw or leak arbitrary numeric properties', async () => {
   const f = fixture(); f.state.consent = true; await f.runtime.sync();
   const event = f.options().before_send({ event: '$$heatmap', properties: { $heatmap_data: {

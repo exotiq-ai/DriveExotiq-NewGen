@@ -1,5 +1,6 @@
 import type { PostHog, PostHogConfig, CaptureResult } from "posthog-js";
 import { analyticsAdminPath, analyticsEvents, analyticsPath, safeAnalyticsProps } from "@/lib/analytics-privacy";
+import { createCampaignAttribution } from "@/lib/analytics-attribution";
 
 type Config = { key: string; host: string; environment: "production" | "preview" };
 type State = { consent: boolean; ready: boolean; pathname: string; origin: string; search?: string; referrer?: string };
@@ -10,6 +11,8 @@ function acquisitionChannel(state: State) {
   if (["cpc", "ppc", "paid", "paid_social"].includes(medium || "")) return "paid";
   if (medium === "email") return "email";
   if (["social", "organic_social"].includes(medium || "")) return "social";
+  if (medium === "referral") return "referral";
+  if (medium === "qr") return "qr";
   try {
     const referrer = new URL(state.referrer || "");
     if (referrer.origin === state.origin) return "internal";
@@ -34,6 +37,7 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
   let lastPage: string | undefined;
   let loadFailed = false;
   let channel = "direct";
+  const campaign = createCampaignAttribution();
   const eligible = () => Boolean(config && state().ready && state().consent && !analyticsAdminPath(state().pathname));
   const safeUrl = (raw: string) => {
     try {
@@ -47,7 +51,7 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
     const raw = event.properties || {};
     const currentUrl = typeof raw.$current_url === "string" && safeUrl(raw.$current_url) || `${state().origin}${analyticsPath(state().pathname)}`;
     const properties: Record<string, unknown> = {
-      ...safeAnalyticsProps(raw), environment: config!.environment, acquisition_channel: channel,
+      ...safeAnalyticsProps(raw), ...campaign.properties(), environment: config!.environment, acquisition_channel: channel,
       // Required SDK ingestion metadata, sourced from config rather than event input.
       token: config!.key,
       $process_person_profile: false,
@@ -156,7 +160,11 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
   };
   return {
     async sync() {
-      if (!eligible()) { stop(); return; }
+      if (!eligible()) {
+        if (!state().consent) campaign.clear();
+        stop(); return;
+      }
+      const tags = campaign.capture(state().search);
       if (loadFailed) return;
       if (!client) {
         if (!pending) pending = (async () => {
@@ -172,7 +180,7 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
       }
       if (!eligible() || !client) return;
       if (!active) {
-        channel = acquisitionChannel(state());
+        channel = acquisitionChannel({ ...state(), search: tags.utm_medium ? new URLSearchParams(tags).toString() : state().search });
         active = true;
         client.set_config({ capture_heatmaps: true, autocapture: options.autocapture, capture_pageleave: true });
         client.opt_in_capturing({ captureEventName: false });
