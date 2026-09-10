@@ -1,8 +1,9 @@
-export type CookieCategory = 'functional' | 'analytics';
+export type CookieCategory = 'functional' | 'analytics' | 'marketing';
 
 export interface CookiePreferences {
   functional: boolean;
   analytics: boolean;
+  marketing?: boolean;
   timestamp: string;
 }
 
@@ -15,7 +16,7 @@ export function getConsentPreferences(): CookiePreferences | null {
     if (!stored) return null;
     const prefs = JSON.parse(stored);
     if (!prefs || typeof prefs.functional !== 'boolean' || typeof prefs.analytics !== 'boolean' || typeof prefs.timestamp !== 'string') return null;
-    return prefs as CookiePreferences;
+    return { ...prefs, marketing: prefs.marketing === true } as CookiePreferences;
   } catch {
     return null;
   }
@@ -25,6 +26,7 @@ export function setConsentPreferences(prefs: Omit<CookiePreferences, 'timestamp'
   if (typeof window === 'undefined') return;
   const full: CookiePreferences = {
     ...prefs,
+    marketing: prefs.marketing === true,
     timestamp: new Date().toISOString(),
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(full));
@@ -32,11 +34,11 @@ export function setConsentPreferences(prefs: Omit<CookiePreferences, 'timestamp'
 }
 
 export function acceptAll(): void {
-  setConsentPreferences({ functional: true, analytics: true });
+  setConsentPreferences({ functional: true, analytics: true, marketing: true });
 }
 
 export function rejectNonEssential(): void {
-  setConsentPreferences({ functional: false, analytics: false });
+  setConsentPreferences({ functional: false, analytics: false, marketing: false });
 }
 
 export function hasConsented(): boolean {

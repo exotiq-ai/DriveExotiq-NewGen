@@ -13,7 +13,7 @@ export default function CookiesPage() {
     <LegalLayout
       title="Cookie Policy"
       subtitle="Cookies and Browser Storage on driveexotiq.com"
-      lastUpdated="September 8, 2026"
+      lastUpdated="September 10, 2026"
     >
       <p>
         This Cookie Policy explains how Drive Exotiq uses cookies and browser storage on
@@ -25,7 +25,7 @@ export default function CookiesPage() {
       <h3>Cookie Choices</h3>
       <p>
         Your choices are saved in your browser&rsquo;s local storage under
-        driveexotiq_cookie_consent. This stores your functional and analytics
+        driveexotiq_cookie_consent. This stores your functional, analytics and marketing
         preferences and the time you saved them. It has no automatic expiry;
         clearing your browser&rsquo;s site data removes it.
       </p>
@@ -70,10 +70,21 @@ export default function CookiesPage() {
         replay; automatic tracking of client-side page changes is disabled.
       </p>
 
-      <h3>Cookies We Do Not Use</h3>
+      <h3>Marketing (requires separate consent)</h3>
       <p>
-        No advertising, cross-site tracking, social media tracking, retargeting,
-        or ad network cookies. We do not serve ads.
+        If you enable marketing cookies, Meta Pixel records page views and
+        successful applications, waitlist entries and partnership inquiries to
+        measure advertising performance and potentially support personalized
+        ads on Meta services. Meta may receive page URLs, browser and device
+        information, IP address and advertising identifiers, and may set cookies
+        such as _fbp and _fbc. We do not send your form-field values as Pixel
+        event parameters.
+      </p>
+      <p>
+        Existing analytics choices do not enable marketing. Change this choice
+        in Cookie Settings; withdrawing marketing consent stops future Pixel
+        events from this integration. It does not delete data already received
+        by Meta. You can remove existing cookies through your browser settings.
       </p>
 
       <h2>Article II: Your Choices</h2>
@@ -85,8 +96,8 @@ export default function CookiesPage() {
 
       <h2>Article III: State Disclosures</h2>
       <p>
-        California: CCPA/CPRA rights apply, we don&rsquo;t sell cookie data.
-        Colorado, Virginia, Connecticut: no targeted advertising cookies.
+        You can decline analytics and marketing independently in Cookie Settings.
+        For privacy rights and contact details, see our Privacy Policy.
         EEA/UK: non-essential cookies placed only with consent.
       </p>
 

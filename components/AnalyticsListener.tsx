@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { syncMetaPixel, stopMetaPixel } from "@/lib/meta-pixel";
 import { track, syncAnalytics, stopAnalytics } from "@/lib/analytics";
 
 /** Consent-aware PostHog lifecycle, safe CTA delegation and actual page depth. */
@@ -11,12 +12,12 @@ export default function AnalyticsListener() {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
     let idle: number | undefined;
-    const sync = () => { void syncAnalytics(); };
+    const sync = () => { void syncAnalytics(); void syncMetaPixel(); };
     const afterLoad = () => {
       if ("requestIdleCallback" in window) {
-        idle = window.requestIdleCallback(() => { void syncAnalytics(true); }, { timeout: 3000 });
+        idle = window.requestIdleCallback(() => { void syncAnalytics(true); void syncMetaPixel(); }, { timeout: 3000 });
       } else {
-        timer = setTimeout(() => { void syncAnalytics(true); }, 1000);
+        timer = setTimeout(() => { void syncAnalytics(true); void syncMetaPixel(); }, 1000);
       }
     };
     window.addEventListener("cookie-consent-changed", sync);
@@ -30,10 +31,11 @@ export default function AnalyticsListener() {
       if (timer !== undefined) clearTimeout(timer);
       if (idle !== undefined) window.cancelIdleCallback(idle);
       stopAnalytics();
+      stopMetaPixel();
     };
   }, []);
 
-  useEffect(() => { void syncAnalytics(); }, [pathname]);
+  useEffect(() => { void syncAnalytics(); void syncMetaPixel(); }, [pathname]);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {

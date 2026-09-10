@@ -13,7 +13,7 @@ export default function PrivacyPage() {
     <LegalLayout
       title="Privacy Policy"
       subtitle="How Drive Exotiq Collects, Uses, and Protects Your Information"
-      lastUpdated="September 8, 2026"
+      lastUpdated="September 10, 2026"
     >
       <p>
         Exotiq Inc., doing business as Drive Exotiq (&ldquo;Drive Exotiq,&rdquo;
@@ -59,6 +59,17 @@ export default function PrivacyPage() {
         timestamp and IP address when SMS consent is provided.
       </p>
 
+      <p>
+        With separate marketing consent, Meta Pixel receives page views and
+        confirmed inquiry events for advertising measurement and potentially
+        personalized ads. Meta may collect page URLs, IP address, browser and
+        device information and advertising identifiers. We do not include form
+        answers, email addresses or phone numbers in Pixel event parameters.
+        Marketing is off unless you enable it in Cookie Settings; you can
+        withdraw that choice there at any time. We also keep the Pixel off when
+        your browser sends Global Privacy Control.
+      </p>
+
       <h2>Article II: How We Use Your Information</h2>
       <p>
         To review applications, manage waitlist interest, respond to partnership
@@ -80,6 +91,11 @@ export default function PrivacyPage() {
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>Meta</td>
+            <td>Consented advertising measurement</td>
+            <td>Page views, confirmed inquiry categories and browser/advertising identifiers</td>
+          </tr>
           <tr>
             <td>Cloudflare Web Analytics</td>
             <td>Cookieless page-load and performance reporting</td>

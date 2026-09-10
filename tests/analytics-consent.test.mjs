@@ -26,3 +26,13 @@ test('configured preview offers consent while disabled preview and existing choi
   assert.equal(consent.shouldPromptConsent(true, true, true), false);
   assert.equal(consent.shouldPromptConsent(false, false, false), true);
 });
+
+
+test('legacy analytics choices and malformed marketing values cannot grant marketing consent', () => {
+  globalThis.window = {};
+  for (const marketing of [undefined, 'yes', 1, false]) {
+    globalThis.localStorage = { getItem: () => JSON.stringify({ analytics: true, functional: true, timestamp: '2026-09-08', marketing }) };
+    assert.equal(consent.getConsentPreferences().marketing, false);
+  }
+  delete globalThis.window; delete globalThis.localStorage;
+});

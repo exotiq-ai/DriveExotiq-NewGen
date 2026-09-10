@@ -49,6 +49,7 @@ export default function CookieConsent() {
   const [expanded, setExpanded] = useState(false);
   const [functional, setFunctional] = useState(false);
   const [analytics, setAnalytics] = useState(false);
+  const [marketing, setMarketing] = useState(false);
   const pathname = usePathname();
   const isMobile = useIsMobile();
   // The film is the home page — hold the consent bar until scroll intent there.
@@ -87,6 +88,7 @@ export default function CookieConsent() {
       if (prefs) {
         setFunctional(prefs.functional);
         setAnalytics(prefs.analytics);
+        setMarketing(prefs.marketing === true);
       }
       setExpanded(true);
       setVisible(true);
@@ -110,7 +112,7 @@ export default function CookieConsent() {
     dismiss();
   };
   const handleSavePreferences = () => {
-    setConsentPreferences({ functional, analytics });
+    setConsentPreferences({ functional, analytics, marketing });
     dismiss();
   };
 
@@ -182,6 +184,16 @@ export default function CookieConsent() {
         />
       </div>
 
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-ink">Marketing</p>
+          <p className="text-xs text-ink-3">
+            Meta Pixel measures ad performance and may support personalized ads.
+          </p>
+        </div>
+        <Toggle on={marketing} onClick={() => setMarketing(!marketing)} label="Marketing cookies" />
+      </div>
+
       <div className="flex justify-end gap-2 pt-1">
         {slim && (
           <button
@@ -219,7 +231,7 @@ export default function CookieConsent() {
                 href="/cookies"
                 className="min-w-0 flex-1 truncate text-xs text-ink-2 underline decoration-line-2 underline-offset-2 transition-colors hover:decoration-ink-3"
               >
-                We use cookies.
+                Analytics & marketing cookies.
               </Link>
               <button
                 onClick={() => setExpanded(!expanded)}
@@ -250,7 +262,7 @@ export default function CookieConsent() {
         <div className="overflow-hidden rounded-sm border border-line bg-surface">
           <div className="flex flex-col items-start gap-3 px-5 py-4 sm:flex-row sm:items-center">
             <p className="flex-1 text-sm leading-relaxed text-ink-2">
-              We use cookies to improve your experience.{" "}
+              We use cookies for analytics and marketing.{" "}
               <Link
                 href="/cookies"
                 className="text-ink underline decoration-line-2 underline-offset-2 transition-colors hover:decoration-ink-3"
