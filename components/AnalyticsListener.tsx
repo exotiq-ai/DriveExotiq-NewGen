@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { syncGa4, stopGa4 } from "@/lib/ga4";
 import { syncMetaPixel, stopMetaPixel } from "@/lib/meta-pixel";
 import { track, syncAnalytics, stopAnalytics } from "@/lib/analytics";
 
@@ -12,12 +13,12 @@ export default function AnalyticsListener() {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
     let idle: number | undefined;
-    const sync = () => { void syncAnalytics(); void syncMetaPixel(); };
+    const sync = () => { void syncAnalytics(); void syncMetaPixel(); void syncGa4(); };
     const afterLoad = () => {
       if ("requestIdleCallback" in window) {
-        idle = window.requestIdleCallback(() => { void syncAnalytics(true); void syncMetaPixel(); }, { timeout: 3000 });
+        idle = window.requestIdleCallback(() => { void syncAnalytics(true); void syncMetaPixel(); void syncGa4(true); }, { timeout: 3000 });
       } else {
-        timer = setTimeout(() => { void syncAnalytics(true); void syncMetaPixel(); }, 1000);
+        timer = setTimeout(() => { void syncAnalytics(true); void syncMetaPixel(); void syncGa4(true); }, 1000);
       }
     };
     window.addEventListener("cookie-consent-changed", sync);
@@ -32,10 +33,11 @@ export default function AnalyticsListener() {
       if (idle !== undefined) window.cancelIdleCallback(idle);
       stopAnalytics();
       stopMetaPixel();
+      stopGa4();
     };
   }, []);
 
-  useEffect(() => { void syncAnalytics(); void syncMetaPixel(); }, [pathname]);
+  useEffect(() => { void syncAnalytics(); void syncMetaPixel(); void syncGa4(); }, [pathname]);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {

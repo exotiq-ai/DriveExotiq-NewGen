@@ -71,6 +71,24 @@ export default function CookiesPage() {
         </tbody>
       </table>
 
+      <h3>Google Analytics (when enabled, requires analytics consent)</h3>
+      <p>
+        Google Analytics measures page visits and form starts. After a successful
+        form save, our server may send a generate_lead event using the consented
+        browser&rsquo;s Google client and session identifiers and approved campaign
+        labels. We do not send names, emails, phone numbers or free-text responses
+        in these events. Google receives browser connection information such as IP
+        address when its tag loads. Google advertising signals and personalization
+        are disabled in this integration.
+      </p>
+      <p>
+        Google uses first-party _ga and _ga_* cookies for browser and session
+        measurement, configured to expire after 90 days. Withdrawing analytics
+        consent stops future collection by this integration; existing cookies can
+        be removed through your browser settings. Data already sent is not deleted
+        by changing the consent choice.
+      </p>
+
       <h3>Cookieless Aggregate Reporting</h3>
       <p>
         When configured, Cloudflare Web Analytics reports aggregate page-load

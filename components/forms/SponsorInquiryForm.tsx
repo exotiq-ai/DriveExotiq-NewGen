@@ -1,5 +1,6 @@
 "use client";
 
+import { ga4FormContext } from "@/lib/ga4";
 import { track } from "@/lib/analytics";
 import { formSubmissionStatus, isFormPreview } from "@/lib/preview";
 import PreviewNotice from "@/components/forms/PreviewNotice";
@@ -50,6 +51,7 @@ export default function SponsorInquiryForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          analytics: await ga4FormContext(),
           website: honeypotRef.current?.value || "",
         }),
       });

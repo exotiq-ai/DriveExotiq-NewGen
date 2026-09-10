@@ -15,6 +15,7 @@ export function getSupabaseAdmin() {
   return {
     from(table) {
       return {
+        select() { return { eq() { return { async maybeSingle() { return { data: { id: `${table}-existing` }, error: null }; } }; } }; },
         insert(rows) {
           providerCalls.inserts.push({ table, rows });
           return {

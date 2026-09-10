@@ -12,6 +12,7 @@ import Textarea from "@/components/ui/Textarea";
 import SmsConsentCheckboxes from "@/components/forms/SmsConsentCheckboxes";
 import { applicationSchema, ApplicationFormData } from "@/lib/validations";
 import { APPLY_INTEREST_OPTIONS, Interest } from "@/lib/interest";
+import { ga4FormContext } from "@/lib/ga4";
 import { track } from "@/lib/analytics";
 import PreviewNotice from "@/components/forms/PreviewNotice";
 import { formSubmissionStatus } from "@/lib/preview";
@@ -57,6 +58,7 @@ export default function ApplicationForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          analytics: await ga4FormContext(),
           website: honeypotRef.current?.value || "",
         }),
       });

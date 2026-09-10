@@ -1,3 +1,4 @@
+import { recordGa4Lead } from "@/lib/ga4-server";
 import { isFormPreview } from "@/lib/preview";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
@@ -79,6 +80,8 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    await recordGa4Lead(body.analytics, "apply");
 
     // Server-only, never throws — safe to await without guarding the response.
     await sendNewApplicationEmails({

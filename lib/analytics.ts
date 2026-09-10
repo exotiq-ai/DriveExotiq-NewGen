@@ -1,5 +1,6 @@
 // PostHog runs after analytics consent; Meta uses separate marketing consent.
 
+import { trackGa4FormStart } from '@/lib/ga4';
 import { trackMetaLead } from '@/lib/meta-pixel';
 import { isPreview } from '@/lib/preview';
 import { analyticsAdminPath, analyticsEvents, safeAnalyticsProps } from '@/lib/analytics-privacy';
@@ -39,5 +40,6 @@ export function track(event: string, props?: Record<string, string | number>) {
   if (typeof window === 'undefined' || analyticsAdminPath(window.location.pathname) || !analyticsEvents.has(event)) return;
   const safe = safeAnalyticsProps(props);
   posthog.capture(event, safe);
+  if (event === "Form Start") trackGa4FormStart(safe.form);
   if (event === "Signup") void trackMetaLead(safe);
 }

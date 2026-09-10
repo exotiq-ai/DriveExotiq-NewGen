@@ -10,7 +10,7 @@ type Storage = Pick<globalThis.Storage, 'getItem' | 'setItem' | 'removeItem'>;
 const key = 'driveexotiq_campaign_v1';
 const lifetime = 30 * 60 * 1000;
 
-function clean(raw: unknown): Tags {
+export function cleanCampaignTags(raw: unknown): Tags {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
   return Object.fromEntries(Object.entries(raw).filter(([name, value]) => typeof value === 'string' && labels[name]?.has(value)));
 }
@@ -30,7 +30,7 @@ export function createCampaignAttribution(
   return {
     capture(search = '') {
       const params = new URLSearchParams(search);
-      const tags = clean(Object.fromEntries(Object.keys(labels).flatMap(name => {
+      const tags = cleanCampaignTags(Object.fromEntries(Object.keys(labels).flatMap(name => {
         const values = params.getAll(name);
         return values.length === 1 ? [[name, values[0].toLowerCase()]] : [];
       })));
@@ -42,7 +42,7 @@ export function createCampaignAttribution(
         try {
           const saved = JSON.parse(storage()?.getItem(key) || 'null');
           if (saved && typeof saved.expires === 'number' && saved.expires > now() && saved.expires <= now() + lifetime) {
-            current = { tags: clean(saved.tags), expires: saved.expires };
+            current = { tags: cleanCampaignTags(saved.tags), expires: saved.expires };
           } else clear();
         } catch { clear(); }
       }

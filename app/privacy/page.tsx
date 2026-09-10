@@ -53,6 +53,16 @@ export default function PrivacyPage() {
         Settings in the footer.
       </p>
 
+      <p>
+        When enabled and you allow analytics, Google Analytics measures page
+        visits, form starts and server-confirmed form completions. Google browser
+        and session identifiers connect these events; approved campaign categories
+        describe referral sources. We do not include form-field contents in these
+        Google events. First-party Google analytics cookies are configured for 90
+        days. Google advertising signals and personalization are disabled. See our
+        Cookie Policy for storage and withdrawal details.
+      </p>
+
       <h3>SMS Consent Data</h3>
       <p>
         Our forms record your phone number and consent choices, and record a

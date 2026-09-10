@@ -1,3 +1,4 @@
+import { recordGa4Lead } from "@/lib/ga4-server";
 import { isFormPreview } from "@/lib/preview";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
@@ -67,6 +68,8 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    await recordGa4Lead(body.analytics, "sponsor");
 
     // Inquirer confirmation + admin notice (lib/email-send: failures are
     // logged and swallowed, never break the inquiry).
