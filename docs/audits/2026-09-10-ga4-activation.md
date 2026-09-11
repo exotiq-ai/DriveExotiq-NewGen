@@ -8,7 +8,9 @@ Verified account: Exotiq / DriveExotiq.com, property `553725728`, DriveExotiq st
 
 Live GA4 Realtime showed `Drive Exotiq /cookies`, proving receipt of a production website pageview. Linktree has the same Measurement ID saved and UI-validated; separate Linktree event receipt remains unverified. The property's other exotiq.ai stream also has traffic and must not be counted as website QA evidence.
 
-A new real form submission remains pending explicit approval because it stores a lead and sends emails. No production generate_lead receipt or credential authentication is claimed from the debug validation alone.
+On September 11, the user confirmed their email flow worked and authorized QA emails. Their browser was found with analytics consent off and no Google tag; no lead was visible in Realtime or the September 10–11 lead report at inspection. The previous withdrawal test had left analytics off, which is a likely explanation, not proof of historical consent at submission.
+
+One additional clearly labeled `QA — GA4 verification` application was submitted to the live site using the approved hello@exotiq.ai address, analytics consent enabled and SMS permissions off. The thank-you page appeared. GA4 Realtime then showed exactly one `generate_lead`, one corresponding key event, and parameter drilldown `form_name = apply` with count one. This verifies deployed server conversion receipt for that controlled submission. The original email receipt is user-confirmed; receipt of the additional QA emails was not independently checked.
 
 ## Implementation
 
@@ -40,7 +42,7 @@ A new real form submission remains pending explicit approval because it stores a
 - 90 tests passed and TypeScript passed. A clean Netlify production build passed in 37 seconds, including function and edge packaging.
 - The actual generated Measurement Protocol payload passed Google's debug endpoint with HTTP 200 and zero validation messages. This endpoint does not ingest events or authenticate a completed production lead.
 - Production Cookie Settings works. Rejecting optional cookies prevented the Google script from loading; analytics-only consent loaded the exact Measurement ID without Meta Pixel. Withdrawal and reload were exercised separately.
-- Realtime confirmed production `Drive Exotiq /cookies` (one view), `Drive Exotiq /apply` (two deliberate visits) and two `form_start` events after the two form-focus exercises. No forms were submitted or emails sent.
+- Realtime confirmed production `Drive Exotiq /cookies` (one view), `Drive Exotiq /apply` (two deliberate visits) and two `form_start` events after the two form-focus exercises. No forms were submitted or emails sent during that initial September 10 check; the September 11 controlled submission is recorded above.
 - Fixed the server gate to use explicit production-functions-only `GA4_SERVER_ENABLED=true`, rather than relying on Netlify CONTEXT being available in deployed functions. Regression tests reproduced and cover this issue.
 
 ## Deployment notes
