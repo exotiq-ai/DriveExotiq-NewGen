@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
     "test:e2e": "playwright test",
-    "test:http": "node tests/preview-http-smoke.mjs"
+    "test:http": "node tests/preview-http-smoke.mjs",
+    "test:images": "node scripts/verify-image-delivery.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

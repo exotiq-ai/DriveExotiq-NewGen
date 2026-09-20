@@ -56,3 +56,16 @@ Versioned delivery files live in `public/media/v2/`; original masters and genera
 The existing branch, remote site name and review URL retain their historical identifier so cleanup does not disconnect the deployment. `netlify.toml` sets preview mode. Old `/astra/...` media URLs redirect to `/media/...`.
 
 The preview project is `driveexotiq-astra`, site ID `f499ad01-b775-4c7d-901f-98f879c83d94`; its review alias is `astra-review`. Deployment is a separate operation from local verification. Do not promote this preview configuration to the production site unchanged.
+
+## Production image delivery
+
+Production is `driveexotiq-newgen` (`a9dc6785-ca82-407f-8899-edc4ebf23fd0`), serving `https://driveexotiq.com`. Build and deploy together using the production context so the Next adapter's redirects, image configuration, functions and static assets are all included:
+
+```sh
+npx netlify-cli@27.5.2 deploy --context production --site a9dc6785-ca82-407f-8899-edc4ebf23fd0
+npm run test:images -- https://DEPLOY-ID--driveexotiq-newgen.netlify.app
+```
+
+The command creates a draft for verification. Publish that verified deployment through Netlify, then run `npm run test:images -- https://driveexotiq.com`. This read-only check loads every sitemap page and requests every emitted image size, including images below the fold; it never submits forms.
+
+Avoid standalone `--no-build` uploads: selecting `.netlify/static` preserves files but can lose adapter-generated routing. The explicit `/_next/image` rewrite in `netlify.toml` also preserves local photo delivery when generated redirects are absent. Local Next.js checks alone cannot verify Netlify routing.
