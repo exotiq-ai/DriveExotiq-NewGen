@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import AnalyticsListener from "@/components/AnalyticsListener";
 import CookieConsent from "@/components/CookieConsent";
+import PostHogAnalytics from "@/components/PostHogAnalytics";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 
 // Drive Exotiq type system (self-hosted, no build-time network fetch):
@@ -157,6 +158,8 @@ export default function RootLayout({
           </>
         )}
         <AnalyticsListener />
+        {/* PostHog loads only after the visitor accepts analytics cookies (lib/posthog.ts). */}
+        <PostHogAnalytics />
         <SmoothScroll>{children}</SmoothScroll>
         <CookieConsent />
       </body>

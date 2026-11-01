@@ -78,6 +78,14 @@ export default function CookiesPage() {
       </table>
 
       <h3>Analytics (require consent)</h3>
+      <p>
+        Page-view counts for the site come from Plausible, which sets no cookie
+        and stores nothing on your device. If you accept analytics cookies we
+        also load PostHog, which uses one cookie and local storage to tell
+        visits apart. It records pages viewed, the buttons you press and the
+        forms you submit; it never records your screen, and we do not build a
+        profile of you.
+      </p>
       <table>
         <thead>
           <tr>
@@ -88,22 +96,17 @@ export default function CookiesPage() {
         </thead>
         <tbody>
           <tr>
-            <td>Page views</td>
-            <td>Improves site structure</td>
-            <td>24 months</td>
-          </tr>
-          <tr>
-            <td>Search analytics</td>
-            <td>Popular search terms</td>
-            <td>24 months</td>
-          </tr>
-          <tr>
-            <td>Performance</td>
-            <td>Load times, errors</td>
-            <td>24 months</td>
+            <td>ph_*_posthog (PostHog)</td>
+            <td>Anonymous visitor id, pages viewed, clicks, form submits</td>
+            <td>12 months</td>
           </tr>
         </tbody>
       </table>
+      <p>
+        Rejecting analytics, or withdrawing consent later, stops PostHog and
+        deletes its cookie and local storage. We also honour the Global Privacy
+        Control and Do Not Track signals from your browser as a refusal.
+      </p>
 
       <h3>Cookies We Do Not Use</h3>
       <p>
