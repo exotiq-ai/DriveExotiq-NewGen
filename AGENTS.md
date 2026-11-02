@@ -1,0 +1,12 @@
+# Drive Exotiq release ownership
+
+- This is the Astra experience. Preserve the rendered homepage's `data-site-experience="astra"` identity and its production PostHog integration. Renaming components is allowed; `scripts/verify-deployment-source.mjs` follows rendered local imports instead of depending on a component filename.
+- Production source is the protected `production-astra` branch. Netlify's production branch and GitHub's default branch must both point there. Develop changes on feature branches and merge only after the `Verify Astra` check passes. Do not commit or force-push to `main`, rewrite release history, or change Claude's checkout.
+- Production project: `driveexotiq-newgen`, `a9dc6785-ca82-407f-8899-edc4ebf23fd0`, `https://driveexotiq.com`. Preview project: `driveexotiq-astra`, `f499ad01-b775-4c7d-901f-98f879c83d94`, alias `astra-review`. Pass the intended site ID explicitly; do not infer it from the current directory or saved CLI state.
+- Use `npm run build`; its source guard must run before Next.js. Do not remove the guard, invent a skip variable, or deploy prebuilt output from another branch. Production Netlify builds require the release branch, production project, production site mode/canonical URL and live form mode. Local production-mode QA without a Netlify context remains supported.
+- Preserve preview indexing/admin isolation and safe form defaults, including any explicitly authorized live-form configuration. Keep production credentials in Netlify's scoped environment store; do not copy `.env.local` into production wholesale or log secret values. Avoid bulk `updateEnvVar` replacements when changing one context.
+- Build a draft with the Next adapter, verify its pages, images, analytics and forms in the appropriate safe mode, then publish the verified deploy. A locked production deploy prevents unrelated automatic publishing while recovery is in progress.
+- Emergency rollback uses Netlify `restoreSiteDeploy` for a verified existing deploy on the production site, followed by `lockDeploy`. It does not need a source-build bypass. After recovery, repair the protected source branch and verification before restoring routine publishing.
+- Run relevant tests, lint and type checks; root owns coordinated builds, deployment and remote mutations during parallel work. Never overwrite another worker's edits or include unrelated untracked artifacts such as `deno.lock`.
+
+See README deployment instructions for the release sequence and limitations of the source guard.

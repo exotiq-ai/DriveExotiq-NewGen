@@ -174,7 +174,7 @@ export default function CookieConsent() {
         <div>
           <p className="text-sm font-medium text-ink">Analytics</p>
           <p className="text-xs text-ink-3">
-            Page views, clicks, heatmaps and masked session replay.
+            Page views, selected clicks and form completion.
           </p>
         </div>
         <Toggle

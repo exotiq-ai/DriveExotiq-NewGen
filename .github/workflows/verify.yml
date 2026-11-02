@@ -1,0 +1,47 @@
+name: Verify Astra
+
+on:
+  pull_request:
+    branches: [production-astra]
+  push:
+    branches: [production-astra, codex/astra-awwwards]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: astra-verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify Astra
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SITE_MODE: preview
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:4317
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Check release identity
+        if: github.ref_name == 'production-astra' && github.event_name != 'pull_request'
+        env:
+          NETLIFY: 'true'
+          CONTEXT: production
+          BRANCH: production-astra
+          SITE_ID: a9dc6785-ca82-407f-8899-edc4ebf23fd0
+          NEXT_PUBLIC_SITE_MODE: production
+          NEXT_PUBLIC_SITE_URL: https://driveexotiq.com
+          NEXT_PUBLIC_FORM_MODE: live
+        run: node scripts/verify-deployment-source.mjs
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      # CI builds a write-free preview; Netlify separately applies production identity.
+      - run: npm run build

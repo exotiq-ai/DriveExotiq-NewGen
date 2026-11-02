@@ -4,7 +4,7 @@ import { trackGa4FormStart } from '@/lib/ga4';
 import { trackMetaLead } from '@/lib/meta-pixel';
 import { isPreview } from '@/lib/preview';
 import { analyticsAdminPath, analyticsEvents, safeAnalyticsProps } from '@/lib/analytics-privacy';
-import { createAnalyticsRuntime, analyticsConfig } from '@/lib/analytics-runtime';
+import { createAnalyticsRuntime, analyticsConfig, analyticsPrivacyBlocked } from '@/lib/analytics-runtime';
 import { getConsentPreferences } from '@/lib/cookie-consent';
 
 let ready = false;
@@ -19,6 +19,7 @@ export const analyticsEnabled = config !== null;
 const posthog = createAnalyticsRuntime(config, () => ({
   ready,
   consent: typeof window !== 'undefined' && getConsentPreferences()?.analytics === true,
+  privacySignal: analyticsPrivacyBlocked(typeof navigator === 'undefined' ? undefined : navigator),
   pathname: typeof window === 'undefined' ? '/admin' : window.location.pathname,
   origin: typeof window === 'undefined' ? '' : window.location.origin,
   search: typeof window === 'undefined' ? '' : window.location.search,

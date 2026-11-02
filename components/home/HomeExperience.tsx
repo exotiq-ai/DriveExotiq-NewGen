@@ -56,7 +56,7 @@ export default function HomeExperience() {
         fetchPriority="high"
       />
       <Header />
-      <main id="main-content" className="home-experience">
+      <main id="main-content" className="home-experience" data-site-experience="astra">
         <HomeMotion />
         <section
           id="the-feeling"

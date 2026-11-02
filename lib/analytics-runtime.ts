@@ -3,8 +3,13 @@ import { analyticsAdminPath, analyticsEvents, analyticsPath, safeAnalyticsProps 
 import { createCampaignAttribution } from "@/lib/analytics-attribution";
 
 type Config = { key: string; host: string; environment: "production" | "preview" };
-type State = { consent: boolean; ready: boolean; pathname: string; origin: string; search?: string; referrer?: string };
-type Client = Pick<PostHog, "init" | "capture" | "set_config" | "opt_in_capturing" | "opt_out_capturing" | "reset" | "startSessionRecording" | "stopSessionRecording">;
+type State = { consent: boolean; ready: boolean; pathname: string; origin: string; privacySignal?: boolean; search?: string; referrer?: string };
+type Client = Pick<PostHog, "init" | "capture" | "set_config" | "opt_in_capturing" | "opt_out_capturing" | "reset" | "stopSessionRecording">;
+
+/** Browser privacy signals override a previously saved analytics choice. */
+export function analyticsPrivacyBlocked(signal?: { globalPrivacyControl?: boolean; doNotTrack?: string | null }): boolean {
+  return signal?.globalPrivacyControl === true || signal?.doNotTrack === "1";
+}
 
 function acquisitionChannel(state: State) {
   const medium = new URLSearchParams(state.search).get("utm_medium")?.toLowerCase();
@@ -38,7 +43,11 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
   let loadFailed = false;
   let channel = "direct";
   const campaign = createCampaignAttribution();
-  const eligible = () => Boolean(config && state().ready && state().consent && !analyticsAdminPath(state().pathname));
+  const eligible = () => {
+    const current = state();
+    return Boolean(config && current.ready && current.consent && !current.privacySignal && !analyticsAdminPath(current.pathname) &&
+      (config.environment === "preview" || ["https://driveexotiq.com", "https://www.driveexotiq.com"].includes(current.origin)));
+  };
   const safeUrl = (raw: string) => {
     try {
       const url = new URL(raw, state().origin);
@@ -47,7 +56,7 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
   };
   const beforeSend = (event: CaptureResult | null): CaptureResult | null => {
     if (!event || !active || !eligible()) return null;
-    if (!analyticsEvents.has(event.event) && !["$pageview", "$pageleave", "$autocapture", "$$heatmap", "$snapshot"].includes(event.event)) return null;
+    if (!analyticsEvents.has(event.event) && !["$pageview", "$pageleave"].includes(event.event)) return null;
     const raw = event.properties || {};
     const currentUrl = typeof raw.$current_url === "string" && safeUrl(raw.$current_url) || `${state().origin}${analyticsPath(state().pathname)}`;
     const properties: Record<string, unknown> = {
@@ -68,28 +77,6 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
     for (const [key, value] of Object.entries(raw)) {
       if (/^\$(viewport|screen|prev_pageview|time|session_duration)/.test(key) && typeof value === "number" && Number.isFinite(value)) properties[key] = value;
     }
-    if (event.event === "$autocapture" && Array.isArray(raw.$elements)) {
-      properties.$elements = raw.$elements.map((el: Record<string, unknown>) => ({
-        tag_name: typeof el.tag_name === "string" && /^[a-z0-9-]+$/.test(el.tag_name) ? el.tag_name : "",
-        nth_child: typeof el.nth_child === "number" ? el.nth_child : 0,
-        nth_of_type: typeof el.nth_of_type === "number" ? el.nth_of_type : 0,
-      }));
-    }
-    if (raw.$heatmap_data && typeof raw.$heatmap_data === "object") {
-      properties.$heatmap_data = Object.fromEntries(Object.entries(raw.$heatmap_data).flatMap(([url, points]) => {
-        const clean = safeUrl(url);
-        if (!clean || !Array.isArray(points)) return [];
-        return [[clean, points.filter(point => point !== null && typeof point === "object" && !Array.isArray(point)).map(point => Object.fromEntries(Object.entries(point).filter(([key, value]) =>
-          (["x", "y"].includes(key) && typeof value === "number" && Number.isFinite(value)) ||
-          (key === "target_fixed" && typeof value === "boolean") ||
-          (key === "type" && ["click", "mousemove", "scroll", "deadclick", "rageclick"].includes(String(value))),
-        )))]];
-      }));
-    }
-    // rrweb payloads have their own strict masks and URL/network filter below.
-    if (event.event === "$snapshot") {
-      for (const key of ["$snapshot_data", "$snapshot_bytes"]) if (raw[key] !== undefined) properties[key] = raw[key];
-    }
     return { ...event, properties };
   };
 
@@ -98,8 +85,8 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
     defaults: "2026-08-30",
     capture_pageview: false,
     capture_pageleave: true,
-    capture_heatmaps: true,
-    autocapture: { dom_event_allowlist: ["click"], element_allowlist: ["a", "button"], capture_copied_text: false },
+    capture_heatmaps: false,
+    autocapture: false,
     mask_all_text: true,
     mask_all_element_attributes: true,
     persistence: "memory",
@@ -108,6 +95,7 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
     opt_out_persistence_by_default: true,
     cross_subdomain_cookie: false,
     person_profiles: "never",
+    respect_dnt: true,
     ip: false,
     save_referrer: false,
     store_google: false,
@@ -120,24 +108,6 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
     enable_recording_console_log: false,
     disable_session_recording: true,
     advanced_disable_feature_flags: true,
-    session_recording: {
-      maskAllInputs: true,
-      maskTextSelector: "*",
-      maskAllElementAttributes: true,
-      blockSelector: "input[type=hidden], input[type=file], iframe, canvas, .ph-no-capture",
-      recordCrossOriginIframes: false,
-      recordBody: false,
-      recordHeaders: false,
-      streamNetworkBody: false,
-      captureJsonLd: false,
-      captureCanvas: { recordCanvas: false },
-      maskCapturedNetworkRequestFn: (request) => {
-        // Replay's own URL metadata calls this with only {name}; discard all network entries.
-        if (!eligible() || Object.keys(request).some(key => key !== "name")) return null;
-        const name = safeUrl(request.name || "");
-        return name ? { ...request, name } : null;
-      },
-    },
     before_send: beforeSend,
   };
 
@@ -161,7 +131,7 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
   return {
     async sync() {
       if (!eligible()) {
-        if (!state().consent) campaign.clear();
+        if (!state().consent || state().privacySignal) campaign.clear();
         stop(); return;
       }
       const tags = campaign.capture(state().search);
@@ -182,9 +152,8 @@ export function createAnalyticsRuntime(config: Config | null, state: () => State
       if (!active) {
         channel = acquisitionChannel({ ...state(), search: tags.utm_medium ? new URLSearchParams(tags).toString() : state().search });
         active = true;
-        client.set_config({ capture_heatmaps: true, autocapture: options.autocapture, capture_pageleave: true });
+        client.set_config({ capture_heatmaps: false, autocapture: false, capture_pageleave: true, disable_session_recording: true });
         client.opt_in_capturing({ captureEventName: false });
-        client.startSessionRecording();
       }
       page();
     },

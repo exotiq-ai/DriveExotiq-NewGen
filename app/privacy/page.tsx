@@ -13,7 +13,7 @@ export default function PrivacyPage() {
     <LegalLayout
       title="Privacy Policy"
       subtitle="How Drive Exotiq Collects, Uses, and Protects Your Information"
-      lastUpdated="September 10, 2026"
+      lastUpdated="November 1, 2026"
     >
       <p>
         Exotiq Inc., doing business as Drive Exotiq (&ldquo;Drive Exotiq,&rdquo;
@@ -44,13 +44,14 @@ export default function PrivacyPage() {
 
       <p>
         With analytics consent, PostHog helps us understand page navigation,
-        clicks, form completion, heatmaps and masked session replay. Form inputs
-        and page text are masked; our analytics events exclude names, email
-        addresses, phone numbers and free-text responses. PostHog uses an
+        selected clicks and form completion. Session replay, heatmaps and
+        automatic interaction capture are disabled. Our analytics events exclude
+        names, email addresses, phone numbers and free-text responses. PostHog uses an
         in-memory identifier for this visit. Approved campaign labels help us
         connect referral visits with completed forms; these labels stay in tab
         storage for up to 30 minutes after analytics consent. Change your choice through Cookie
-        Settings in the footer.
+        Settings in the footer. PostHog treats Global Privacy Control and Do Not
+        Track signals as a refusal regardless of a saved analytics choice.
       </p>
 
       <p>
@@ -113,8 +114,8 @@ export default function PrivacyPage() {
           </tr>
           <tr>
             <td>PostHog</td>
-            <td>Consented visitor analytics, heatmaps and masked replay</td>
-            <td>Interaction events, device information and masked page activity</td>
+            <td>Consented page views and selected interaction analytics</td>
+            <td>Page views, interaction categories and device information</td>
           </tr>
           <tr>
             <td>Supabase</td>

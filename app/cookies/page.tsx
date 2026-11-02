@@ -13,7 +13,7 @@ export default function CookiesPage() {
     <LegalLayout
       title="Cookie Policy"
       subtitle="Cookies and Browser Storage on driveexotiq.com"
-      lastUpdated="September 10, 2026"
+      lastUpdated="November 1, 2026"
     >
       <p>
         This Cookie Policy explains how Drive Exotiq uses cookies and browser storage on
@@ -37,11 +37,14 @@ export default function CookiesPage() {
 
       <h3>Analytics (require consent)</h3>
       <p>
-        When enabled and you consent, PostHog records page views, interaction
-        events, heatmaps and masked session replay. Form inputs and page text
-        are masked. Its identifier stays in memory for the current visit; this
+        When enabled and you consent, PostHog records page views and selected
+        interaction events, such as button clicks and form completion. It does
+        not record your screen, collect heatmaps or automatically capture page
+        interactions. Events exclude form-field contents. Its identifier stays in memory for the current visit; this
         integration does not set a persistent PostHog cookie. Cookie Settings
-        lets you stop future PostHog capture.
+        lets you stop future PostHog capture. PostHog also respects Global Privacy
+        Control and Do Not Track signals as a refusal, even if you previously
+        accepted analytics.
       </p>
       <p>
         With analytics consent, approved campaign labels (such as Linktree and

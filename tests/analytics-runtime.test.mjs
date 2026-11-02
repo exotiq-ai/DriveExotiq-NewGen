@@ -33,6 +33,72 @@ test('missing config, absent consent, deferred initial work and admin prevent SD
   f.state.ready = true; f.state.pathname = '/admin/leads'; await f.runtime.sync(); assert.equal(f.loads(), 0);
 });
 
+test('production capture loads only on the two HTTPS production origins', async () => {
+  for (const origin of ['http://driveexotiq.com', 'https://driveexotiq.com.evil.example', 'https://driveexotiq-newgen.netlify.app', 'http://localhost:4318', '']) {
+    const f = fixture(); f.state.consent = true; f.state.origin = origin;
+    await f.runtime.sync();
+    assert.equal(f.loads(), 0, origin);
+    assert.deepEqual(f.calls, [], origin);
+  }
+  for (const origin of ['https://driveexotiq.com', 'https://www.driveexotiq.com']) {
+    const f = fixture(); f.state.consent = true; f.state.origin = origin;
+    await f.runtime.sync();
+    assert.equal(f.calls.filter(c => c[0] === 'event').length, 1, origin);
+  }
+});
+
+test('an explicitly configured preview can capture without using the production host gate', async () => {
+  const f = fixture({ ...config, key: 'phc_preview', environment: 'preview' });
+  f.state.consent = true; f.state.origin = 'https://review--driveexotiq-astra.netlify.app';
+  await f.runtime.sync();
+  const view = f.calls.find(c => c[0] === 'event')[1];
+  assert.equal(view.properties.token, 'phc_preview');
+  assert.equal(view.properties.environment, 'preview');
+});
+
+test('privacy signals block loading and immediately suppress an active visitor even before lifecycle sync', async () => {
+  const blocked = fixture(); blocked.state.consent = true; blocked.state.privacySignal = true;
+  await blocked.runtime.sync(); assert.equal(blocked.loads(), 0);
+  const f = fixture(); f.state.consent = true; await f.runtime.sync();
+  const count = f.calls.filter(c => c[0] === 'event').length;
+  f.state.privacySignal = true;
+  f.runtime.capture('Signup', { form: 'apply', status: 'stored' });
+  assert.equal(f.calls.filter(c => c[0] === 'event').length, count);
+  assert.equal(f.options().before_send({ event: '$pageleave', properties: {} }), null);
+  await f.runtime.sync();
+  assert.ok(f.calls.some(c => c[0] === 'out'));
+});
+
+test('GPC and Do Not Track independently override stored consent', () => {
+  assert.equal(typeof runtimeModule.analyticsPrivacyBlocked, 'function');
+  for (const signal of [{ globalPrivacyControl: true }, { doNotTrack: '1' }, { globalPrivacyControl: true, doNotTrack: '0' }]) {
+    assert.equal(runtimeModule.analyticsPrivacyBlocked(signal), true);
+  }
+  for (const signal of [undefined, {}, { globalPrivacyControl: false, doNotTrack: '0' }, { doNotTrack: 'unspecified' }]) {
+    assert.equal(runtimeModule.analyticsPrivacyBlocked(signal), false);
+  }
+});
+
+test('consented collection remains memory-only and never enables recording, heatmaps or automatic events', async () => {
+  const f = fixture(); f.state.consent = true; await f.runtime.sync();
+  assert.equal(f.options().persistence, 'memory');
+  assert.equal(f.options().disable_persistence, true);
+  assert.equal(f.options().person_profiles, 'never');
+  assert.equal(f.options().capture_heatmaps, false);
+  assert.equal(f.options().autocapture, false);
+  assert.equal(f.options().disable_session_recording, true);
+  assert.equal(f.calls.some(c => c[0] === 'replay'), false);
+  for (const c of f.calls.filter(c => c[0] === 'config')) {
+    assert.notEqual(c[1].capture_heatmaps, true);
+    assert.ok(!c[1].autocapture);
+  }
+  for (const event of ['$snapshot', '$$heatmap', '$autocapture', '$exception', 'unknown']) {
+    assert.equal(f.options().before_send({ event, properties: { $snapshot_data: 'private', $heatmap_data: { '/': [{ x: 10 }] } } }), null, event);
+  }
+  f.runtime.capture('Signup', { form: 'apply', status: 'stored' });
+  assert.ok(f.calls.some(c => c[0] === 'event' && c[1].event === 'Signup'));
+});
+
 test('consent starts once, route updates deduplicate pageviews, revoke stops and drops capture', async () => {
   const f = fixture(); f.state.consent = true;
   await f.runtime.sync(); await f.runtime.sync();
@@ -67,11 +133,6 @@ test('SDK event boundary strips contact data, query strings and unknown properti
   assert.equal(clean.properties.form, 'apply');
   assert.equal(JSON.stringify(clean).includes('person@example.com'), false);
   assert.equal(JSON.stringify(clean).includes('5551234567'), false);
-  const recording = f.options().session_recording;
-  assert.equal(recording.maskAllInputs, true); assert.equal(recording.maskTextSelector, '*');
-  assert.equal(recording.recordBody, false); assert.equal(recording.recordHeaders, false);
-  assert.equal(recording.maskCapturedNetworkRequestFn({ name: 'https://driveexotiq.com/api/apply', method: 'POST', requestBody: 'secret' }), null);
-  assert.equal(recording.maskCapturedNetworkRequestFn({ name: 'https://driveexotiq.com/apply?email=secret' }).name, 'https://driveexotiq.com/apply');
 });
 
 test('preview requires an explicit key and permits deliberate reuse with preview tagging', () => {
@@ -90,13 +151,11 @@ test('distinct detail routes count separately without sending their sensitive pa
   assert.equal(views[1][1].properties.$pathname, '/journal/detail');
 });
 
-test('pageleave retains the preceding safe URL and heatmaps redact URL keys', async () => {
+test('pageleave retains the preceding safe URL', async () => {
   const f = fixture(); f.state.consent = true; await f.runtime.sync();
   f.state.pathname = '/tour';
   const event = f.options().before_send({ event: '$pageleave', properties: { $current_url: 'https://driveexotiq.com/apply?email=secret' } });
   assert.equal(event.properties.$current_url, 'https://driveexotiq.com/apply');
-  const heat = f.options().before_send({ event: '$$heatmap', properties: { $heatmap_data: { 'https://driveexotiq.com/tour?email=secret': [{ x: 12, y: 34, type: 'click', text: 'secret' }] } } });
-  assert.deepEqual(heat.properties.$heatmap_data, { 'https://driveexotiq.com/tour': [{ x: 12, y: 34, type: 'click' }] });
 });
 
 test('acquisition uses fixed channel categories without transmitting raw UTMs or referrer queries', async () => {
@@ -130,12 +189,13 @@ test('Linktree campaign follows pageview, form start and stored success, but nev
   assert.equal(f.calls.filter(c => c[0] === 'event').at(-1)[1].properties.utm_source, undefined);
 });
 
-test('malformed heatmap points cannot throw or leak arbitrary numeric properties', async () => {
+test('unexpected collection payloads are removed even from a named event', async () => {
   const f = fixture(); f.state.consent = true; await f.runtime.sync();
-  const event = f.options().before_send({ event: '$$heatmap', properties: { $heatmap_data: {
+  const event = f.options().before_send({ event: 'Signup', properties: { $snapshot_data: 'private', $heatmap_data: {
     'https://driveexotiq.com/apply?email=secret': [null, 'secret', 42, { x: 1, y: 2, type: 'click', phone: 5551234567 }],
   } } });
-  assert.deepEqual(event.properties.$heatmap_data, { 'https://driveexotiq.com/apply': [{ x: 1, y: 2, type: 'click' }] });
+  assert.equal(event.properties.$heatmap_data, undefined);
+  assert.equal(event.properties.$snapshot_data, undefined);
 });
 
 test('sanitizer retains the configured ingestion token and disables person processing', async () => {
